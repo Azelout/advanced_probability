@@ -1,0 +1,139 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C4}{Convergence en loi, LGN et TCL}{Convergence in law, LLN, CLT}
+
+\textit{Source : slides, début du chapitre 6, et poly « Gaussian vector » (Déf.~2, Thm~3, Lemme~4).
+La partie 4 (modes de convergence) est \textbf{hors cours} : le cours n'énonce que la convergence en loi et la LGN p.s.}
+
+\section*{1. Fonction caractéristique}
+
+\begin{definition}[Fonction caractéristique, \emph{characteristic function}]\label{C4:fc}
+Pour $X$ réelle : $\varphi_X(t)=\E\bigl(e^{itX}\bigr)$, $t\in\R$. Pour $Z=(Z_1,\dots,Z_d)$ à valeurs dans $\R^d$ :
+$\varphi_Z(x)=\E\bigl(\exp(ix^tZ)\bigr)=\E\bigl(\exp\bigl(i\sum_{j=1}^dx_jZ_j\bigr)\bigr)$, $x\in\R^d$.
+Toujours définie ($|e^{itX}|=1$).
+\end{definition}
+
+\begin{proposition}[propriétés]\label{C4:fc-prop}\leavevmode
+\begin{enumerate}
+  \item La fonction caractéristique \textbf{caractérise la loi} : $\varphi_X=\varphi_Y\iff\PP_X=\PP_Y$ (utilisé dans le cours, Thm~8 du chap.~6).
+  \item (standard) $\varphi_X(0)=1$, $|\varphi_X|\le1$, $\varphi_{aX+b}(t)=e^{itb}\varphi_X(at)$.
+  \item (C3) Si $X\indep Y$ : $\varphi_{X+Y}=\varphi_X\varphi_Y$.
+  \item $X\sim\Nc(m,\sigma^2)$ : $\varphi_X(t)=e^{itm-\frac{t^2\sigma^2}{2}}$.
+  \quad\emph{Hors cours :} $X\sim\Poi(\lambda)$ : $\varphi_X(t)=e^{\lambda(e^{it}-1)}$ ; $X\sim\mathcal B(n,p)$ : $(1-p+pe^{it})^n$.
+\end{enumerate}
+\end{proposition}
+
+\section*{2. Convergence en loi}
+
+\begin{definition}[Convergence en loi, \emph{convergence in law}]\label{C4:loi}
+Soient $(Y_n)_{n\in\N^*}$ et $Y$ réelles. $Y_n\tendloi Y$ si pour toute $f:\R\to\R$ \textbf{continue et bornée},
+$\E(f(Y_n))\xrightarrow[n\to+\infty]{}\E(f(Y))$. Même définition dans $\R^d$ avec $f:\R^d\to\R$.
+\end{definition}
+\begin{remarque}
+Seules les \emph{lois} comptent : si $Y\sim\Nc(0,1)$, on écrit $Y_n\tendloi\Nc(0,1)$. (Standard) Les $Y_n$ peuvent même être définies sur
+des espaces probabilisés différents.
+\end{remarque}
+
+\begin{theoreme}[Lévy -- nom standard ; « Theorem 6 » des slides]\label{C4:levy}
+$Y_n\tendloi Y\iff\forall t\in\R,\ \varphi_{Y_n}(t)\xrightarrow[n\to+\infty]{}\varphi_Y(t)$. Idem dans $\R^d$ avec $\varphi_Z(x)=\E(e^{ix^tZ})$.
+\end{theoreme}
+
+\begin{lemme}[limite de gaussiennes]\label{C4:lim-gauss}
+Si $X_n\sim\Nc(m_n,\sigma_n^2)$ avec $m_n\to m$ et $\sigma_n\to\sigma$, alors $X_n\tendloi X\sim\Nc(m,\sigma^2)$
+(si $\sigma=0$, la limite est la loi dégénérée $\delta_m$).
+\end{lemme}
+\begin{idee}
+$\varphi_{X_n}(t)=e^{itm_n-t^2\sigma_n^2/2}\to e^{itm-t^2\sigma^2/2}$ pour tout $t$, puis Lévy.
+\end{idee}
+
+\begin{horscours}[autres critères usuels]\label{C4:criteres}\leavevmode
+\begin{enumerate}
+  \item $Y_n\tendloi Y\iff F_{Y_n}(x)\to F_Y(x)$ en tout point $x$ où $F_Y$ est \emph{continue}.
+  \item Pour des v.a.\ à valeurs dans $\N$ : $Y_n\tendloi Y\iff\forall k\in\N,\ \PP(Y_n=k)\to\PP(Y=k)$.
+  \item Si $z_n\to z$ dans $\C$, alors $(1+\frac{z_n}{n})^n\to e^z$ (outil clé pour les calculs de $\varphi_{S_n}=\varphi^n$).
+\end{enumerate}
+\end{horscours}
+
+\section*{3. Loi des grands nombres et théorème central limite}
+
+\begin{theoreme}[LGN forte, \emph{Law of Large Numbers}]\label{C4:LGN}
+Si $(X_i)_{i\in\N^*}$ sont i.i.d.\ et dans $L^1(\Omega,\F,\PP)$ (i.e.\ $\E|X_1|<\infty$), alors
+$\displaystyle\frac1n\sum_{i=1}^nX_i\tendps\E(X_1)$.
+\end{theoreme}
+
+\begin{theoreme}[TCL, \emph{Central Limit Theorem}]\label{C4:TCL}
+Si $(X_i)_{i\in\N^*}$ sont i.i.d.\ et dans $L^2(\Omega,\F,\PP)$ (i.e.\ $\E(X_1^2)<\infty$), $m=\E(X_1)$, $\sigma^2=\Var(X_1)$,
+$S_n=X_1+\dots+X_n$, alors
+\[\frac{S_n-nm}{\sqrt n}\tendloi\Nc(0,\sigma^2),\qquad\text{et si }\sigma>0:\quad
+\frac{\sqrt n}{\sqrt{\Var(X_1)}}\Bigl(\frac1n\sum_{i=1}^nX_i-\E(X_1)\Bigr)\tendloi\Nc(0,1).\]
+\end{theoreme}
+\begin{idee}
+Quitte à centrer, $m=0$. Par indépendance $\varphi_{S_n/\sqrt n}(t)=\varphi_{X_1}(t/\sqrt n)^n$ et, $X_1\in L^2$,
+$\varphi_{X_1}(u)=1-\frac{\sigma^2u^2}2+o(u^2)$ ; donc $\varphi_{S_n/\sqrt n}(t)=\bigl(1-\frac{\sigma^2t^2}{2n}+o(\frac1n)\bigr)^n\to e^{-\sigma^2t^2/2}$ ; Lévy.
+\end{idee}
+\begin{remarque}
+La LGN dit \emph{où} va $\bar X_n=\frac1n S_n$ ; le TCL donne la \emph{vitesse} : $\bar X_n-m$ est d'ordre $\sigma/\sqrt n$.
+En pratique : $\PP\bigl(S_n\le nm+x\sigma\sqrt n\bigr)\approx\PP(N\le x)$, $N\sim\Nc(0,1)$ (approximation, pas une égalité).
+\end{remarque}
+
+\section*{4. Modes de convergence (hors cours, standard)}
+
+\begin{horscours}[définitions et inégalités]\label{C4:modes}
+Soient $X_n,X$ définies sur le \emph{même} $(\Omega,\F,\PP)$.
+\begin{itemize}
+  \item p.s. : $\PP(\{\omega,\ X_n(\omega)\to X(\omega)\})=1$ ;
+  \item en probabilité : $\forall\varepsilon>0$, $\PP(|X_n-X|>\varepsilon)\to0$ ;
+  \item dans $L^p$ ($p\ge1$) : $X_n,X\in L^p$ et $\E|X_n-X|^p\to0$.
+\end{itemize}
+Markov : $\PP(|X|\ge a)\le\frac{\E|X|}{a}$ ($a>0$). Bienaymé--Tchebychev : pour $X\in L^2$,
+$\PP(|X-\E X|\ge a)\le\frac{\Var X}{a^2}$.
+\end{horscours}
+
+\begin{liens}[title={Liens entre modes de convergence (hors cours)}]
+\[\begin{array}{ccccc}
+L^q\ (q\ge p) & \Rightarrow & L^p & & \\
+ & & \Downarrow & & \\
+\text{p.s.} & \Rightarrow & \text{proba} & \Rightarrow & \text{loi}
+\end{array}\]
+Preuves : $L^p\Rightarrow$ proba par Markov appliquée à $|X_n-X|^p$ ; p.s.\ $\Rightarrow$ proba par convergence dominée de
+$\1_{|X_n-X|>\varepsilon}$. Et : loi vers une \emph{constante} $c$ $\Rightarrow$ proba vers $c$. Contre-exemples :
+\begin{itemize}
+  \item \textbf{proba $\not\Rightarrow$ p.s.}, \textbf{$L^p\not\Rightarrow$ p.s.} : $X_n\sim\mathcal B(\frac1n)$ indépendantes. $\E|X_n|^p=\frac1n\to0$,
+  mais $\sum\PP(X_n=1)=+\infty$ donc, par Borel--Cantelli 2 (C3), $X_n=1$ infiniment souvent p.s. : pas de convergence p.s.\ vers 0.
+  \item \textbf{p.s.\ $\not\Rightarrow L^1$} : sur $([0,1],\Bc,\lambda)$, $X_n=n\1_{]0,1/n[}\to0$ partout, mais $\E X_n=1$ (donc aussi proba $\not\Rightarrow L^1$).
+  \item \textbf{$L^p\not\Rightarrow L^q$ ($q>p$)} : même espace, $X_n=n^{1/q}\1_{]0,1/n[}$ : $\E|X_n|^p=n^{p/q-1}\to0$ mais $\E|X_n|^q=1$.
+  \item \textbf{loi $\not\Rightarrow$ proba} : $X\sim\Nc(0,1)$ et $X_n=-X$. Même loi, donc $X_n\tendloi X$, mais $|X_n-X|=2|X|$ ne tend pas vers 0.
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item La convergence en loi porte sur les \emph{lois} : on ne peut pas additionner des limites en loi
+  ($X_n\tendloi X$, $Y_n\tendloi Y$ $\not\Rightarrow X_n+Y_n\tendloi X+Y$ ; prendre $Y_n=-X_n$ dans le contre-exemple ci-dessus).
+  \item Fonctions test : \emph{continues bornées}. Pour une fonction non bornée (ex.\ $f(x)=x$), $\E(f(Y_n))\to\E(f(Y))$ peut être fausse.
+  \item TCL : hypothèse $L^2$ (variance finie) et i.i.d. ; LGN forte : $L^1$ et i.i.d. ; ne pas inverser les normalisations
+  ($\frac1n$ pour la LGN, $\frac1{\sqrt n}$ pour le TCL).
+  \item Dans $\Nc(0,\sigma^2)$ le second paramètre est la \emph{variance} ; le quantile à utiliser est celui de $\Nc(0,1)$ après
+  division par l'écart-type $\sigma$.
+  \item Bienaymé--Tchebychev est bilatère : pour $c>\E S$, $\PP(S>c)\le\PP(|S-\E S|\ge c-\E S)$ ; c'est une borne (souvent grossière).
+  \item Toujours préciser le mode : « $\to$ » seul ne veut rien dire.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[Binomiale $\to$ Poisson par Lévy, schéma]\label{C4:ex-binom}
+Si $X_n\sim\mathcal B(n,\frac{\lambda}{n})$ ($n\ge\lambda$) : $\varphi_{X_n}(t)=\bigl(1+\frac{\lambda(e^{it}-1)}{n}\bigr)^n\to e^{\lambda(e^{it}-1)}$
+(Hors cours~\ref{C4:criteres}.3), qui est $\varphi$ de $\Poi(\lambda)$. Donc $X_n\tendloi\Poi(\lambda)$ (Lévy + caractérisation).
+\end{exemple}
+
+\begin{exemple}[dimensionnement par le TCL]\label{C4:ex-TCL}
+$n=100$ lancers d'une pièce équilibrée, $X_i\sim\mathcal B(\frac12)$, $m=\frac12$, $\sigma=\frac12$. On cherche $c$ tel que
+$\PP(S_n\le c)\approx0{,}95$. TCL : $\frac{S_n-50}{\sqrt{100}\cdot\frac12}=\frac{S_n-50}{5}\approx\Nc(0,1)$ ;
+avec $\PP(N\le1{,}645)=0{,}95$ : $c\approx50+1{,}645\times5\approx58{,}2$.
+Bienaymé--Tchebychev donnerait seulement $\PP(|S_n-50|\ge a)\le\frac{25}{a^2}\le0{,}05$ pour $a\ge\sqrt{500}\approx22{,}4$, soit $c\approx72{,}4$ :
+bien plus grossier.
+\end{exemple}
+
+\end{document}

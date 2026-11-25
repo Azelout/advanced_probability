@@ -1,0 +1,65 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD2}{Un peu de théorie de la mesure}{A bit of measure theory}
+
+\textit{À lire avant de chercher le TD. Renvois : « C2.8 » = fiche C2, énoncé n°8. Fiches associées : \textbf{C2}, \textbf{C9}
+(Poisson/exponentielle), \textbf{C5} (gaussienne).}
+
+\begin{exo}[Théorème de transfert, fait en séance]
+\outils Loi $\PP_X$ (C2.7), théorème de transfert (C2.8), fonctions étagées, convergence monotone (standard).
+
+\meth Méthode « standard » de la théorie de l'intégration : indicatrices $\to$ fonctions étagées positives $\to$ fonctions mesurables
+positives (limite croissante).
+
+\indic
+\begin{itemize}
+  \item $g=\1_B$ : $\E(\1_B(X))=\PP(X\in B)=\PP_X(B)=\int\1_B\dd\PP_X$, c'est la définition de $\PP_X$.
+  \item $g=\sum_k c_k\1_{B_k}$ avec $c_k\ge0$ : linéarité des deux côtés.
+  \item $g\ge0$ mesurable : $g_n\uparrow g$ avec $g_n$ étagées (à construire : découper l'axe des valeurs en intervalles de longueur $2^{-n}$),
+  puis convergence monotone de chaque côté, sur $(\Omega,\PP)$ et sur $(\R,\PP_X)$.
+\end{itemize}
+\end{exo}
+
+\begin{exo}[Poisson $\to$ exponentielle ; catastrophes aériennes]
+\outils Loi de Poisson (C2.11) ; fiche C9 : dictionnaire $\{N_t=0\}=\{T_1>t\}$ (C9.3), Thm C9.6 ; absence de mémoire (C9.12).
+
+\meth Calculer la \textbf{queue} $\PP(T>t)$ : « aucun événement pendant une durée $t$ après le dernier » est l'événement $\{Y_t=0\}$
+(en comptant à partir du dernier événement, ce qui suppose implicitement des accroissements indépendants et stationnaires).
+Puis reconnaître la queue d'une exponentielle.
+
+\indic $\PP(T>t)=\PP(Y_t=0)=e^{-\lambda t}$, et une fonction de répartition caractérise la loi.
+Pour l'application, $\lambda=0{,}2$ par an : le premier cas est $\PP(T>1)$, le second
+$\PP(T>11\mid T>10)$ (le dernier crash date de 10 ans et aucun crash depuis).
+
+\rep Les deux probabilités sont égales à $e^{-0{,}2}\approx0{,}819$ : c'est l'absence de mémoire de l'exponentielle.
+\end{exo}
+
+\begin{exo}[Loi log-normale]
+\outils Loi $\Nc(m,\sigma^2)$ (C5.1) ; changement de variables / fonction muette (C2.10 et l'encadré Méthode de C2) ; transfert (C2.8, C2.9).
+
+\meth
+\begin{itemize}
+  \item Loi : $F_Y(y)=\PP(e^X\le y)=\PP(X\le\ln y)$ pour $y>0$ (et $0$ pour $y\le0$), puis dériver ; ou bien fonction muette avec $y=e^x$.
+  \item Moments : $\E(Y^k)=\E(e^{kX})=\int e^{kx}f_{m,\sigma^2}(x)\dd x$ ; \textbf{compléter le carré} dans l'exponentielle
+  ($kx-\frac{(x-m)^2}{2\sigma^2}=-\frac{(x-m-k\sigma^2)^2}{2\sigma^2}+km+\frac{k^2\sigma^2}2$) et reconnaître une densité gaussienne d'intégrale 1.
+\end{itemize}
+
+\rep $f_Y(y)=\dfrac{1}{y\sigma\sqrt{2\pi}}\exp\Bigl(-\dfrac{(\ln y-m)^2}{2\sigma^2}\Bigr)\1_{y>0}$ ;\quad
+$\E(Y)=e^{m+\sigma^2/2}$ ;\quad $\Var(Y)=\E(Y^2)-\E(Y)^2=e^{2m+\sigma^2}\bigl(e^{\sigma^2}-1\bigr)$.
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Prouver une égalité d'intégrales pour toute $g\ge0$ mesurable & Indicatrices $\to$ étagées $\to$ limites croissantes (convergence monotone).\\
+Calculer $\E(g(X))$ & Transfert (C2.8) : $\int g f_X$ (densité) ou $\sum g(k)\PP(X=k)$ (discret).\\
+Trouver la loi de $Y=\varphi(X)$ & Fonction de répartition puis dérivée, ou fonction muette + changement de variables (C2.10).\\
+Loi d'un temps d'attente & Calculer $\PP(T>t)$ via un événement de comptage $\{N_t=0\}$ (C9.3).\\
+« Sachant qu'il ne s'est rien passé depuis… » & Absence de mémoire de l'exponentielle (C9.12).\\
+$\E(e^{kX})$, $X$ gaussienne & Compléter le carré ; résultat $e^{km+k^2\sigma^2/2}$.\\\bottomrule
+\end{tabularx}
+
+\end{document}

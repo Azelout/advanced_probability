@@ -1,0 +1,471 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+% Encadré local pour les résultats (macro absente du préambule)
+\newtcolorbox{resultat}{fichebox,colback=gray!6,colframe=black!55}
+\newcommand{\question}[1]{\par\medskip\noindent\textbf{Question #1.}~}
+\newcommand{\partie}[1]{\par\medskip\noindent{\bfseries Partie #1}\par\nopagebreak}
+\newcommand{\hc}{\textbf{Hors cours :}~}
+\DeclareMathOperator{\erf}{erf}
+\newcommand{\Bin}{\mathcal{B}}
+\newcommand{\Em}{\E^{(m)}}
+\newcommand{\Pm}{\PP^{(m)}}
+\begin{document}
+\fiche{TD3}{Corrigé -- Indépendance, convergence et vecteurs gaussiens}{Independence, Convergence and Gaussian Vectors}
+
+\textit{Corrigé rédigé du TD3. Renvois : « C4.5 » = fiche de cours C4, énoncé n°5 ; « C4.7, point 3 » = item 3 de
+l'énoncé C4.7. Notations : $\Nc(m,\sigma^2)$ a pour second paramètre la \emph{variance} ; $\varphi_X(t)=\E(e^{itX})$ (C4.1) ;
+« $\tendloi$ » désigne la convergence en loi (C4.3).}
+
+% =====================================================================
+\begin{exo}[Borel--Cantelli et Bernoulli]
+
+\question{unique} \emph{$(X_n)_{n\ge1}$ indépendantes, $X_n\sim\Bin(p_n)$. Montrer que $\PP(X_n\to0)=1\iff\sum_np_n<\infty$.}
+
+\textbf{Mise en forme de l'événement.} Quitte à modifier les $X_n$ sur un ensemble négligeable (ce qui ne change ni les lois, ni
+l'indépendance, ni $\PP(X_n\to0)$), on suppose $X_n(\omega)\in\{0,1\}$ pour tout $\omega$. Posons $A_n=\{X_n=1\}=X_n^{-1}(\{1\})\in\F$,
+de sorte que $\PP(A_n)=p_n$. Pour une suite à valeurs dans $\{0,1\}$,
+\[X_n(\omega)\to0\iff\exists k,\ \forall n\ge k,\ |X_n(\omega)|<\tfrac12\iff\exists k,\ \forall n\ge k,\ X_n(\omega)=0 .\]
+Donc, avec C3.5,
+\[\{X_n\to0\}=\bigcup_{k\ge1}\bigcap_{n\ge k}A_n^c=\liminf_nA_n^c=\bigl(\limsup_nA_n\bigr)^c .\]
+En particulier c'est un événement (C3.5), et $\PP(X_n\to0)=1-\PP(\limsup_nA_n)$.
+
+\textbf{Sens $\Leftarrow$.} Si $\sum_np_n=\sum_n\PP(A_n)<\infty$, Borel--Cantelli 1 (C3.6, point 1, qui ne demande \emph{aucune}
+indépendance) donne $\PP(\limsup_nA_n)=0$, donc $\PP(X_n\to0)=1$.
+
+\textbf{Sens $\Rightarrow$ (par contraposée).} Supposons $\sum_np_n=+\infty$. Les événements $A_n$ sont indépendants : pour $n_1<\dots<n_k$,
+\[\PP(A_{n_1}\cap\dots\cap A_{n_k})=\PP(X_{n_1}\in\{1\},\dots,X_{n_k}\in\{1\})=\prod_{j=1}^k\PP(X_{n_j}\in\{1\})\]
+par définition de l'indépendance des v.a.\ (C3.8, avec les boréliens $\{1\}$), ce qui est la définition C3.3. Borel--Cantelli 2
+(C3.6, point 2) donne alors $\PP(\limsup_nA_n)=1$, donc $\PP(X_n\to0)=0\neq1$.
+\begin{resultat}
+$\{X_n\to0\}=(\limsup_n\{X_n=1\})^c$ et, par Borel--Cantelli (C3.6), $\PP(X_n\to0)=1\iff\sum_np_n<\infty$ ; sinon $\PP(X_n\to0)=0$
+(loi du 0--1). Autrement dit : $X_n\to0$ p.s.\ $\iff\sum_np_n<\infty$.
+\end{resultat}
+Remarque : comme $\E|X_n|=p_n$, avec $p_n=\frac1n$ on a $X_n\to0$ dans $L^1$ mais pas p.s.\ (voir « Liens » de C4).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Somme de gaussiennes indépendantes]
+
+\question{unique} \emph{$(X_n)$ indépendantes, $X_n\sim\Nc(m_n,\sigma_n^2)$. Montrer que pour tout $N\ge1$,\\ $\sum_{n=1}^NX_n\sim\Nc\bigl(\sum_{n=1}^Nm_n,\sum_{n=1}^N\sigma_n^2\bigr)$.}
+
+Notons $S_N=\sum_{n=1}^NX_n$, $M_N=\sum_{n=1}^Nm_n$, $V_N=\sum_{n=1}^N\sigma_n^2$. On montre par récurrence sur $N\ge1$ que
+\[\varphi_{S_N}(t)=e^{itM_N-\frac{t^2}2V_N}\quad\forall t\in\R .\tag{$H_N$}\]
+\emph{Initialisation.} $(H_1)$ est la fonction caractéristique de $\Nc(m_1,\sigma_1^2)$ (C5.1, ou C4.2, point 4). Elle vaut aussi
+dans le cas dégénéré $\sigma_1=0$ ($\delta_{m_1}$ a pour f.c.\ $e^{itm_1}$).
+
+\emph{Hérédité.} Supposons $(H_N)$. Par regroupement par paquets (\hc C3.11), $S_N=f(X_1,\dots,X_N)$ et $X_{N+1}$ sont des fonctions
+mesurables de paquets disjoints de v.a.\ indépendantes, donc $S_N\indep X_{N+1}$. Par C3.15 (f.c.\ d'une somme indépendante) puis $(H_N)$ et C5.1 :
+\[\varphi_{S_{N+1}}(t)=\varphi_{S_N}(t)\,\varphi_{X_{N+1}}(t)=e^{itM_N-\frac{t^2}2V_N}\,e^{itm_{N+1}-\frac{t^2}2\sigma_{N+1}^2}
+=e^{itM_{N+1}-\frac{t^2}2V_{N+1}} .\]
+\emph{Conclusion.} $\varphi_{S_N}$ est la fonction caractéristique de $\Nc(M_N,V_N)$ (C5.1) ; comme la f.c.\ caractérise la loi
+(C4.2, point 1), $S_N\sim\Nc(M_N,V_N)$. (C'est le cas $a_i=1$, $b_i=0$ de C5.2.)
+\begin{resultat}
+$\displaystyle\sum_{n=1}^NX_n\sim\Nc\Bigl(\sum_{n=1}^Nm_n,\ \sum_{n=1}^N\sigma_n^2\Bigr)$ : moyennes et \emph{variances} s'additionnent
+(pas les écarts-types). L'indépendance est indispensable.
+\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Limite de gaussiennes]
+
+\question{unique} \emph{$X_n$ de densité $f_n$ ($\Nc(m_n,\sigma_n^2)$, $\sigma_n>0$), $m_n\to m$, $\sigma_n\to\sigma$ : convergence en loi de $(X_n)$ ?}
+
+La densité $f_n$ est celle de $\Nc(m_n,\sigma_n^2)$ (C5.1, point 1), donc par C5.1 : $\varphi_{X_n}(t)=\exp\bigl(itm_n-\frac{t^2\sigma_n^2}2\bigr)$.
+Fixons $t\in\R$. Comme $m_n\to m$, $\sigma_n^2\to\sigma^2$ et $\exp$ est continue sur $\C$,
+\[\varphi_{X_n}(t)\xrightarrow[n\to+\infty]{}\exp\Bigl(itm-\frac{t^2\sigma^2}2\Bigr)\qquad\forall t\in\R .\]
+Comme $\sigma_n>0$, la limite vérifie $\sigma\ge0$ :
+\begin{itemize}
+  \item si $\sigma>0$, la limite est la f.c.\ de $\Nc(m,\sigma^2)$ (C5.1, point 1) ;
+  \item si $\sigma=0$, la limite $e^{itm}$ est la f.c.\ de la loi dégénérée $\delta_m$ (C5.1, point 2), i.e.\ d'une v.a.\ constante égale à $m$.
+\end{itemize}
+Dans les deux cas la limite simple est la f.c.\ d'une v.a.\ $X$, et le théorème de Lévy (C4.5) donne $X_n\tendloi X$ (c'est le
+lemme C4.6).
+\begin{resultat}
+$X_n\tendloi\Nc(m,\sigma^2)$ si $\sigma>0$, et $X_n\tendloi\delta_m$ (constante $m$, « gaussienne dégénérée ») si $\sigma=0$.
+\end{resultat}
+Remarque : si $\sigma=0$, les $X_n$ ont une densité mais pas la limite : la convergence en loi ne préserve pas l'existence d'une densité.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Théorème de Poisson]
+
+\par\medskip\noindent\textbf{Question.}~\emph{$X_n\sim\Bin(n,p_n)$ avec $np_n\to\lambda$. Montrer que $\PP(X_n=k)\to\frac{\lambda^k}{k!}e^{-\lambda}$ pour tout $k\in\N$.}
+
+On suppose $\lambda>0$ (paramètre d'une loi de Poisson ; le calcul ci-dessous reste valable pour $\lambda=0$). Comme $np_n\to\lambda$,
+$p_n=\frac{np_n}n\to0$ ; en particulier $p_n<1$ pour $n$ grand. Fixons $k\in\N$ et prenons $n\ge k$. Par la loi binomiale (\hc C2.11, tableau
+des lois usuelles) :
+\[\PP(X_n=k)=\binom nkp_n^k(1-p_n)^{n-k}
+=\underbrace{\frac{n(n-1)\cdots(n-k+1)}{n^k}}_{(a)}\cdot\underbrace{\frac{(np_n)^k}{k!}}_{(b)}\cdot\underbrace{(1-p_n)^n}_{(c)}\cdot\underbrace{(1-p_n)^{-k}}_{(d)} .\]
+\begin{itemize}
+  \item (a) $=\prod_{j=0}^{k-1}\bigl(1-\frac jn\bigr)\to1$ (produit d'un nombre \emph{fixe} $k$ de facteurs tendant vers 1).
+  \item (b) $\to\frac{\lambda^k}{k!}$ par continuité de $x\mapsto x^k$.
+  \item (c) Pour $n$ grand, $(1-p_n)^n=\exp\bigl(n\ln(1-p_n)\bigr)$. Comme $\ln(1-x)=-x+O(x^2)$ quand $x\to0$ et $p_n\to0$ :
+  $n\ln(1-p_n)=-np_n+O(np_n^2)$, et $np_n^2=(np_n)\,p_n\to\lambda\cdot0=0$. Donc $n\ln(1-p_n)\to-\lambda$ et, $\exp$ étant continue,
+  (c) $\to e^{-\lambda}$.
+  \item (d) $\to1$ car $p_n\to0$ et $k$ est fixé.
+\end{itemize}
+\begin{resultat}
+Pour tout $k\in\N$ : $\displaystyle\PP(X_n=k)\xrightarrow[n\to+\infty]{}\frac{\lambda^k}{k!}e^{-\lambda}=\PP(Y=k)$, $Y\sim\Poi(\lambda)$.
+\end{resultat}
+
+\par\medskip\noindent\textbf{Remarque de l'énoncé.}~\emph{En déduire que $X_n\tendloi Y\sim\Poi(\lambda)$.}
+
+C'est exactement le critère \hc C4.7, point 2 (v.a.\ à valeurs dans $\N$). On peut aussi le vérifier directement sur la définition C4.3.
+Soit $f:\R\to\R$ continue bornée, $\|f\|_\infty\le M$, et $\varepsilon>0$. Par le transfert (C2.8) pour des v.a.\ à valeurs dans $\N$,
+$\E f(X_n)=\sum_{k\ge0}f(k)\PP(X_n=k)$ et $\E f(Y)=\sum_kf(k)\PP(Y=k)$. Choisissons $L$ tel que $\PP(Y>L)\le\varepsilon$. Alors
+\[\bigl|\E f(X_n)-\E f(Y)\bigr|\le M\sum_{k=0}^L\bigl|\PP(X_n=k)-\PP(Y=k)\bigr|+M\,\PP(X_n>L)+M\,\PP(Y>L).\]
+Le premier terme (somme \emph{finie}) tend vers 0 par la question 1 ; de même
+$\PP(X_n>L)=1-\sum_{k=0}^L\PP(X_n=k)\to1-\sum_{k=0}^L\PP(Y=k)=\PP(Y>L)\le\varepsilon$. D'où $\limsup_n|\E f(X_n)-\E f(Y)|\le2M\varepsilon$
+pour tout $\varepsilon>0$ : $\E f(X_n)\to\E f(Y)$.
+
+\emph{Variante par Lévy (C4.12).} $\varphi_{X_n}(t)=(1-p_n+p_ne^{it})^n=\bigl(1+\frac{z_n}n\bigr)^n$ avec $z_n=np_n(e^{it}-1)\to\lambda(e^{it}-1)$
+(\hc C4.2, point 4) ; par \hc C4.7, point 3, $\varphi_{X_n}(t)\to e^{\lambda(e^{it}-1)}$, f.c.\ de $\Poi(\lambda)$ (\hc C4.2, point 4) ; Lévy (C4.5) conclut.
+\begin{resultat}
+$X_n\tendloi\Poi(\lambda)$.
+\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Poisson renormalisée]
+
+\question{unique} \emph{$X_\lambda\sim\Poi(\lambda)$. Montrer que $\frac{X_\lambda-\lambda}{\sqrt\lambda}\tendloi\Nc(0,1)$ quand $\lambda\to+\infty$.}
+
+\textbf{Réduction aux suites.} Par définition (C4.3), « $Z_\lambda\to N$ en loi quand $\lambda\to\infty$ » signifie
+$\E f(Z_\lambda)\to\E f(N)$ pour toute $f$ continue bornée ; une limite de fonction de $\lambda$ se teste sur toutes les suites
+$\lambda_n\to+\infty$. Il suffit donc de montrer, pour toute suite $\lambda_n\to+\infty$, que $Z_{\lambda_n}\tendloi\Nc(0,1)$, et par Lévy
+(C4.5) que $\varphi_{Z_{\lambda_n}}(t)\to e^{-t^2/2}$ pour tout $t$. On montre plus fort : $\varphi_{Z_\lambda}(t)\to e^{-t^2/2}$ quand $\lambda\to\infty$.
+
+\textbf{Fonction caractéristique.} (\hc C4.2, point 4) Par transfert (C2.8),
+$\varphi_{X_\lambda}(t)=\sum_{k\ge0}e^{itk}e^{-\lambda}\frac{\lambda^k}{k!}=e^{-\lambda}e^{\lambda e^{it}}=e^{\lambda(e^{it}-1)}$.
+Avec $Z_\lambda=\frac1{\sqrt\lambda}X_\lambda-\sqrt\lambda$ et C4.2, point 2 ($\varphi_{aX+b}(t)=e^{itb}\varphi_X(at)$) :
+\[\varphi_{Z_\lambda}(t)=e^{-it\sqrt\lambda}\,\varphi_{X_\lambda}\Bigl(\frac t{\sqrt\lambda}\Bigr)=\exp\Bigl(\lambda\bigl(e^{it/\sqrt\lambda}-1\bigr)-it\sqrt\lambda\Bigr).\]
+\textbf{Développement.} Pour $x\in\R$, $e^{ix}=1+ix-\frac{x^2}2+R(x)$ avec $|R(x)|\le\frac{|x|^3}6$ (Taylor avec reste intégral, analyse).
+Avec $x=t/\sqrt\lambda$ ($t$ fixé) :
+\[\lambda\bigl(e^{it/\sqrt\lambda}-1\bigr)-it\sqrt\lambda=\lambda\Bigl(\frac{it}{\sqrt\lambda}-\frac{t^2}{2\lambda}+R\Bigl(\frac t{\sqrt\lambda}\Bigr)\Bigr)-it\sqrt\lambda
+=-\frac{t^2}2+\lambda R\Bigl(\frac t{\sqrt\lambda}\Bigr),\]
+et $\bigl|\lambda R(t/\sqrt\lambda)\bigr|\le\frac{|t|^3}{6\sqrt\lambda}\to0$. Les termes en $it\sqrt\lambda$ se compensent. Par continuité de $\exp$ :
+$\varphi_{Z_\lambda}(t)\to e^{-t^2/2}$, f.c.\ de $\Nc(0,1)$ (C5.1). Lévy (C4.5) conclut.
+\begin{resultat}
+$\dfrac{X_\lambda-\lambda}{\sqrt\lambda}\xrightarrow[\lambda\to+\infty]{\text{loi}}N\sim\Nc(0,1)$.
+\end{resultat}
+Remarque : pour $\lambda=n\in\N^*$, c'est aussi le TCL (C4.9) : $X_n$ a la loi de $\sum_{i=1}^n\xi_i$ avec $\xi_i$ i.i.d.\ $\Poi(1)$ ($\E\xi_i=\Var\xi_i=1$) ;
+la preuve ci-dessus traite directement $\lambda$ réel.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Retraits à la banque : Tchebychev contre TCL]
+
+\textbf{Modèle.} $X_1,\dots,X_{200}$ i.i.d.\ (montants demandés), $\E X_i=40$, $\sqrt{\Var X_i}=10$ (donc $X_i\in L^2$). Total
+$S=\sum_{i=1}^{200}X_i$. Par linéarité, $\E S=200\times40=8000$. Par indépendance, $\Var S=\sum_i\Var X_i=200\times100=20\,000$
+(C3.15 pour deux v.a., étendu à 200 par récurrence et regroupement par paquets, \hc C3.11) ; $\sqrt{\Var S}=100\sqrt2\approx141{,}4$.
+On cherche une somme $c$ (en euros) telle que $\PP(S\le c)\ge0{,}95$, i.e.\ $\PP(S>c)\le0{,}05$.
+
+\question{1} \emph{Avec l'inégalité de Bienaymé--Tchebychev.}
+
+(\hc C4.11) Pour $c>8000$, posons $a=c-8000>0$. Comme $\{S>c\}\subset\{|S-\E S|\ge a\}$,
+\[\PP(S>c)\le\PP\bigl(|S-\E S|\ge a\bigr)\le\frac{\Var S}{a^2}=\frac{20\,000}{a^2}.\]
+Il suffit donc que $\frac{20\,000}{a^2}\le0{,}05$, i.e.\ $a^2\ge400\,000$, $a\ge200\sqrt{10}\approx632{,}5$.
+\begin{resultat}
+Avec $c=8000+200\sqrt{10}\approx8632{,}5$~€, soit $c\approx8{,}63\cdot10^3$~€, on a \emph{garanti} $\PP(S\le c)\ge0{,}95$.
+\end{resultat}
+Remarques. Le résultat est une \emph{borne sûre} (valable sans approximation) mais grossière : Tchebychev est bilatère et ne
+distingue pas les deux queues. L'inégalité unilatérale de Cantelli (\hc) $\PP(S-\E S\ge a)\le\frac{\Var S}{\Var S+a^2}$
+donnerait $a=\sqrt{19\Var S}\approx616{,}4$, soit $c\approx8616$~€.
+
+\question{2} \emph{Avec le TCL, sachant que $\PP(N\le1{,}645)=0{,}95$ pour $N\sim\Nc(0,1)$.}
+
+Hypothèses du TCL (C4.9) : $X_i$ i.i.d.\ dans $L^2$, $\sigma=10>0$. Il donne
+$\frac{S_n-n\cdot40}{10\sqrt n}\tendloi\Nc(0,1)$ ; pour $n=200$ on \emph{approxime} la loi de $\frac{S-8000}{100\sqrt2}$ par $\Nc(0,1)$ (exemple C4.13) :
+\[\PP(S\le c)=\PP\Bigl(\frac{S-8000}{100\sqrt2}\le\frac{c-8000}{100\sqrt2}\Bigr)\approx\PP\Bigl(N\le\frac{c-8000}{100\sqrt2}\Bigr).\]
+C'est $\ge0{,}95$ dès que $\frac{c-8000}{100\sqrt2}\ge1{,}645$, i.e.\ $c\ge8000+1{,}645\times100\sqrt2\approx8000+232{,}6$.
+\begin{resultat}
+TCL : $c\approx8232{,}6$~€, soit $c\approx8{,}23\cdot10^3$~€. Ce n'est qu'une \emph{approximation} (pas une garantie à $n$ fixé),
+mais la marge au-dessus de la moyenne ($\approx233$~€) est près de trois fois plus faible qu'avec Tchebychev ($\approx632$~€).
+\end{resultat}
+% Valeurs recalculées avec awk : 8000+sqrt(400000)=8632.46 ; 8000+1.645*141.4214=8232.64.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[$Z=XY$ : gaussienne sans vecteur gaussien]
+
+Cadre : $X\sim\Nc(0,1)$, $\PP(Y=1)=p=1-\PP(Y=-1)$, $X\indep Y$, $Z=XY$. Par C5.2 (avec $a=-1$), $-X\sim\Nc(0,1)$.
+
+\question{1} \emph{Loi de $Z$.}
+
+On peut supposer $Y(\omega)\in\{-1,1\}$ pour tout $\omega$ (modification sur un négligeable). Alors
+$e^{itZ}=e^{itX}\1_{\{Y=1\}}+e^{-itX}\1_{\{Y=-1\}}$. Les fonctions $\cos(tx),\sin(tx),\1_{\{1\}}(y),\1_{\{-1\}}(y)$ sont mesurables bornées ;
+par C3.14, point 3 (appliqué aux parties réelle et imaginaire), $\E\bigl(e^{\pm itX}\1_{\{Y=\pm1\}}\bigr)=\E(e^{\pm itX})\PP(Y=\pm1)$. Donc
+\[\varphi_Z(t)=p\,\varphi_X(t)+(1-p)\,\varphi_X(-t)=p\,e^{-t^2/2}+(1-p)\,e^{-t^2/2}=e^{-t^2/2}\]
+(C5.1). Par C4.2, point 1, $Z\sim\Nc(0,1)$. (Variante : $\PP(Z\le z)=p\PP(X\le z)+(1-p)\PP(-X\le z)=\PP(X\le z)$.)
+\begin{resultat}
+$Z\sim\Nc(0,1)$ pour tout $p\in[0,1]$.
+\end{resultat}
+
+\question{2} \emph{$(X,Z)$ est-il un vecteur gaussien ?}
+
+\emph{Cas $0<p<1$.} Par C5.3, il suffit d'exhiber une combinaison linéaire non gaussienne. Prenons
+$X+Z=X(1+Y)=2X\1_{\{Y=1\}}$. Alors, par indépendance (C3.8) et $\PP(X=0)=0$ ($X$ a une densité) :
+\[\PP(X+Z=0)=\PP(Y=-1)+\PP(Y=1,X=0)=(1-p)+p\cdot0=1-p\in\,]0,1[ .\]
+Or une gaussienne non dégénérée a une densité, donc ne charge aucun point, et une gaussienne dégénérée $\delta_c$ charge un point avec
+probabilité $1$ (C5.1). Ainsi $X+Z$ n'est pas gaussienne et $(X,Z)$ n'est \emph{pas} un vecteur gaussien.
+
+\emph{Cas $p=1$ (resp.\ $p=0$).} $Y=1$ p.s.\ (resp.\ $Y=-1$ p.s.), donc $Z=X$ (resp.\ $Z=-X$) p.s. ; $(X,Z)=AX$ p.s.\ avec
+$A=(1,1)^t$ (resp.\ $(1,-1)^t$), vecteur gaussien par C5.5 (dégénéré : covariance non inversible).
+\begin{resultat}
+Pour $0<p<1$ : non ($X+Z$ a un atome de masse $1-p$ en $0$). Pour $p\in\{0,1\}$ : oui, $Z=\pm X$ p.s.\ (vecteur gaussien dégénéré).
+\end{resultat}
+On a ainsi deux v.a.\ \emph{gaussiennes} dont le couple n'est pas gaussien (« Liens » de C5).
+
+\question{3} \emph{$X$ et $Z$ sont-ils indépendants ?}
+
+On a $|Z|=|X||Y|=|X|$. Avec les boréliens $A=[-1,1]$ et $B=\R\setminus[-1,1]$ :
+$\PP(X\in A,Z\in B)=\PP(|X|\le1,|X|>1)=0$, tandis que $\PP(X\in A)\PP(Z\in B)=\PP(|X|\le1)\PP(|X|>1)>0$ (les deux facteurs sont
+dans $]0,1[$ car $X\sim Z\sim\Nc(0,1)$ a une densité strictement positive). La définition C3.8 est donc violée.
+\begin{resultat}
+Non, pour aucune valeur de $p\in[0,1]$ : $|Z|=|X|$.
+\end{resultat}
+
+\question{4} \emph{Montrer que $\Cov(X,Z)=0$ pour un $p$ bien choisi.}
+
+$X,Z\in L^2$ (gaussiennes) et $\E X=\E Z=0$, donc $\Cov(X,Z)=\E(XZ)=\E(X^2Y)$. Par C3.10, $X^2\indep Y$, et $X^2,Y\in L^1$ ;
+C3.15 donne $\E(X^2Y)=\E(X^2)\E(Y)=1\cdot(p-(1-p))=2p-1$.
+\begin{resultat}
+$\Cov(X,Z)=2p-1$, nul si et seulement si $p=\frac12$. Alors $X$ et $Z$ sont gaussiennes, non corrélées, mais \emph{dépendantes}.
+\end{resultat}
+Pas de contradiction avec C5.12 : pour $p=\frac12$ le couple $(X,Z)$ n'est pas un vecteur gaussien (question 2), et « covariance nulle
+$\Rightarrow$ indépendance » exige que le \emph{vecteur joint} soit gaussien.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Indépendance de deux combinaisons linéaires]
+
+\question{unique} \emph{$X_1,\dots,X_n$ i.i.d.\ $\Nc(0,1)$ ; condition nécessaire et suffisante pour $a_1X_1+\dots+a_nX_n\indep b_1X_1+\dots+b_nX_n$.}
+
+Notons $X=(X_1,\dots,X_n)^t$, $a=(a_i)$, $b=(b_i)\in\R^n$, $U=a^tX$, $V=b^tX$.
+\begin{enumerate}
+  \item Les $X_i$ sont des gaussiennes indépendantes, donc $X$ est un vecteur gaussien (C5.4), centré, de covariance $I_n$ (C5.13).
+  \item $(U,V)^t=AX$ avec $A\in\mathcal M_{2,n}(\R)$ de lignes $a^t$ et $b^t$. Par C5.5, $(U,V)$ est un vecteur gaussien centré de covariance
+  \[A\,I_n\,A^t=\begin{pmatrix}a^ta&a^tb\\b^ta&b^tb\end{pmatrix},\qquad\Cov(U,V)=a^tb=\sum_{i=1}^na_ib_i .\]
+  \item Par le théorème des blocs (C5.12, blocs $(U)$ et $(V)$), applicable car le vecteur \emph{joint} $(U,V)$ est gaussien :
+  $U\indep V\iff\Cov(U,V)=0$.
+\end{enumerate}
+\begin{resultat}
+$\displaystyle a_1X_1+\dots+a_nX_n\ \indep\ b_1X_1+\dots+b_nX_n\iff\sum_{i=1}^na_ib_i=0$ (vecteurs $a$ et $b$ orthogonaux dans $\R^n$).
+\end{resultat}
+Cas particulier cohérent : si $a=0$, $U=0$ est constante, donc indépendante de tout, et $a^tb=0$. Exemple : C5.14 ($a=(1,1)$, $b=(1,-1)$).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[$N$ indépendant de $Y$]
+
+\question{unique} \emph{$X=(X_1,X_2,X_3)\sim\Nc_3(0,I_3)$, $N=X_1-X_2+X_3$, $Y=(X_1+X_2,\ X_2+X_3,\ X_1-X_3)$. Loi de $N$ ; montrer $N\indep Y$.}
+
+\textbf{Loi de $N$.} $N=c^tX$ avec $c=(1,-1,1)^t$. Par C5.5 (et la remarque qui le suit), $N\sim\Nc(c^t0,\ c^tI_3c)=\Nc(0,\ 1+1+1)$.
+
+\textbf{Vecteur joint.} $(N,Y_1,Y_2,Y_3)^t=AX$ avec
+\[A=\begin{pmatrix}1&-1&1\\1&1&0\\0&1&1\\1&0&-1\end{pmatrix}.\]
+Par C5.5, c'est un vecteur gaussien (de $\R^4$), centré, de covariance $AA^t$. Les covariances croisées sont les produits scalaires de la
+première ligne avec les trois autres (bilinéarité, $\Cov(X_i,X_j)=\1_{i=j}$) :
+\[\Cov(N,Y_1)=1-1+0=0,\qquad\Cov(N,Y_2)=0-1+1=0,\qquad\Cov(N,Y_3)=1+0-1=0 .\]
+La matrice de covariance de $(N,Y)$ est donc diagonale par blocs $\begin{pmatrix}3&0\\0&\Sigma_Y\end{pmatrix}$, avec
+$\Sigma_Y=\begin{pmatrix}2&1&1\\1&2&-1\\1&-1&2\end{pmatrix}$. Par le théorème des blocs (C5.12, blocs $(N)$ et $(Y_1,Y_2,Y_3)$), $N\indep Y$.
+\begin{resultat}
+$N\sim\Nc(0,3)$ et $N\indep Y=(Y_1,Y_2,Y_3)$.
+\end{resultat}
+Remarques. (i) Il faut l'indépendance de $N$ avec le \emph{vecteur} $Y$, pas seulement avec chaque $Y_j$ : c'est ce que donne C5.12
+(point 2 $\Rightarrow$ point 1). (ii) $Y_3=Y_1-Y_2$, donc $\det\Sigma_Y=0$ : $Y$ est un vecteur gaussien dégénéré (sans densité, \hc C5.11) ;
+C5.12 ne demande aucune inversibilité.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Modèle binomial et formule de Black--Scholes]
+
+\begin{alerte}
+\begin{itemize}
+  \item L'énoncé note « $\erf$ » la \emph{fonction de répartition de $\Nc(0,1)$} : $\erf(x)=\int_{-\infty}^xe^{-u^2/2}\frac{\dd u}{\sqrt{2\pi}}$
+  (notée $\Phi$ d'habitude). Ce n'est pas la fonction erreur usuelle $\frac2{\sqrt\pi}\int_0^xe^{-t^2}\dd t$. On garde la notation de l'énoncé.
+  Par parité de la densité (changement de variable $u\mapsto-u$) : $\erf(x)+\erf(-x)=1$.
+  \item IV.2 : la formule de l'énoncé, $e^{-rT}\erf(-d_2)-s_0\erf(-d_1)$, \textbf{omet un facteur $K$}. Le calcul ci-dessous donne
+  $Ke^{-rT}\erf(-d_2)-s_0\erf(-d_1)$ (les deux coïncident seulement si $K=1$). Contrôle numérique ci-dessous.
+  \item V.2 : de même, la limite dépend aussi de $K$ (absent de la liste « $r,T,s_0,d_1,d_2$ et erf »).
+  \item Dans III, $\Phi_m$ désigne une \emph{fonction caractéristique} (pas une fonction de répartition).
+\end{itemize}
+\end{alerte}
+% À VÉRIFIER : IV.2 (p. 5 de l'énoncé) écrit e^{-rT} erf(-d2) - s0 erf(-d1), sans K ; corrigé avec K (contrôle numérique awk).
+
+On suppose $T>0$, $K>0$, $s_0>0$, $\sigma^\pm>0$, et $m$ assez grand pour que $b_m>-1$ et $\frac{rT}m>-1$. Notons que
+$h_m-b_m=(\sigma^++\sigma^-)\sqrt{T/m}>0$ : $b_m<h_m$.
+
+\partie{I -- Espaces de probabilité}
+
+\question{I.1} \emph{Modèle à une période.}
+
+$\Lambda^{(m)}=\{b_m,h_m\}$ (deux éléments distincts), $\Tc^{(m)}=\Pc(\Lambda^{(m)})=\{\emptyset,\{b_m\},\{h_m\},\Lambda^{(m)}\}$ (C1.3), et
+$\QQ^{(m)}$ la probabilité (C1.10) définie par $\QQ^{(m)}(\{h_m\})=p_m$, $\QQ^{(m)}(\{b_m\})=q_m=1-p_m$, avec $p_m\in[0,1]$.
+\begin{resultat}
+$\bigl(\Lambda^{(m)},\Tc^{(m)},\QQ^{(m)}\bigr)=\bigl(\{b_m,h_m\},\ \Pc(\{b_m,h_m\}),\ p_m\delta_{h_m}+q_m\delta_{b_m}\bigr)$.
+\end{resultat}
+
+\question{I.2} \emph{Modèle à $m$ périodes ; propriété des coordonnées $U^{(m)}_k$.}
+
+On prend l'espace produit (C3.12) : $\Omega^{(m)}=(\Lambda^{(m)})^m$ (ensemble fini à $2^m$ éléments), $\F^{(m)}=(\Tc^{(m)})^{\otimes m}=\Pc(\Omega^{(m)})$
+(tous les singletons sont des pavés), et $\Pm=(\QQ^{(m)})^{\otimes m}$, i.e.
+\[\Pm\bigl(\{(u_1,\dots,u_m)\}\bigr)=\prod_{k=1}^m\QQ^{(m)}(\{u_k\})=p_m^{\,j}\,q_m^{\,m-j},\qquad j=\card\{k:\ u_k=h_m\}.\]
+Les coordonnées $U^{(m)}_k(\omega)=\omega_k$ sont mesurables ($\F^{(m)}=\Pc(\Omega^{(m)})$). Pour $A_1,\dots,A_m\subset\Lambda^{(m)}$, par C3.12 :
+\[\Pm\bigl(U^{(m)}_1\in A_1,\dots,U^{(m)}_m\in A_m\bigr)=\Pm(A_1\times\dots\times A_m)=\prod_{k=1}^m\QQ^{(m)}(A_k).\]
+En prenant $A_j=\Lambda^{(m)}$ pour $j\ne k$, on obtient $\Pm(U^{(m)}_k\in A_k)=\QQ^{(m)}(A_k)$ : $U^{(m)}_k$ a pour loi $\QQ^{(m)}$. L'égalité
+ci-dessus devient alors $\Pm(\bigcap_k\{U_k^{(m)}\in A_k\})=\prod_k\Pm(U^{(m)}_k\in A_k)$, ce qui est l'indépendance (C3.8 ; cf.\ C3.13).
+\begin{resultat}
+$\Omega^{(m)}=\{b_m,h_m\}^m$, $\F^{(m)}=\Pc(\Omega^{(m)})$, $\Pm=(\QQ^{(m)})^{\otimes m}$ ; les $U^{(m)}_1,\dots,U^{(m)}_m$ sont
+\textbf{i.i.d.\ de loi $\QQ^{(m)}$} : $\Pm(U^{(m)}_k=h_m)=p_m$, $\Pm(U^{(m)}_k=b_m)=q_m$.
+\end{resultat}
+
+\partie{II -- Dynamique et probabilité risque-neutre}
+
+\question{II.1} \emph{Montrer que $S^{(m)}_T=s_0\prod_{k=1}^m(1+U^{(m)}_k)$.}
+
+Par récurrence sur $k\in\{0,\dots,m\}$, montrons $S^{(m)}_{kT/m}=s_0\prod_{j=1}^k(1+U^{(m)}_j)$ (produit vide $=1$ pour $k=0$).
+Pour $k=0$ c'est $S^{(m)}_0=s_0$. Si c'est vrai au rang $k-1$, la relation de récurrence donne
+$S^{(m)}_{kT/m}=S^{(m)}_{(k-1)T/m}(1+U^{(m)}_k)=s_0\prod_{j=1}^{k}(1+U^{(m)}_j)$. Pour $k=m$ ($mT/m=T$) :
+\begin{resultat}
+$S^{(m)}_T=s_0\prod_{k=1}^m\bigl(1+U^{(m)}_k\bigr)$, et $S_T^{(m)}>0$ car chaque facteur vaut $1+h_m>0$ ou $1+b_m>0$.
+\end{resultat}
+
+\question{II.2} \emph{Si $\Em\bigl(S^{(m)}_T/S^{(m)}_0\bigr)=B^{(m)}_T$, montrer que $p_m=\frac{\sigma^-}{\sigma^++\sigma^-}$, $q_m=\frac{\sigma^+}{\sigma^++\sigma^-}$.}
+
+Les v.a.\ $1+U^{(m)}_k$ sont indépendantes (C3.10, fonctions des $U^{(m)}_k$ indépendantes, I.2), bornées donc dans $L^1$, et de même loi. Par
+II.1 et C3.15 :
+\[\Em\Bigl(\frac{S^{(m)}_T}{S^{(m)}_0}\Bigr)=\Em\Bigl(\prod_{k=1}^m(1+U^{(m)}_k)\Bigr)=\prod_{k=1}^m\Em\bigl(1+U^{(m)}_k\bigr)=\bigl(1+\Em U^{(m)}_1\bigr)^m .\]
+L'hypothèse s'écrit donc $(1+\Em U^{(m)}_1)^m=(1+\frac{rT}m)^m$. Or $1+\Em U^{(m)}_1=p_m(1+h_m)+q_m(1+b_m)>0$ (combinaison convexe de deux réels
+$>0$) et $1+\frac{rT}m>0$ ; $x\mapsto x^m$ étant injective sur $]0,\infty[$, on obtient $\Em U^{(m)}_1=\frac{rT}m$. Or
+\[\Em U^{(m)}_1=p_mh_m+q_mb_m=\frac{rT}m+\sqrt{\frac Tm}\,\bigl(p_m\sigma^+-q_m\sigma^-\bigr).\]
+Donc $p_m\sigma^+=q_m\sigma^-=(1-p_m)\sigma^-$, i.e.\ $p_m(\sigma^++\sigma^-)=\sigma^-$.
+\begin{resultat}
+$p_m=\dfrac{\sigma^-}{\sigma^++\sigma^-}$, $q_m=\dfrac{\sigma^+}{\sigma^++\sigma^-}$ (dans $]0,1[$ et indépendants de $m$ ; on note $p,q$).
+De façon équivalente : $\Em U^{(m)}_1=\frac{rT}m$, i.e.\ $p\sigma^+=q\sigma^-$.
+\end{resultat}
+
+\partie{III -- Convergence en loi de $\ln(S^{(m)}_T/s_0)$}
+
+Notons $\ell^+_m=\ln(1+h_m)$, $\ell^-_m=\ln(1+b_m)$ (bien définis car $h_m>b_m>-1$) et $\delta_m=\sqrt{T/m}\to0$.
+
+\question{III.1} \emph{Développements de $\ln(1+h_m)$ et $\ln(1+b_m)$.}
+
+On a $h_m=\sigma^+\delta_m+r\delta_m^2$, donc $h_m=O(\delta_m)$, $h_m^2=(\sigma^+)^2\delta_m^2+2r\sigma^+\delta_m^3+r^2\delta_m^4=(\sigma^+)^2\delta_m^2+O(\delta_m^3)$
+et $h_m^3=O(\delta_m^3)$. Avec $\ln(1+x)=x-\frac{x^2}2+O(x^3)$ quand $x\to0$ :
+\[\ell^+_m=\sigma^+\delta_m+r\delta_m^2-\frac{(\sigma^+)^2}2\delta_m^2+O(\delta_m^3)=\sigma^+\sqrt{\frac Tm}+\Bigl(r-\frac{(\sigma^+)^2}2\Bigr)\frac Tm+O(m^{-3/2}).\]
+Le calcul est identique pour $b_m=-\sigma^-\delta_m+r\delta_m^2$ (remplacer $\sigma^+$ par $-\sigma^-$ ; $(-\sigma^-)^2=(\sigma^-)^2$).
+Comme $O(m^{-3/2})=\frac1m\,O(m^{-1/2})$, le reste s'écrit $\frac1m\varepsilon(\frac1{\sqrt m})$ avec $\varepsilon(\frac1{\sqrt m})=O(\frac1{\sqrt m})\to0$.
+\begin{resultat}
+$\displaystyle\ln(1+h_m)=\sigma^+\sqrt{\tfrac Tm}+\Bigl(r-\tfrac{(\sigma^+)^2}2\Bigr)\tfrac Tm+\tfrac1m\varepsilon\bigl(\tfrac1{\sqrt m}\bigr)$,\quad
+$\displaystyle\ln(1+b_m)=-\sigma^-\sqrt{\tfrac Tm}+\Bigl(r-\tfrac{(\sigma^-)^2}2\Bigr)\tfrac Tm+\tfrac1m\varepsilon\bigl(\tfrac1{\sqrt m}\bigr)$.
+\end{resultat}
+
+\question{III.2} \emph{Développement de $\Phi_m(u)=\Em\bigl(e^{iu\ln(1+U^{(m)}_1)}\bigr)$.}
+
+Fixons $u\in\R$. Par transfert (C2.8) pour la loi $\QQ^{(m)}$ de $U^{(m)}_1$ : $\Phi_m(u)=p\,e^{iu\ell^+_m}+q\,e^{iu\ell^-_m}$. Avec
+$e^{ix}=1+ix-\frac{x^2}2+R(x)$, $|R(x)|\le\frac{|x|^3}6$, et $\ell^\pm_m=O(m^{-1/2})$ (III.1), on a $R(u\ell^\pm_m)=O(m^{-3/2})$ et
+\[\Phi_m(u)=1+iu\bigl(p\ell^+_m+q\ell^-_m\bigr)-\frac{u^2}2\bigl(p(\ell^+_m)^2+q(\ell^-_m)^2\bigr)+O(m^{-3/2}).\]
+Deux identités tirées de II.2 :
+\[p\sigma^+-q\sigma^-=\frac{\sigma^-\sigma^+-\sigma^+\sigma^-}{\sigma^++\sigma^-}=0,\qquad
+p(\sigma^+)^2+q(\sigma^-)^2=\frac{\sigma^+\sigma^-(\sigma^++\sigma^-)}{\sigma^++\sigma^-}=\sigma^+\sigma^- .\]
+\emph{Terme d'ordre 1.} Par III.1, $p\ell^+_m+q\ell^-_m=(p\sigma^+-q\sigma^-)\sqrt{\frac Tm}+\bigl(r-\frac{p(\sigma^+)^2+q(\sigma^-)^2}2\bigr)\frac Tm+O(m^{-3/2})
+=\bigl(r-\frac{\sigma^+\sigma^-}2\bigr)\frac Tm+O(m^{-3/2})$ : le terme en $\frac1{\sqrt m}$ disparaît.
+
+\emph{Terme d'ordre 2.} $(\ell^\pm_m)^2=(\sigma^\pm)^2\frac Tm+O(m^{-3/2})$, donc $p(\ell^+_m)^2+q(\ell^-_m)^2=\sigma^+\sigma^-\frac Tm+O(m^{-3/2})$.
+\begin{resultat}
+$\displaystyle\Phi_m(u)=1+\Bigl(iu\Bigl(r-\frac{\sigma^+\sigma^-}2\Bigr)-u^2\frac{\sigma^+\sigma^-}2\Bigr)\frac Tm+\frac1m\varepsilon\Bigl(\frac1{\sqrt m}\Bigr)$,
+avec $\varepsilon(\frac1{\sqrt m})=O(\frac1{\sqrt m})\to0$ ($u$ fixé).
+\end{resultat}
+
+\question{III.3} \emph{Fonction caractéristique de $Y_m=\ln(S^{(m)}_T/s_0)$.}
+
+Par II.1, $Y_m=\sum_{k=1}^m\ln(1+U^{(m)}_k)$. Les v.a.\ $\ln(1+U^{(m)}_k)$ sont indépendantes (C3.10) et de même loi que $\ln(1+U^{(m)}_1)$
+(I.2). Par C3.15 (f.c.\ d'une somme indépendante), étendu à $m$ termes par récurrence et regroupement par paquets (\hc C3.11) :
+\begin{resultat}
+$\varphi_{Y_m}(u)=\Em\bigl(e^{iuY_m}\bigr)=\prod_{k=1}^m\Em\bigl(e^{iu\ln(1+U^{(m)}_k)}\bigr)=\Phi_m(u)^m$ pour tout $u\in\R$.
+\end{resultat}
+
+\question{III.4} \emph{Montrer que $Y_m\to\Nc(\mu,\vartheta^2)$ en loi, $\mu=(r-\frac{\sigma^+\sigma^-}2)T$, $\vartheta=\sqrt{\sigma^+\sigma^-T}$.}
+
+Fixons $u$. Par III.2, $\Phi_m(u)=1+\frac{z_m}m$ avec
+$z_m=T\bigl(iu(r-\frac{\sigma^+\sigma^-}2)-u^2\frac{\sigma^+\sigma^-}2\bigr)+\varepsilon(\frac1{\sqrt m})\to z=iu\mu-\frac{u^2\vartheta^2}2$ dans $\C$.
+Par \hc C4.7, point 3, et III.3 :
+\[\varphi_{Y_m}(u)=\Bigl(1+\frac{z_m}m\Bigr)^m\xrightarrow[m\to+\infty]{}e^{iu\mu-\frac{u^2\vartheta^2}2},\]
+qui est la f.c.\ de $\Nc(\mu,\vartheta^2)$ (C5.1). Par Lévy (C4.5) -- les $Y_m$ vivent sur des espaces $\Omega^{(m)}$ différents, ce qui est
+permis puisque seule la loi compte (remarque suivant C4.3) :
+\begin{resultat}
+$Y_m=\ln\bigl(S^{(m)}_T/s_0\bigr)\xrightarrow[m\to+\infty]{\text{loi}}\Nc(\mu,\vartheta^2)$, $\mu=\bigl(r-\frac{\sigma^+\sigma^-}2\bigr)T$,
+$\vartheta=\sqrt{\sigma^+\sigma^-T}$ : à la limite, $S_T$ est log-normale.
+\end{resultat}
+
+\partie{IV -- Prix limite du put}
+
+\question{IV.1} \emph{Justifier que $\lim_mP^{(m)}_0=e^{-rT}\int_{\R}(K-s_0e^{\mu+\vartheta u})_+e^{-u^2/2}\frac{\dd u}{\sqrt{2\pi}}$.}
+
+Par II.1, $S^{(m)}_T=s_0e^{Y_m}$, donc $P^{(m)}_0=(1+\frac{rT}m)^{-m}\,\Em\bigl(g(Y_m)\bigr)$ avec $g(y)=(K-s_0e^y)_+$.
+\begin{itemize}
+  \item $g$ est continue (composée de fonctions continues, $x\mapsto x_+=\max(x,0)$ l'étant) et \textbf{bornée} : $0\le g(y)\le K$ car $s_0e^y>0$.
+  Par définition de la convergence en loi (C4.3) et III.4 : $\Em g(Y_m)\to\E g(Y)$, $Y\sim\Nc(\mu,\vartheta^2)$. (Pour un call, $(s_0e^y-K)_+$ n'est
+  pas bornée : d'où le passage par la parité en V.)
+  \item On peut écrire $Y=\mu+\vartheta U$ avec $U\sim\Nc(0,1)$ (C5.2) ; par transfert (C2.8) avec la densité de $U$ (C5.1) :
+  $\E g(Y)=\int_\R(K-s_0e^{\mu+\vartheta u})_+\,e^{-u^2/2}\frac{\dd u}{\sqrt{2\pi}}$ (intégrande positive et bornée par $K\times$ densité).
+  \item $(1+\frac{rT}m)^m\to e^{rT}$ (\hc C4.7, point 3, avec $z_m=rT$), donc $(1+\frac{rT}m)^{-m}\to e^{-rT}$.
+\end{itemize}
+Le produit de deux suites convergentes converge vers le produit des limites :
+\begin{resultat}
+$\displaystyle\lim_{m\to+\infty}P^{(m)}_0=e^{-rT}\int_{-\infty}^{+\infty}\bigl(K-s_0e^{\mu+\vartheta u}\bigr)_+e^{-\frac{u^2}2}\frac{\dd u}{\sqrt{2\pi}}
+=e^{-rT}\,\E\bigl((K-s_0e^{Y})_+\bigr)$, $Y\sim\Nc(\mu,\vartheta^2)$.
+\end{resultat}
+
+\question{IV.2} \emph{Calculer cette limite en fonction de $\erf$, $d_1$, $d_2$.}
+
+\emph{Zone d'exercice.} Comme $\vartheta>0$ : $K-s_0e^{\mu+\vartheta u}>0\iff\mu+\vartheta u<\ln\frac K{s_0}\iff u<\frac{\ln(K/s_0)-\mu}\vartheta$. Or
+\[-d_2=-\frac{\ln\frac{s_0}K+(r-\frac{\sigma^+\sigma^-}2)T}{\sqrt{\sigma^+\sigma^-T}}=\frac{\ln\frac K{s_0}-\mu}{\vartheta}.\]
+Donc l'intégrande est non nulle exactement pour $u<-d_2$, et
+\[\int_\R(K-s_0e^{\mu+\vartheta u})_+e^{-\frac{u^2}2}\frac{\dd u}{\sqrt{2\pi}}=K\int_{-\infty}^{-d_2}e^{-\frac{u^2}2}\frac{\dd u}{\sqrt{2\pi}}
+-s_0\int_{-\infty}^{-d_2}e^{\mu+\vartheta u-\frac{u^2}2}\frac{\dd u}{\sqrt{2\pi}}=K\erf(-d_2)-s_0J ,\]
+la séparation étant licite car les deux intégrales sont finies.
+
+\emph{Complétion du carré.} $\mu+\vartheta u-\frac{u^2}2=\mu+\frac{\vartheta^2}2-\frac{(u-\vartheta)^2}2$ et
+$\mu+\frac{\vartheta^2}2=rT-\frac{\sigma^+\sigma^-T}2+\frac{\sigma^+\sigma^-T}2=rT$. Avec le changement de variable $v=u-\vartheta$ :
+\[J=e^{rT}\int_{-\infty}^{-d_2-\vartheta}e^{-\frac{v^2}2}\frac{\dd v}{\sqrt{2\pi}}=e^{rT}\erf(-d_2-\vartheta),\qquad
+d_2+\vartheta=\frac{\ln\frac{s_0}K+(r-\frac{\sigma^+\sigma^-}2)T+\sigma^+\sigma^-T}{\sqrt{\sigma^+\sigma^-T}}=d_1 .\]
+Ainsi $\lim P^{(m)}_0=e^{-rT}\bigl(K\erf(-d_2)-s_0e^{rT}\erf(-d_1)\bigr)$ :
+\begin{resultat}
+$\displaystyle\lim_{m\to+\infty}P^{(m)}_0=K\,e^{-rT}\erf(-d_2)-s_0\erf(-d_1)$ \quad(formule de Black--Scholes du put).
+
+L'énoncé écrit $e^{-rT}\erf(-d_2)-s_0\erf(-d_1)$ : il manque le facteur $K$ (sauf si $K=1$).
+\end{resultat}
+\emph{Contrôle numérique} (awk, $\erf$ approchée par Abramowitz--Stegun 7.1.26) : pour $s_0=100$, $K=110$, $r=0{,}05$, $T=1$,
+$\sigma^+=0{,}3$, $\sigma^-=0{,}2$ : $d_1\approx-0{,}0625$, $d_2\approx-0{,}307$ ; le prix binomial exact vaut $12{,}449$ ($m=200$),
+$12{,}458$ ($m=2000$), $12{,}460$ ($m=20\,000$), et $Ke^{-rT}\erf(-d_2)-s_0\erf(-d_1)\approx12{,}460$, alors que la formule sans $K$
+donne $\approx-51{,}9$ (négatif, impossible pour un prix).
+
+\partie{V -- Call et parité call--put}
+
+\question{V.1} \emph{Montrer que $C^{(m)}_0-P^{(m)}_0=s_0-K(1+\frac{rT}m)^{-m}$.}
+
+Pour tout réel $x$ : $(x-K)_+-(K-x)_+=x-K$ (si $x\ge K$ : $(x-K)-0$ ; si $x<K$ : $0-(K-x)$). Appliqué à $x=S^{(m)}_T$, puis par linéarité
+de l'espérance ($S^{(m)}_T$ prend un nombre fini de valeurs, donc est intégrable) :
+\[C^{(m)}_0-P^{(m)}_0=\Bigl(1+\frac{rT}m\Bigr)^{-m}\Em\bigl(S^{(m)}_T-K\bigr)=\Bigl(1+\frac{rT}m\Bigr)^{-m}\Bigl(\Em S^{(m)}_T-K\Bigr).\]
+Par l'hypothèse de II.2 (qui définit $p_m$), $\Em S^{(m)}_T=s_0B^{(m)}_T=s_0(1+\frac{rT}m)^m$. D'où :
+\begin{resultat}
+$\displaystyle C^{(m)}_0-P^{(m)}_0=s_0-\frac{K}{(1+\frac{rT}m)^m}$ (parité call--put).
+\end{resultat}
+
+\question{V.2} \emph{Existence et expression de $\lim_mC^{(m)}_0$.}
+
+Par V.1, $C^{(m)}_0=P^{(m)}_0+s_0-K(1+\frac{rT}m)^{-m}$. Les deux termes variables convergent (IV.2, et $(1+\frac{rT}m)^{-m}\to e^{-rT}$ comme en IV.1),
+donc $C^{(m)}_0$ converge et
+\[\lim_{m\to+\infty}C^{(m)}_0=Ke^{-rT}\erf(-d_2)-s_0\erf(-d_1)+s_0-Ke^{-rT}=s_0\bigl(1-\erf(-d_1)\bigr)-Ke^{-rT}\bigl(1-\erf(-d_2)\bigr).\]
+Avec $\erf(x)+\erf(-x)=1$ (alerte ci-dessus) :
+\begin{resultat}
+$\displaystyle\lim_{m\to+\infty}C^{(m)}_0=s_0\erf(d_1)-K\,e^{-rT}\erf(d_2)$ (formule de Black--Scholes du call) ; elle dépend de $r,T,s_0,d_1,d_2$, $\erf$
+\emph{et de $K$}.
+\end{resultat}
+\emph{Contrôle numérique} (mêmes paramètres) : $s_0\erf(d_1)-Ke^{-rT}\erf(d_2)\approx7{,}825$, contre $7{,}813$ / $7{,}823$ / $7{,}824$ pour le prix
+binomial avec $m=200$ / $2000$ / $20\,000$.
+\end{exo}
+
+\end{document}

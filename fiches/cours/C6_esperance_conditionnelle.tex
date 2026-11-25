@@ -1,0 +1,169 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C6}{Espérance conditionnelle}{Conditional expectation}
+
+\textit{Sources : slides, chapitre 7 (Déf.~50--52, Thm~12--15) ; poly « Conditional Expectation » (Déf.~1.1, Prop.~2.1--2.7,
+Lemme~2.1, Thm~2.1) ; poly « Gaussian vector » (Déf.~14--17, Thm~18--21). Cadre : $(\Omega,\F,\PP)$, $\G,\Hc$ sous-tribus de $\F$.}
+
+\section*{1. Conditionnement élémentaire}
+
+\begin{definition}[sachant un événement]\label{C6:evt}
+Pour $X$ intégrable et $B\in\F$ avec $\PP(B)>0$ : $\E(X\mid B)=\dfrac{\E(X\1_B)}{\PP(B)}$ (un \emph{nombre}).
+Avec $X=\1_A$ : $\E(\1_A\mid B)=\PP(A\mid B)$.
+\end{definition}
+
+\begin{definition}[sachant une v.a.\ discrète]\label{C6:discret}
+Soit $X$ réelle intégrable et $Y$ prenant un nombre au plus dénombrable de valeurs. $\E(X\mid Y)$ est la \emph{v.a.}
+$\E(X\mid Y)(\omega)=\phi(Y(\omega))$, où
+$\phi(y)=\E(X\mid Y=y)=\dfrac{\E(X\1_{\{Y=y\}})}{\PP(Y=y)}$ si $\PP(Y=y)>0$, et $\phi(y)=0$ sinon.
+\end{definition}
+
+\section*{2. Définition générale}
+
+\begin{definition}[Espérance conditionnelle sachant une tribu]\label{C6:def}
+Soit $Y\in L^1(\Omega,\F,\PP)$ et $\G\subset\F$ une sous-tribu. L'espérance conditionnelle de $Y$ sachant $\G$ est \emph{toute}
+v.a.\ $Z$ telle que
+\begin{enumerate}[label=(\roman*)]
+  \item $Z$ est \textbf{$\G$-mesurable} ;
+  \item $\forall G\in\G$, $\E(\1_GY)=\E(\1_GZ)$ \quad (i.e.\ $\int_GY\dd\PP=\int_GZ\dd\PP$).
+\end{enumerate}
+Une telle $Z$ existe et est \textbf{unique à égalité $\PP$-p.s.\ près} ; on note $Z=\E(Y\mid\G)$.
+\end{definition}
+
+\begin{remarque}[compléments du cours]\leavevmode
+\begin{itemize}
+  \item (ii) équivaut à : $\E(XY)=\E(XZ)$ pour toute v.a.\ $X$ $\G$-mesurable (\emph{bornée}, pour que tout soit intégrable).
+  \item Si $\Omega$ est fini et $\PP(\{\omega\})>0$ pour tout $\omega$, $\E(Y\mid\G)$ est unique (pas seulement p.s.).
+  \item Existence : si $Y\in L^2$, $\E(Y\mid\G)$ est la \emph{projection orthogonale} de $Y$ sur le sous-espace $L^2(\Omega,\G,\PP)$,
+  c'est-à-dire la meilleure approximation de $Y$ au sens quadratique par une v.a.\ $\G$-mesurable de carré intégrable ; cas $L^1$ par densité de $L^2$
+  ou par Radon--Nikodym (fiche C7).
+  \item Vecteur : $\E(Y\mid\G)=(\E(Y_1\mid\G),\dots,\E(Y_d\mid\G))$. Pour $X:\Omega\to(E,\Ec)$ : $\E(Y\mid X):=\E(Y\mid\sigma(X))$.
+  \item Toute v.a.\ $\sigma(X)$-mesurable s'écrit $\varphi(X)$ avec $\varphi$ mesurable ; donc $\E(Y\mid X)=\varphi(X)$, et on note
+  $\varphi(x)=\E(Y\mid X=x)$.
+\end{itemize}
+\end{remarque}
+
+\section*{3. Propriétés (toutes vraies $\PP$-p.s.)}
+
+\begin{proposition}\label{C6:prop}
+Soient $X,Y\in L^1$ et $\alpha,\beta\in\R$.
+\begin{enumerate}
+  \item \textbf{Espérance totale} : $\E\bigl(\E(Y\mid\G)\bigr)=\E(Y)$.
+  \item \textbf{Linéarité} : $\E(\alpha X+\beta Y\mid\G)=\alpha\E(X\mid\G)+\beta\E(Y\mid\G)$.
+  \item \textbf{Positivité / monotonie} : $Y\ge0$ p.s.\ $\Rightarrow\E(Y\mid\G)\ge0$ ; $X\le Y$ p.s.\ $\Rightarrow\E(X\mid\G)\le\E(Y\mid\G)$.
+  \item \textbf{Ce qui est connu} : si $Y$ est $\G$-mesurable, $\E(Y\mid\G)=Y$. Si $X$ est $\G$-mesurable et $\E|XY|<\infty$,
+  $\E(XY\mid\G)=X\,\E(Y\mid\G)$.
+  \item Si $X$ est $\G$-mesurable et $\E|XY|<\infty$ (alors $X\,\E(Y\mid\G)=\E(XY\mid\G)\in L^1$) : $\E\bigl(X\,\E(Y\mid\G)\bigr)=\E(XY)$.
+  % À VÉRIFIER : le cours suppose seulement E|X E(Y|G)| < infini, ce qui ne garantit pas que E(XY) existe
+  % (ex. Z dans L^1 hors L^2, eps = +-1 independant, Y = eps Z, G = sigma(Z), X = Z).
+  (Le cours écrit l'hypothèse $\E|X\,\E(Y\mid\G)|<\infty$, insuffisante pour que $\E(XY)$ existe.)
+  \item \textbf{Tour} (\emph{tower law, chaining rule}) : si $\Hc\subset\G$, $\E\bigl(\E(Y\mid\G)\mid\Hc\bigr)=\E(Y\mid\Hc)$.
+  « La plus petite information l'emporte. »
+  \item \textbf{Indépendance} : si $\sigma(Y)$ et $\G$ sont indépendantes, $\E(Y\mid\G)=\E(Y)$. Plus généralement, si $\G$ est
+  indépendante de $\sigma(\sigma(Y)\cup\Hc)$, alors $\E(Y\mid\sigma(\Hc\cup\G))=\E(Y\mid\Hc)$.
+  \item \textbf{Jensen conditionnel} : $\Phi$ convexe et $\E|\Phi(Y)|<\infty$ $\Rightarrow$ $\Phi(\E(Y\mid\G))\le\E(\Phi(Y)\mid\G)$.
+\end{enumerate}
+\end{proposition}
+\begin{idee}
+On vérifie (i)--(ii) pour le candidat puis on invoque l'unicité p.s.
+1 : prendre $G=\Omega$. 2 : $\alpha\E(X\mid\G)+\beta\E(Y\mid\G)$ est $\G$-mesurable et
+$\E\bigl((\alpha\E(X\mid\G)+\beta\E(Y\mid\G))\1_G\bigr)=\alpha\E(X\1_G)+\beta\E(Y\1_G)$.
+6 : $\E(Y\mid\Hc)$ est $\Hc$-mesurable et pour $H\in\Hc\subset\G$, $\E(\1_H\E(Y\mid\G))=\E(\1_HY)=\E(\1_H\E(Y\mid\Hc))$.
+7 : $\E(\1_GY)=\PP(G)\E(Y)=\E(\1_G\E(Y))$ par indépendance.
+\end{idee}
+
+\begin{proposition}[gel / \emph{freezing}, slides]\label{C6:gel}
+Soit $X:(\Omega,\F)\to(E,\Ec)$ \textbf{indépendante} de $\G$, $Y$ \textbf{$\G$-mesurable} réelle, et $\Phi:\R\times E\to\R$
+$\Bc(\R)\otimes\Ec$-mesurable, positive ou bornée. Alors $\varphi(y):=\E\,\Phi(y,X)$ est mesurable et
+$\E(\Phi(Y,X)\mid\G)=\varphi(Y)$ p.s. (« on gèle $Y$ comme une constante, on intègre en $X$ »).
+\end{proposition}
+
+\begin{proposition}[convergences conditionnelles, poly]\label{C6:conv}\leavevmode
+\begin{enumerate}
+  \item (\emph{convergence monotone}) $0\le X_n\uparrow X$ p.s.\ $\Rightarrow\E(X_n\mid\G)\uparrow\E(X\mid\G)$ p.s.
+  \item (\emph{Fatou}) $X_n\ge0$ $\Rightarrow\E(\liminf X_n\mid\G)\le\liminf\E(X_n\mid\G)$ p.s.
+  \item (\emph{convergence dominée}) $X_n\to X$ p.s.\ et $|X_n|\le Y\in L^1$ $\Rightarrow\E(X_n\mid\G)\to\E(X\mid\G)$ p.s.
+\end{enumerate}
+\end{proposition}
+
+\section*{4. Calculs explicites}
+
+\begin{theoreme}[partition finie]\label{C6:partition}
+Si $X\in L^1$ et $\G=\sigma(A_1,\dots,A_n)$ avec $(A_j)$ partition de $\Omega$ (et $\PP(A_j)>0$), alors
+$\displaystyle\E(X\mid\G)=\sum_{j=1}^n\frac{\E(X\1_{A_j})}{\PP(A_j)}\1_{A_j}$ p.s.
+\end{theoreme}
+\begin{idee}
+$\G$-mesurable $\Rightarrow$ constante sur chaque $A_j$ : $\E(X\mid\G)=\sum_j\lambda_j\1_{A_j}$. Puis
+$\E(\1_{A_i}X)=\E(\1_{A_i}\E(X\mid\G))=\lambda_i\PP(A_i)$.
+\end{idee}
+
+\begin{theoreme}[cas à densité]\label{C6:densite}
+Soient $X$ et $Y$ des vecteurs aléatoires à valeurs dans $\R^p$ et $\R^k$ tels que $(X,Y)$ ait une densité $f(x,y)$ par rapport à Lebesgue sur $\R^{p+k}$, et
+$f_X(x)=\int_{\R^k}f(x,y)\dd y$. La loi de $Y$ sachant $\{X=x\}$ a pour densité
+\[f_Y^{X=x}(y)=\frac{f(x,y)}{f_X(x)}\quad\text{si }f_X(x)>0\qquad(\text{n'importe quelle densité si }f_X(x)=0).\]
+Pour $g:\R^{p+k}\to\R$ mesurable, positive ou bornée : $\E(g(X,Y)\mid X=x)=\int_{\R^k}g(x,y)f_Y^{X=x}(y)\dd y=:\psi(x)$ et
+$\E(g(X,Y)\mid X)=\psi(X)$ p.s.
+\end{theoreme}
+
+\begin{theoreme}[cas gaussien : régression linéaire]\label{C6:gauss}
+Si $(Y_1,\dots,Y_n,X)$ est un \textbf{vecteur gaussien} (et $\Sigma_Y$ inversible), alors
+\begin{gather*}\E(X\mid\sigma(Y_1,\dots,Y_n))=\E(X)+\sum_{j=1}^n\lambda_j(Y_j-\E Y_j)=\E(X)+\Lambda^t(Y-\E Y)\quad\text{p.s.},\\
+\Lambda=\Sigma_Y^{-1}\begin{pmatrix}\Cov(X,Y_1)\\\vdots\\\Cov(X,Y_n)\end{pmatrix}.\end{gather*}
+L'espérance conditionnelle coïncide avec la régression linéaire de $X$ sur $(Y_1,\dots,Y_n)$.
+\end{theoreme}
+\begin{idee}
+Avec $Z=\E(X\mid Y)$ et $Y_i-\E Y_i$ $\sigma(Y)$-mesurable : $\E(Z(Y_i-\E Y_i))=\E(X(Y_i-\E Y_i))=\Cov(X,Y_i)$ ; en injectant la forme
+affine, $\sum_j\lambda_j\Cov(Y_j,Y_i)=\Cov(X,Y_i)$, i.e.\ $\Sigma_Y\Lambda=(\Cov(X,Y_i))_i$. La forme affine est admise dans le cours ; justification : avec ce $\Lambda$, $R=X-\E X-\Lambda^t(Y-\E Y)$ forme avec $Y$ un vecteur gaussien et $\Cov(R,Y_i)=0$, donc $R\indep Y$ (C5) et $\E(R\mid Y)=\E R=0$.
+\end{idee}
+
+\begin{horscours}[loi conditionnelle gaussienne]\label{C6:gauss-loi}
+Sous les hypothèses du Thm~\ref{C6:gauss}, $R:=X-\E(X\mid Y)$ est indépendant de $Y$ (le vecteur $(R,Y)$ est gaussien et
+$\Cov(R,Y_i)=0$, C5), et $R\sim\Nc(0,s^2)$ avec $s^2=\Var X-C^t\Sigma_Y^{-1}C$, $C=(\Cov(X,Y_i))_i$.
+Par le lemme de gel : la loi de $X$ sachant $Y$ est $\Nc\bigl(\E(X\mid Y),\,s^2\bigr)$, et $\E\bigl((X-\E(X\mid Y))^2\mid Y\bigr)=s^2$.
+\end{horscours}
+
+\begin{liens}
+\begin{itemize}
+  \item $\E(Y\mid\{\emptyset,\Omega\})=\E(Y)$ ; $\E(Y\mid\F)=Y$ ; $\G$ « entre les deux » donne une v.a.\ intermédiaire.
+  \item Déf.~\ref{C6:discret} et Thm~\ref{C6:partition} sont des cas particuliers de la Déf.~\ref{C6:def} (avec $\G=\sigma(Y)$,
+  tribu d'une partition).
+  \item $\sigma(Y)\indep\G\Rightarrow\E(Y\mid\G)=\E Y$ ; réciproque fausse : $Y\sim\Nc(0,1)$, $\G=\sigma(Y^2)$, alors
+  $\E(Y\mid\G)=0=\E Y$ ($(Y,Y^2)$ et $(-Y,Y^2)$ ont même loi) mais $Y$ n'est pas indépendante de $Y^2$.
+  \item Pour $X,Y\in L^2$ : indépendance $\Rightarrow\E(X\mid Y)=\E X\Rightarrow\Cov(X,Y)=0$ ; aucune réciproque en général. Par exemple $Y\sim\Nc(0,1)$, $X=Y^2$ : $\Cov(X,Y)=\E Y^3=0$ mais $\E(X\mid Y)=Y^2\neq1=\E X$.
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item $\E(Y\mid\G)$ est une \textbf{variable aléatoire} ($\G$-mesurable), pas un nombre ; toutes les égalités sont \textbf{p.s.}
+  \item Hypothèse d'\textbf{intégrabilité} : $Y\in L^1$ (et $XY\in L^1$ pour sortir $X$).
+  \item On ne sort que ce qui est \textbf{$\G$-mesurable} : $\E(XY\mid\G)\neq X\E(Y\mid\G)$ en général.
+  \item Tour : $\Hc\subset\G$ ; dans les deux ordres on obtient $\E(Y\mid\Hc)$ (la plus petite tribu gagne) ; dans l'ordre $\E(\E(Y\mid\Hc)\mid\G)$, c'est « ce qui est connu », car $\E(Y\mid\Hc)$ est $\G$-mesurable.
+  \item Jensen : sens $\Phi(\E(Y\mid\G))\le\E(\Phi(Y)\mid\G)$ pour $\Phi$ \emph{convexe} ; $\E(\Phi(Y)\mid\G)\neq\Phi(\E(Y\mid\G))$.
+  \item Conditionner par $\{X=x\}$ quand $\PP(X=x)=0$ : passer par les densités (Thm~\ref{C6:densite}), pas par la Déf.~\ref{C6:evt}.
+  \item Lemme de gel : exige $X\indep\G$ \emph{et} $Y$ $\G$-mesurable.
+  \item Cas gaussien : la formule linéaire n'est valable que si le vecteur $(Y,X)$ est \emph{gaussien}.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[dé, slides]\label{C6:ex-de}
+$\Omega=\{1,\dots,6\}$ uniforme, $X(\omega)=\omega$, $Y=\1_{\{\omega\text{ impair}\}}$. Sur $\{Y=1\}$ :
+$\E(X\mid Y)=\frac{\frac16(1+3+5)}{3/6}=3$ ; sur $\{Y=0\}$ : $\frac{\frac16(2+4+6)}{3/6}=4$. Donc $\E(X\mid Y)=4-Y$.
+Avec $Z=1$ sur $\{1,3\}$, $2$ en $5$, $3$ sur $\{2,4\}$, $4$ en $6$ (plus informative : $\sigma(Y)\subset\sigma(Z)$), la tour donne $\E(\E(X\mid Z)\mid Y)=\E(X\mid Y)$ (vérifié dans les slides).
+\end{exemple}
+
+\begin{exemple}[arbre binomial, slides]\label{C6:ex-arbre}
+Modèle C1 ($0<p<1$), $S_2(UU)=s_0u^2$, $S_2(UD)=S_2(DU)=s_0ud$, $S_2(DD)=s_0d^2$, $\F_1=\sigma(A_U)$. Par le Thm~\ref{C6:partition} :
+$\E(S_2\1_{A_U})=p^2s_0u^2+p(1-p)s_0ud=ps_0u(pu+(1-p)d)$ et $\PP(A_U)=p$, idem sur $A_D$ ; d'où
+$\E(S_2\mid\F_1)=(pu+(1-p)d)(s_0u\1_{A_U}+s_0d\1_{A_D})=(pu+(1-p)d)\,S_1$ p.s.
+\end{exemple}
+
+\begin{exemple}[densité]\label{C6:ex-densite}
+$(X,Y)$ de densité $f(x,y)=e^{-y}\1_{0<x<y}$. $f_X(x)=\int_x^{\infty}e^{-y}\dd y=e^{-x}\1_{x>0}$ et
+$f_Y^{X=x}(y)=e^{-(y-x)}\1_{y>x}$ : sachant $X=x$, $Y-x\sim\Expo(1)$. Donc $\E(Y\mid X=x)=x+1$ et $\E(Y\mid X)=X+1$ p.s.
+\end{exemple}
+
+\end{document}

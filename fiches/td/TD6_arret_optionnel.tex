@@ -1,0 +1,86 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD6}{Martingales et théorème d'arrêt}{Doob's stopping time theorem}
+
+\textit{À lire avant de chercher le TD. Renvois : « C8.11 » = fiche C8, énoncé n°11. Fiche associée : \textbf{C8} (et C6 pour les
+calculs conditionnels). Les outils « martingale régulière » et « passage à la limite dans l'arrêt » sont \textbf{hors cours} (C8.11).}
+
+\begin{exo}[{Martingale exponentielle et sortie de $]-a,a[$}]
+\begin{alerte}
+L'énoncé ne dit pas explicitement que les $Z_i$ sont \textbf{indépendantes} (ni qu'elles sont définies pour tout $i\ge1$) : il faut le supposer,
+c'est le cadre de la marche aléatoire simple. « $\F_0=(\Omega,\emptyset)$ » désigne la tribu triviale $\{\emptyset,\Omega\}$.
+% Vérifié sur le PDF de l'énoncé (p. 1) : aucune hypothèse d'indépendance des Z_i.
+\end{alerte}
+\outils Martingale en temps discret (C8.4) ; sortir le connu, indépendance (C6.5) ; martingale arrêtée et $\E(X_{n\wedge\tau})=\E(X_0)$ (C8.10, C8.11) ;
+convergence monotone et dominée ; martingale régulière (C8.11).
+
+\meth
+\begin{enumerate}
+  \item $\cos(\lambda S_{n+1})=\cos(\lambda S_n)\cos(\lambda Z_{n+1})-\sin(\lambda S_n)\sin(\lambda Z_{n+1})$ ; or $\E\cos(\lambda Z)=\cos\lambda$ et
+  $\E\sin(\lambda Z)=0$. Noter que $\cos\lambda>0$ car $0<\lambda<\frac\pi{2a}\le\frac\pi2$.
+  \item $n\wedge\tau$ est un temps d'arrêt borné : $\E(X_{n\wedge\tau})=X_0=1$. Avant la sortie, $|S_{n\wedge\tau}|\le a$, donc
+  $\lambda|S_{n\wedge\tau}|\le\lambda a<\frac\pi2$ et $\cos(\lambda S_{n\wedge\tau})\ge\cos(\lambda a)>0$.
+  \item Convergence monotone : $(\cos\lambda)^{-n\wedge\tau}\uparrow(\cos\lambda)^{-\tau}$, qui vaut $+\infty$ sur $\{\tau=\infty\}$ (car $0<\cos\lambda<1$).
+  \item Domination : $|X_{n\wedge\tau}|\le(\cos\lambda)^{-\tau}\in L^1$, donc la martingale arrêtée est uniformément intégrable (régulière).
+  \item Passer à la limite dans $\E(X_{n\wedge\tau})=1$ (convergence dominée) et utiliser $|S_\tau|=a$, donc $\cos(\lambda S_\tau)=\cos(\lambda a)$.
+  \item $(\cos\lambda)^{-\tau}=e^{c\tau}$ avec $c=-\ln\cos\lambda>0$ : un moment exponentiel fini domine tous les moments polynomiaux
+  ($\tau^p\le C_pe^{c\tau}$).
+\end{enumerate}
+
+\rep 5. $\E\bigl((\cos\lambda)^{-\tau}\bigr)=\dfrac1{\cos(\lambda a)}$. 6. Oui, $\tau\in L^p$ pour tout $p\ge1$.
+\end{exo}
+
+\begin{exo}[Ruine de l'investisseur]
+\begin{alerte}
+\begin{itemize}
+  \item $X_{n+1}=X_n\pm10$ avec probabilités $p$ et $1-p$ donne $\E(X_{n+1}\mid\F_n)=X_n+10(2p-1)$ sur $\{n<T\}$. Le processus (arrêté)
+  n'est une \textbf{martingale que si $p=\frac12$} ; c'est une sous-martingale si $p>\frac12$, une sur-martingale si $p<\frac12$.
+  \item L'énoncé affirme que $X_T$ vaut $150$ avec probabilité $p$ : c'est \textbf{faux en général}. Pour $p=\frac12$, l'arrêt de Doob donne
+  $\PP(X_T=150)=\frac{100}{150}=\frac23$ (cf.\ exemple C8.13 avec $a=10$ et $b=5$ pas de $10$).
+  \item Les questions 6--10 reprennent les questions 1--5.
+\end{itemize}
+% Vérifié : E(X_{n+1}|F_n) = X_n + 10(2p-1), martingale ssi p = 1/2, et alors P(X_T=150) = 2/3.
+\end{alerte}
+\outils Martingale (C8.2, C8.4) ; arrêt de Doob (C8.10) ; passage à la limite pour $T$ non borné (C8.11) ; exemple C8.13 ; probabilités totales (C1.13).
+
+\meth
+\begin{itemize}
+  \item Q1/Q6 : probabilités totales sur le résultat de la période $n+1$.
+  \item Q2/Q7 : $(X_{n\wedge T})$ est bornée ($0\le X_{n\wedge T}\le150$) ; montrer $T<\infty$ p.s.\ (par ex.\ avec la martingale $M_n=(X_n-100)^2-100n$
+  comme dans C8.13 si $p=\frac12$), puis convergence dominée dans $\E(X_{n\wedge T})=100$.
+  \item Cas $p\neq\frac12$ (hors cours, ruine du joueur) : $\bigl(\frac{1-p}p\bigr)^{X_{n}/10}$ est une martingale ; même schéma d'arrêt.
+  \item Q3/Q8 : $\E(X_T)=150\,\PP(X_T=150)+0$.
+\end{itemize}
+
+\rep Pour $p=\frac12$ : $\PP(X_T=150)=\frac23$ et $\E(X_T)=100=X_0$ (le jeu équitable ne crée pas de gain moyen).
+Pour $p\neq\frac12$, avec $r=\frac{1-p}{p}$ (départ à 10 pas de 0, cible à 15 pas de 0, pas $=10$) : $\PP(X_T=A)=\dfrac{1-r^{10}}{1-r^{15}}$ et $\E(X_T)=A\,\PP(X_T=A)$, $A=150$.
+Exemples : $p=0{,}6$ donne $\PP\approx0{,}985$ et $\E(X_T)\approx147{,}7$ ; $p=0{,}4$ donne $\PP\approx0{,}130$ et $\E(X_T)\approx19{,}5$.
+Interprétation (Q4, 5, 9, 10) : la probabilité d'atteindre l'objectif croît avec $p$ ; si $p<\frac12$ l'espérance de gain est négative et
+la ruine est probable ; un seuil $A$ plus élevé diminue la probabilité de l'atteindre.
+\end{exo}
+
+\begin{exo}[Sortie d'un intervalle asymétrique]
+\outils Comme à l'exercice 1 (C8.4, C8.10, C8.11).
+
+\meth 1. Même calcul qu'à l'exercice 1 Q1 avec $x=\lambda(S_n-\frac{b-a}2)$ : $\E\cos(x+\lambda Z)=\cos x\cos\lambda$.
+2. Sur $[-a,b]$, $|S_{n\wedge T}-\frac{b-a}2|\le\frac{a+b}2$ ; pour $0<\lambda<\frac\pi{a+b}$, $\cos\bigl(\lambda(S_{n\wedge T}-\frac{b-a}2)\bigr)\ge\cos\frac{\lambda(a+b)}2>0$.
+Reprendre les étapes 2 à 5 de l'exercice 1. En $S_T=b$ comme en $S_T=-a$, $\bigl|S_T-\frac{b-a}2\bigr|=\frac{a+b}2$ (cosinus pair).
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Martingale trigonométrique / exponentielle & Formule d'addition + indépendance du pas : $\E\cos(x+\lambda Z)=\cos x\cos\lambda$.\\
+Appliquer l'arrêt avec $\tau$ non borné & Arrêter en $n\wedge\tau$ (borné, C8.10), puis $n\to\infty$ (C8.11).\\
+Montrer $\tau<\infty$ p.s. & Borne uniforme sur $\E(f(n\wedge\tau))$ avec $f\uparrow+\infty$, puis convergence monotone.\\
+Passer à la limite dans $\E(X_{n\wedge\tau})$ & Convergence dominée (processus arrêté borné ou dominé par une v.a.\ intégrable).\\
+Martingale régulière & Domination par une v.a.\ $L^1$ $\Rightarrow$ uniformément intégrable (C8.11).\\
+Moments de $\tau$ & Un moment exponentiel fini entraîne tous les moments polynomiaux.\\
+Probabilité de sortie par un bord & $\E(X_\tau)=\E(X_0)$ avec $X_\tau$ à deux valeurs : équation linéaire en $\PP(\text{bord})$.\\
+Jeu biaisé ($p\neq\frac12$) & Chercher une martingale $r^{S_n}$ avec $r=\frac{1-p}p$ (hors cours).\\\bottomrule
+\end{tabularx}
+
+\end{document}

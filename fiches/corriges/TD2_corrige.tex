@@ -1,0 +1,253 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+
+% ---------- Macros locales au corrigé ----------------------------
+\newtcolorbox{resultat}[1][]{fichebox,colback=gray!6,colframe=black!65,title={Résultat},#1}
+\newcommand{\question}[1]{\par\medskip\noindent\textbf{#1}~}
+\newcommand{\HC}{\textbf{Hors cours :}~}
+
+\begin{document}
+\fiche{TD2}{Corrigé -- Un peu de théorie de la mesure}{A bit of measure theory}
+
+\textit{Corrigé détaillé du TD2. Renvois : « C2.8 » = fiche C2, énoncé n°8. Fiches utilisées : \textbf{C1}, \textbf{C2},
+\textbf{C5}, \textbf{C9}. Toutes les égalités entre espérances ou intégrales de fonctions positives ont lieu dans $[0,+\infty]$.}
+
+% =====================================================================
+\begin{exo}[Théorème de transfert pour $g\ge0$]
+
+\question{Énoncé.} $X:(\Omega,\Tc)\to(\R,\Bc(\R))$ est une variable aléatoire et $g:\R\to\R_+$ est mesurable.
+Montrer que $\E(g(X))=\int_\R g\dd\PP_X$.
+
+L'énoncé ne nomme pas la probabilité : on note $\PP$ la probabilité sur $(\Omega,\Tc)$, $\E$ l'espérance associée
+($\E(Z)=\int_\Omega Z\dd\PP$ pour $Z\ge0$ mesurable) et $\PP_X(B)=\PP(X\in B)$, $B\in\Bc(\R)$, la loi de $X$ (C2.7).
+
+\textbf{Rappels sur l'intégrale d'une fonction positive} (construction standard, le cours l'utilise sans la détailler ; \HC construction de
+l'intégrale de Lebesgue abstraite et théorème de convergence monotone de Beppo Levi). Soit $(E,\Ec,\mu)$ un espace mesuré (C2.1).
+\begin{itemize}
+  \item Une fonction \emph{étagée positive} est $s=\sum_{k=1}^n c_k\1_{B_k}$ avec $n\in\N^*$, $c_k\ge0$, $B_k\in\Ec$ ;
+  on pose $\int s\dd\mu=\sum_{k=1}^n c_k\,\mu(B_k)$ (la valeur ne dépend pas de l'écriture choisie, et cette intégrale est linéaire
+  à coefficients positifs).
+  \item Pour $f:E\to[0,+\infty]$ mesurable, $\int f\dd\mu=\sup\bigl\{\int s\dd\mu,\ s \text{ étagée},\ 0\le s\le f\bigr\}\in[0,+\infty]$.
+  \item \emph{Convergence monotone} : si $(f_n)$ sont mesurables positives et $f_n\uparrow f$ \emph{en tout point}, alors
+  $\int f_n\dd\mu\uparrow\int f\dd\mu$ dans $[0,+\infty]$.
+\end{itemize}
+
+\question{Étape 0 : tout est bien défini.}
+\begin{itemize}
+  \item $g(X)=g\circ X$ est $\Tc$-mesurable : pour $B\in\Bc(\R_+)$, $(g\circ X)^{-1}(B)=X^{-1}\bigl(g^{-1}(B)\bigr)$ ; or
+  $g^{-1}(B)\in\Bc(\R)$ car $g$ est mesurable, puis $X^{-1}(g^{-1}(B))\in\Tc$ car $X$ est une v.a.\ (C1.7). Comme $g(X)\ge0$,
+  $\E(g(X))$ est bien défini dans $[0,+\infty]$.
+  \item $\PP_X$ est une probabilité sur $(\R,\Bc(\R))$ (C2.7) : $\PP_X(\R)=\PP(\Omega)=1$ et, si les $B_n\in\Bc(\R)$ sont deux à deux disjoints,
+  les $X^{-1}(B_n)$ le sont aussi et $X^{-1}(\bigsqcup_n B_n)=\bigsqcup_n X^{-1}(B_n)$, d'où
+  $\PP_X(\bigsqcup_n B_n)=\sum_n\PP(X^{-1}(B_n))=\sum_n\PP_X(B_n)$ par $\sigma$-additivité de $\PP$ (C1.10).
+  Donc $\int_\R g\dd\PP_X\in[0,+\infty]$ est bien défini.
+\end{itemize}
+
+\question{Étape 1 : indicatrices.} Soit $g=\1_B$ avec $B\in\Bc(\R)$. Pour tout $\omega$, $\1_B(X(\omega))=1\iff X(\omega)\in B$,
+donc $\1_B(X)=\1_{\{X\in B\}}$, indicatrice de l'événement $\{X\in B\}\in\Tc$. Ainsi
+\[\E(\1_B(X))=\E(\1_{\{X\in B\}})=\PP(X\in B)=\PP_X(B)=\int_\R\1_B\dd\PP_X,\]
+la première étant l'identité ponctuelle ci-dessus, la troisième la définition de $\PP_X$ (C2.7), la deuxième et la quatrième
+la définition de l'intégrale d'une indicatrice.
+
+\question{Étape 2 : fonctions étagées positives.} Soit $g=\sum_{k=1}^n c_k\1_{B_k}$, $c_k\ge0$, $B_k\in\Bc(\R)$. Alors
+$g(X)=\sum_{k=1}^n c_k\1_{\{X\in B_k\}}$ est une fonction étagée positive sur $(\Omega,\Tc)$, et par définition de l'intégrale des
+fonctions étagées des deux côtés et l'étape~1 :
+\[\E(g(X))=\sum_{k=1}^n c_k\,\PP(X\in B_k)=\sum_{k=1}^n c_k\,\PP_X(B_k)=\int_\R g\dd\PP_X.\]
+
+\question{Étape 3 : approximation de $g\ge0$ mesurable par des fonctions étagées.} Pour $n\ge1$ on pose
+\[g_n=\sum_{k=0}^{n2^n-1}\frac{k}{2^n}\,\1_{g^{-1}\left([k2^{-n},(k+1)2^{-n}[\right)}+n\,\1_{g^{-1}([n,+\infty[)}
+\;=\;\min\Bigl(n,\ 2^{-n}\bigl\lfloor 2^n g\bigr\rfloor\Bigr).\]
+\begin{itemize}
+  \item \emph{$g_n$ est étagée positive} : ensemble fini de valeurs $\ge0$, et chaque ensemble $g^{-1}(I)$, $I$ intervalle, est borélien
+  car $g$ est mesurable.
+  \item \emph{$(g_n)$ est croissante} : pour $a\ge0$, $\lfloor 2^{n+1}a\rfloor\ge 2\lfloor 2^n a\rfloor$ (car $2\lfloor 2^na\rfloor$ est un entier
+  $\le 2^{n+1}a$), donc $2^{-(n+1)}\lfloor 2^{n+1}a\rfloor\ge 2^{-n}\lfloor 2^na\rfloor$ ; comme de plus $n+1\ge n$, le minimum croît :
+  $g_{n+1}\ge g_n$.
+  \item \emph{$g_n\to g$ en tout point} : fixons $x\in\R$ ; $g(x)<+\infty$ (car $g$ est à valeurs dans $\R_+$). Pour $n\ge g(x)$,
+  $g_n(x)=2^{-n}\lfloor 2^ng(x)\rfloor\in\,]g(x)-2^{-n},g(x)]$, donc $g_n(x)\to g(x)$.
+\end{itemize}
+
+\question{Étape 4 : passage à la limite.} Pour tout $\omega\in\Omega$, $g_n(X(\omega))\uparrow g(X(\omega))$ (étape 3 en $x=X(\omega)$),
+les $g_n(X)$ étant étagées positives sur $\Omega$. Par convergence monotone (\HC Beppo Levi), appliquée deux fois :
+\begin{itemize}
+  \item sur $(\Omega,\Tc,\PP)$ : $\E(g_n(X))\uparrow\E(g(X))$ ;
+  \item sur $(\R,\Bc(\R),\PP_X)$ : $\int_\R g_n\dd\PP_X\uparrow\int_\R g\dd\PP_X$.
+\end{itemize}
+Par l'étape 2, les deux suites sont \emph{égales} terme à terme ; leurs limites (dans $[0,+\infty]$) sont donc égales.
+
+\begin{resultat}
+Pour toute $g:\R\to\R_+$ mesurable, $\displaystyle\E(g(X))=\int_\Omega g(X(\omega))\,\PP(\dd\omega)=\int_\R g(x)\,\PP_X(\dd x)$,
+égalité dans $[0,+\infty]$ (les deux membres peuvent valoir $+\infty$). C'est le théorème de transfert C2.8 pour $g\ge0$.
+\end{resultat}
+
+\begin{remarque}
+Si $g$ est de signe quelconque avec $\E(|g(X)|)=\int|g|\dd\PP_X<\infty$ (même identité appliquée à $|g|\ge0$), on applique le résultat à
+$g^+$ et $g^-$ et on soustrait (termes finis) : on obtient C2.8 en général. Si de plus $\PP_X$ a une densité, on retrouve C2.9 :
+$\E(g(X))=\int g(x)f_X(x)\dd x$ (pour $g=\1_B$ c'est la définition C2.7, puis même procédé).
+\end{remarque}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Poisson $\to$ exponentielle ; catastrophes aériennes]
+
+\question{Énoncé.} $Y_t$ est le nombre d'événements sur un intervalle de temps de longueur $t$ (en années), avec $Y_t\sim\Poi(\lambda t)$,
+$\lambda>0$. Montrer que la durée $T$ séparant deux événements consécutifs suit $\Expo(\lambda)$.
+
+\begin{alerte}
+% À VÉRIFIER : hypothèse de l'énoncé insuffisante telle quelle ; on se place dans le cadre du processus de Poisson (C9.4).
+L'hypothèse « $Y_t\sim\Poi(\lambda t)$ » ne porte que sur la loi du nombre d'événements dans \emph{un} intervalle de longueur $t$. Les lois
+marginales seules ne déterminent pas la loi du processus (fiche C9, encadré « Liens ») : pour parler de l'écart entre deux événements
+consécutifs, il faut savoir que le comptage sur un intervalle de longueur $t$ \emph{commençant à un événement} suit encore
+$\Poi(\lambda t)$, et ne dépend pas du passé. On fait donc l'hypothèse (implicite dans l'énoncé, et c'est le cadre du cours) que les
+instants des événements forment un \textbf{processus de Poisson d'intensité $\lambda$} (C9.4) : $N_t$ = nombre d'événements dans $]0,t]$,
+accroissements indépendants et stationnaires, $N_{s+t}-N_s\sim\Poi(\lambda t)$ ; $Y_t$ désigne l'un quelconque de ces accroissements.
+\end{alerte}
+
+\textbf{Notations} (C9.1, C9.2) : $0<T_1<T_2<\dots$ instants des événements, $T_0=0$, $\tau_n=T_n-T_{n-1}$ ; la durée entre deux
+événements consécutifs est $T=\tau_{n+1}=T_{n+1}-T_n$ pour un $n\ge1$.
+
+\question{Idée en une ligne.} « $T>t$ » signifie « aucun événement pendant une durée $t$ après un événement », i.e.\ $\{Y_t=0\}$, d'où
+$\PP(T>t)=e^{-\lambda t}$. Justifions-le rigoureusement en deux temps.
+
+\question{(a) Premier événement : $T_1\sim\Expo(\lambda)$.}
+Soit $t\ge0$. Par C9.3 avec $n=1$, $\{N_t\ge1\}=\{T_1\le t\}$, donc par passage au complémentaire $\{T_1>t\}=\{N_t=0\}$ ($N_t$ est à valeurs
+dans $\N$). Comme $N_t\sim\Poi(\lambda t)$ (C9.4, point 4 ; masse en $0$ donnée par C2.11) :
+\[\PP(T_1>t)=\PP(N_t=0)=e^{-\lambda t}\frac{(\lambda t)^0}{0!}=e^{-\lambda t}.\]
+Pour $t<0$, $\PP(T_1>t)=1$ car $T_1>0$. La fonction de répartition de $T_1$ est donc
+$F_{T_1}(t)=(1-e^{-\lambda t})\1_{t\ge0}=\int_{-\infty}^t\lambda e^{-\lambda u}\1_{u>0}\dd u$, qui est celle de $\Expo(\lambda)$ (C2.11).
+Une fonction de répartition caractérisant la loi (\HC unicité d'une probabilité sur $\Bc(\R)$ connue sur les demi-droites
+$]-\infty,t]$, qui forment un $\pi$-système engendrant $\Bc(\R)$), on obtient $T_1\sim\Expo(\lambda)$ : c'est C9.6.
+
+\question{(b) Écart entre deux événements consécutifs : $\tau_{n+1}\sim\Expo(\lambda)$, $n\ge1$.}
+\begin{itemize}
+  \item \emph{$T_n$ est un temps d'arrêt fini p.s.} : $\{T_n\le t\}=\{N_t\ge n\}\in\F^N_t$ pour tout $t$ (C9.3). De plus
+  $\PP(T_n\le t)=\PP(N_t\ge n)=1-e^{-\lambda t}\sum_{k=0}^{n-1}\frac{(\lambda t)^k}{k!}\xrightarrow[t\to+\infty]{}1$, et
+  $\{T_n\le m\}\uparrow\{T_n<\infty\}$ quand $m\uparrow\infty$, donc $\PP(T_n<\infty)=1$ par continuité monotone (C1.11, point 4).
+  \item \emph{Propriété de Markov forte} (C9.7, avec $S=T_n$) : $N^{T_n}_t=N_{T_n+t}-N_{T_n}$ est un processus de Poisson d'intensité
+  $\lambda$, indépendant de $\F^N_{T_n}$. Sa première arrivée est $T_{N_{T_n}+1}-T_n=T_{n+1}-T_n=\tau_{n+1}$ (car $N_{T_n}=n$).
+  \item Par (a) appliqué au processus de Poisson $N^{T_n}$ : $\PP(\tau_{n+1}>t)=\PP(N^{T_n}_t=0)=e^{-\lambda t}$, donc
+  $\tau_{n+1}\sim\Expo(\lambda)$.
+\end{itemize}
+On retrouve C9.9 : les $(\tau_n)_{n\ge1}$ sont i.i.d.\ de loi $\Expo(\lambda)$, l'indépendance venant de
+$\tau_{n+1}\indep\F^N_{T_n}$ (C9.7), $(\tau_1,\dots,\tau_n)$ étant $\F^N_{T_n}$-mesurable. Le point (b) formalise exactement
+« $\PP(T>t)=\PP(\text{aucun événement dans une fenêtre de longueur $t$ ouverte à un événement})=\PP(Y_t=0)$ ».
+
+\begin{resultat}
+$\PP(T>t)=e^{-\lambda t}$ pour $t\ge0$ : \quad $T\sim\Expo(\lambda)$, de moyenne $\E(T)=1/\lambda$ (C2.11).
+\end{resultat}
+
+\question{Application.} Nombre de catastrophes aériennes en $t$ années $\sim\Poi(0{,}2\,t)$ : $\lambda=0{,}2$ par an, d'où
+$\Expo(0{,}2)$ pour les écarts (durée moyenne entre deux crashs : $1/\lambda=5$ ans). On est le 1\textsuperscript{er} janvier 2018 ;
+l'unité de temps est l'année (on ignore les années bissextiles : 2018 $\to$ 2019 compte pour $1$ an, 2008 $\to$ 2019 pour $11$ ans).
+Notons $T_n$ l'instant du dernier crash ($n$ fixé, $T_n$ temps d'arrêt) et $\tau=\tau_{n+1}$ ; d'après (b), $\tau\sim\Expo(0{,}2)$ et
+$\tau$ est indépendant de $\F^N_{T_n}$ ; le résultat ci-dessous ne dépend pas de $n$. (Attention : sans ce conditionnement, l'intervalle
+qui contient la date d'aujourd'hui n'est \emph{pas} exponentiel, cf.\ le piège « paradoxe de l'autobus » de la fiche C9.)
+
+\begin{alerte}
+% À VÉRIFIER : interprétation du conditionnement « knowing that the last occurred on ... ».
+« Sachant que le dernier crash a eu lieu le 1\textsuperscript{er} janvier 2008 » contient deux informations : la date exacte du dernier crash
+(événement de probabilité nulle pour une loi à densité, inutilisable avec C1.12) et le fait qu'\emph{aucun} crash n'a eu lieu depuis,
+i.e.\ $\{\tau>10\}$. La date exacte n'apporte rien : $\tau$ est indépendant de $\F^N_{T_n}$ (C9.7). On conditionne donc par $\{\tau>10\}$,
+comme le fait la fiche de rappels.
+\end{alerte}
+
+\begin{itemize}
+  \item \textbf{Cas 1} (dernier crash le 01/01/2018, i.e.\ aujourd'hui). « Le prochain crash a lieu après le 01/01/2019 » $=\{\tau>1\}$.
+  Comme $\tau$ est indépendant du passé (C9.7), le conditionnement par le passé ne change rien :
+  \[p_1=\PP(\tau>1)=e^{-0{,}2\times1}=e^{-0{,}2}.\]
+  \item \textbf{Cas 2} (dernier crash le 01/01/2008, aucun depuis). L'événement cherché est $\{\tau>11\}$, sachant $\{\tau>10\}$, avec
+  $\PP(\tau>10)=e^{-2}>0$. Comme $\{\tau>11\}\subset\{\tau>10\}$, par C1.12 :
+  \[p_2=\PP(\tau>11\mid\tau>10)=\frac{\PP(\{\tau>11\}\cap\{\tau>10\})}{\PP(\tau>10)}=\frac{\PP(\tau>11)}{\PP(\tau>10)}
+  =\frac{e^{-0{,}2\times11}}{e^{-0{,}2\times10}}=e^{-0{,}2}.\]
+  C'est l'\emph{absence de mémoire} de la loi exponentielle (C2.11, C9.12) : $\PP(\tau>s+t\mid\tau>s)=\PP(\tau>t)$ avec $s=10$, $t=1$.
+\end{itemize}
+Autre lecture (plus directe) : par C9.6, l'attente résiduelle après la date $s$ = aujourd'hui, $T_{N_s+1}-s$, suit $\Expo(\lambda)$ et,
+par C9.7 avec le temps d'arrêt constant $S=s$, elle est indépendante de tout le passé $\F^N_s$ : quelle que soit la date du dernier
+crash, la probabilité de n'avoir aucun crash dans l'année qui vient vaut $e^{-0{,}2}$.
+
+Calcul numérique (awk) : $e^{-0{,}2}=0{,}818731\ldots$, $e^{-2}=0{,}135335\ldots$, $e^{-2{,}2}=0{,}110803\ldots$, et le quotient redonne
+$0{,}818731\ldots$
+
+\begin{resultat}
+$p_1=p_2=e^{-0{,}2}\approx 0{,}819$. Les deux probabilités sont \textbf{égales} : un crash n'est pas « en retard » parce que le précédent
+est ancien (absence de mémoire). La probabilité d'au moins un crash en 2018 vaut, dans les deux cas, $1-e^{-0{,}2}\approx0{,}181$.
+\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Loi log-normale]
+
+$Y=e^X$ avec $X\sim\Nc(m,\sigma^2)$, $\sigma\ne0$. Par C5.1 (cas non dégénéré, $\sigma^2>0$), $X$ a pour densité
+$f_{m,\sigma^2}(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\,e^{-\frac{(x-m)^2}{2\sigma^2}}$ par rapport à la mesure de Lebesgue.
+On note que seul $\sigma^2$ intervient (l'énoncé autorise $\sigma<0$) : on écrit donc $\sqrt{2\pi\sigma^2}=|\sigma|\sqrt{2\pi}$.
+$Y$ est une v.a.\ réelle car $\exp$ est continue donc borélienne (même argument qu'à l'étape 0 de l'exercice 1), et $Y>0$.
+
+\question{1. Loi de $Y$.} Méthode de la fonction muette (encadré Méthode de la fiche C2). Soit $h:\R\to\R_+$ mesurable.
+Par transfert (C2.8, C2.9) appliqué à $g=h\circ\exp\ge0$ mesurable :
+\[\E(h(Y))=\E\bigl(h(e^X)\bigr)=\int_\R h(e^x)\,\frac{1}{\sqrt{2\pi\sigma^2}}\,e^{-\frac{(x-m)^2}{2\sigma^2}}\dd x .\]
+Changement de variables $y=e^x$, i.e.\ $x=\ln y$, avec $\varphi=\exp:\R\to\,]0,+\infty[$ un $C^1$-difféomorphisme,
+$(\varphi^{-1})'(y)=\frac1y>0$ (changement de variables dans l'intégrale, \HC c'est exactement C2.10, lui-même hors cours, avec $U=\R$, $V=\,]0,+\infty[$, $\varphi=\exp$) ; l'intégrande est positif, donc l'égalité vaut dans $[0,+\infty]$ :
+\begin{gather*}\E(h(Y))=\int_0^{+\infty}h(y)\,\frac{1}{y\sqrt{2\pi\sigma^2}}\,e^{-\frac{(\ln y-m)^2}{2\sigma^2}}\dd y=\int_\R h(y)\,f_Y(y)\dd y,\\
+f_Y(y):=\frac{1}{y\sqrt{2\pi\sigma^2}}\,e^{-\frac{(\ln y-m)^2}{2\sigma^2}}\1_{]0,+\infty[}(y).\end{gather*}
+Avec $h=\1_B$, $B\in\Bc(\R)$ : $\PP(Y\in B)=\int_B f_Y(y)\dd y$, c'est-à-dire $\PP_Y=f_Y\cdot\lambda$ : $f_Y$ est une densité de $Y$ (C2.7).
+(Avec $h=1$ on vérifie $\int f_Y=1$, cohérent avec C2.6.)
+
+\emph{Vérification par la fonction de répartition.} Pour $y\le0$, $F_Y(y)=\PP(e^X\le y)=0$ car $e^X>0$. Pour $y>0$, $\ln$ étant strictement
+croissante, $\{e^X\le y\}=\{X\le\ln y\}$ et $F_Y(y)=F_X(\ln y)=\Phi\bigl(\frac{\ln y-m}{|\sigma|}\bigr)$ ($\Phi$ : fonction de répartition de
+$\Nc(0,1)$, car $\frac{X-m}{|\sigma|}\sim\Nc(0,1)$ par C5.2 avec $n=1$). $F_Y$ est continue sur $\R$ et $C^1$ sur $\R^*$, de dérivée
+$\frac{1}{y|\sigma|}\Phi'\bigl(\frac{\ln y-m}{|\sigma|}\bigr)=f_Y(y)$ pour $y>0$ et $0$ pour $y<0$ : on retrouve $f_Y$.
+
+\begin{resultat}
+$Y\sim\LN(m,\sigma^2)$ a pour densité \quad
+$\displaystyle f_Y(y)=\frac{1}{y\,|\sigma|\sqrt{2\pi}}\exp\Bigl(-\frac{(\ln y-m)^2}{2\sigma^2}\Bigr)\1_{y>0}$,
+\quad et $F_Y(y)=\Phi\Bigl(\dfrac{\ln y-m}{|\sigma|}\Bigr)\1_{y>0}$.
+\end{resultat}
+
+\question{2. Espérance de $Y$.} Plus généralement, calculons $\E(Y^k)=\E(e^{kX})$ pour $k\in\R$. La fonction $x\mapsto e^{kx}$ est
+mesurable positive, donc le transfert (C2.8, C2.9) s'applique sans condition, dans $[0,+\infty]$ :
+\[\E(e^{kX})=\int_\R e^{kx}\,\frac{1}{\sqrt{2\pi\sigma^2}}\,e^{-\frac{(x-m)^2}{2\sigma^2}}\dd x.\]
+\emph{On complète le carré} : en développant $(x-m-k\sigma^2)^2=(x-m)^2-2k\sigma^2(x-m)+k^2\sigma^4$,
+\[-\frac{(x-m-k\sigma^2)^2}{2\sigma^2}+km+\frac{k^2\sigma^2}{2}
+=-\frac{(x-m)^2}{2\sigma^2}+k(x-m)-\frac{k^2\sigma^2}2+km+\frac{k^2\sigma^2}{2}=kx-\frac{(x-m)^2}{2\sigma^2}.\]
+D'où
+\[\E(e^{kX})=e^{km+\frac{k^2\sigma^2}{2}}\int_\R\underbrace{\frac{1}{\sqrt{2\pi\sigma^2}}\,e^{-\frac{(x-m-k\sigma^2)^2}{2\sigma^2}}}_{=f_{m+k\sigma^2,\,\sigma^2}(x)}\dd x
+=e^{km+\frac{k^2\sigma^2}{2}},\]
+car $f_{m+k\sigma^2,\sigma^2}$ est la densité de $\Nc(m+k\sigma^2,\sigma^2)$ (C5.1), d'intégrale $1$. En particulier $\E(e^{kX})<\infty$
+pour tout $k$ : $Y\in L^p$ pour tout $p\ge1$. Avec $k=1$ :
+
+\begin{resultat}
+$\E(Y)=\E(e^X)=e^{m+\sigma^2/2}$ \quad (fini : $Y\in L^1$). Plus généralement $\E(Y^k)=e^{km+k^2\sigma^2/2}$, $k\in\R$.
+\end{resultat}
+\emph{Attention} : $\E(e^X)\ne e^{\E(X)}=e^m$ ; l'écart $e^{\sigma^2/2}>1$ est cohérent avec l'inégalité de Jensen
+(\HC Jensen pour l'espérance ordinaire ; $\exp$ est strictement convexe et $X$ non constante).
+
+\question{3. Variance de $Y$.} D'après 2 avec $k=2$, $\E(Y^2)=e^{2m+2\sigma^2}<\infty$, donc $Y\in L^2$ et la variance est définie ;
+par la formule $\Var(Y)=\E(Y^2)-\E(Y)^2$ (formule standard, utilisée dans C2.12) :
+\[\Var(Y)=e^{2m+2\sigma^2}-\bigl(e^{m+\sigma^2/2}\bigr)^2=e^{2m+2\sigma^2}-e^{2m+\sigma^2}=e^{2m+\sigma^2}\bigl(e^{\sigma^2}-1\bigr).\]
+
+\begin{resultat}
+$\Var(Y)=e^{2m+\sigma^2}\bigl(e^{\sigma^2}-1\bigr)$, \quad strictement positive car $\sigma\ne0$.
+\end{resultat}
+
+\textit{Contrôle numérique} (awk), pour $m=0$, $\sigma^2=1$ : $\E(Y)=e^{1/2}\approx1{,}65$ et $\Var(Y)=e(e-1)\approx4{,}67$.
+
+\begin{remarque}[lien avec C5.1]
+La formule $\E(e^{kX})=e^{km+k^2\sigma^2/2}$ est la fonction caractéristique $\varphi_X(t)=e^{itm-t^2\sigma^2/2}$ de C5.1 évaluée formellement
+en $t=-ik$ (\HC prolongement analytique ; le calcul direct ci-dessus suffit). Application finance (fiche C2, §3) : si
+$\ln\frac{S_T}{s_0}\sim\Nc(\mu,\sigma^2T)$, alors $\E(S_T)=s_0\,e^{\mu+\sigma^2T/2}$.
+\end{remarque}
+\end{exo}
+
+\section*{Synthèse des réponses}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.3\linewidth}X@{}}
+\toprule
+Question & Réponse\\\midrule
+Ex.~1 & $\E(g(X))=\int_\R g\dd\PP_X$ dans $[0,+\infty]$ : indicatrices $\to$ étagées $\to$ convergence monotone.\\
+Ex.~2 & $\PP(T>t)=\PP(Y_t=0)=e^{-\lambda t}$, donc $T\sim\Expo(\lambda)$ (cadre : processus de Poisson).\\
+Ex.~2, application & $p_1=\PP(\tau>1)=e^{-0{,}2}\approx0{,}819$ ; $p_2=\PP(\tau>11\mid\tau>10)=e^{-0{,}2}\approx0{,}819$ : égales.\\
+Ex.~3, loi & $f_Y(y)=\frac{1}{y|\sigma|\sqrt{2\pi}}e^{-(\ln y-m)^2/(2\sigma^2)}\1_{y>0}$.\\
+Ex.~3, moments & $\E(Y)=e^{m+\sigma^2/2}$ ; $\Var(Y)=e^{2m+\sigma^2}(e^{\sigma^2}-1)$.\\\bottomrule
+\end{tabularx}
+
+\end{document}

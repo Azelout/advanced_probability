@@ -1,0 +1,77 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD1}{Tribus et mesures de probabilité}{Sigma-algebra, Probability Measure}
+
+\textit{À lire avant de chercher le TD. Renvois : « C1.4 » = fiche de cours C1, énoncé n°4. On donne des indications, et la réponse finale
+uniquement pour les calculs. Fiche de cours associée : \textbf{C1}.}
+
+\begin{exo}[Tribu engendrée par un ensemble]
+\outils Définition d'une tribu (C1.1) ; tribu engendrée $\sigma(\Cc)$ (C1.4) ; exemples de tribus (C1.3).
+
+\meth Pour montrer qu'une famille est une tribu, vérifier \emph{les trois axiomes un par un}. Pour un contre-exemple, travailler sur
+un $\Omega$ à 2 ou 3 éléments et des tribus de partitions $\{\emptyset,A,A^c,\Omega\}$.
+
+\indic
+\begin{enumerate}
+  \item Chaque axiome passe à l'intersection : si $A$ est dans toutes les $\Tc_i$, $A^c$ aussi, etc. $I$ peut être quelconque (même non dénombrable).
+  \item Prendre $\Omega=\{1,2,3\}$, $\Tc_1=\sigma(\{1\})$, $\Tc_2=\sigma(\{2\})$ et regarder $\{1\}\cup\{2\}$.
+  \item $\Tc_1\times\Tc_2$ désigne l'ensemble des pavés $A\times B$ : le complémentaire d'un pavé, $(A^c\times\Omega_2)\cup(A\times B^c)$,
+  n'est en général pas un pavé (essayer $\Omega_1=\Omega_2=\{0,1\}$ et $\{0\}\times\{0\}$). C'est pourquoi on définit $\Tc_1\otimes\Tc_2=\sigma(\Tc_1\times\Tc_2)$ (C3.12).
+  \item Intersection de \emph{toutes} les tribus contenant $\Cc$ : la famille est non vide ($\Pc(\Omega)$ en fait partie) ; utiliser la question 1.
+  Minimalité : par construction elle est incluse dans toute tribu contenant $\Cc$.
+  \item Chercher $\Cc_1,\Cc_2$ \emph{disjointes} qui engendrent pourtant la même tribu (penser à $A$ et $A^c$) : alors $\sigma(\Cc_1\cap\Cc_2)=\sigma(\emptyset)=\{\emptyset,\Omega\}$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}[Tribu engendrée par une partition]
+\outils C1.1, C1.3 (tribu d'une partition), C1.4.
+
+\meth Toute opération ensembliste sur des unions de blocs reste une union de blocs : $\bigl(\bigcup_{j\in J}A_j\bigr)^c=\bigcup_{j\in I\setminus J}A_j$
+et $\bigcup_n\bigcup_{j\in J_n}A_j=\bigcup_{j\in\bigcup_nJ_n}A_j$. Égalité de tribus : \textbf{double inclusion}.
+
+\indic
+\begin{enumerate}
+  \item $J=\emptyset$ donne $\emptyset$ ; complémentaire et union dénombrable comme ci-dessus (utiliser que les $A_i$ forment une \emph{partition}).
+  \item $\supset$ : $\Tc$ est une tribu contenant chaque $A_i$ (prendre $J=\{i\}$). $\subset$ : tout $\bigcup_{j\in J}A_j$ est une union
+  \emph{au plus dénombrable} (car $I$ l'est) d'éléments de $\sigma(\{A_i\})$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}[Compatibilité de probabilités]
+\outils Propriétés élémentaires : $\PP(A\cup B)=\PP(A)+\PP(B)-\PP(A\cap B)$ et $\PP\le1$ (C1.11).
+
+\meth Calculer la probabilité de $A\cup B$ imposée par les données et confronter à $\PP(A\cup B)\le1$.
+
+\indic Pour la borne inférieure : $A\subset A\cup B$ et $B\subset A\cup B$ (monotonie).
+
+\rep Impossible, car on obtiendrait $\PP(A\cup B)=0{,}7+0{,}9-0{,}5=1{,}1>1$. Borne : $\PP(A\cup B)\ge\max(\PP(A),\PP(B))$
+(ne pas confondre avec la minoration de l'intersection $\PP(A\cap B)\ge\PP(A)+\PP(B)-1$, qui découle de $\PP(A\cup B)\le1$, C1.11).
+\end{exo}
+
+\begin{exo}[Gérants bien ou mal informés]
+\outils Probabilité conditionnelle (C1.12) ; probabilités totales et formule de Bayes (C1.13, \emph{hors cours}).
+
+\meth Nommer les événements : $I$ = « gérant bien informé », $H$ = « le titre monte ». Traduire chaque phrase en une probabilité
+conditionnelle, puis appliquer les probabilités totales (partition $\{I,I^c\}$) et Bayes.
+
+\indic $\PP(I)=0{,}1$, $\PP(H\mid I)=0{,}8$, et « le titre baisse avec probabilité $0{,}6$ » chez un mal informé donne
+$\PP(H\mid I^c)=1-0{,}6=0{,}4$. On cherche $\PP(I^c\mid H)$.
+
+\rep $\PP(H)=0{,}1\times0{,}8+0{,}9\times0{,}4=0{,}44$ et $\PP(I^c\mid H)=\dfrac{0{,}36}{0{,}44}=\dfrac9{11}\approx0{,}818$.
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Montrer qu'une famille est une tribu & Vérifier $\emptyset$, complémentaire, union dénombrable (C1.1).\\
+Montrer qu'une construction n'est pas une tribu & Contre-exemple sur $\Omega$ fini (2--3 points), tribus $\{\emptyset,A,A^c,\Omega\}$.\\
+Identifier $\sigma(\Cc)$ & Double inclusion : « $\supset$ » car $\sigma(\Cc)$ est une tribu contenant $\Cc$ ; « $\subset$ » par minimalité (C1.4).\\
+Tribu d'une partition dénombrable & Unions de blocs ; c'est $\sigma(\{A_i\})$ (C1.3).\\
+Des valeurs de $\PP$ sont-elles compatibles ? & Inclusion--exclusion, $0\le\PP\le1$, monotonie (C1.11).\\
+« Sachant que l'on observe… » & Nommer les événements, partition, probabilités totales puis Bayes (C1.13).\\\bottomrule
+\end{tabularx}
+
+\end{document}

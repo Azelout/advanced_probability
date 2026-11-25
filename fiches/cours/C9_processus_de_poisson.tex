@@ -1,0 +1,135 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C9}{Processus de Poisson}{Poisson process}
+
+\textit{Source : slides, chapitre 10 (Thm~21) ; poly « Gaussian vector » (Déf.~33, Thm~34--39), plus détaillé.
+Modèle d'arrivées aléatoires : clients d'une file, appels, sinistres (risque), blocs d'une blockchain.}
+
+\section*{1. Processus ponctuel et fonction de comptage}
+
+\begin{definition}[processus ponctuel, \emph{point process}]\label{C9:ponctuel}
+Sur $(\Omega,\F,\PP)$, une suite $(T_n)_{n\ge1}$ de v.a.\ à valeurs dans $\R_+$, strictement croissante, avec $T_n\to+\infty$ p.s. ;
+$T_0=0$ par convention : $0<T_1<T_2<\dots<T_n<\dots\to\infty$. $T_n$ est l'instant de la $n$-ième arrivée.
+Inter-arrivées : $\tau_n=T_n-T_{n-1}>0$, et $T_n=\sum_{i=1}^n\tau_i$ (connaître $(T_n)$ ou $(\tau_n)$, c'est pareil).
+\end{definition}
+
+\begin{definition}[fonction de comptage, \emph{counting process}]\label{C9:comptage}
+$N_t=\sup\{j\ge1,\ T_j\le t\}=\sum_{j\ge1}\1_{\{T_j\le t\}}$ ($=0$ si $T_1>t$) : nombre d'arrivées dans $[0,t]$.
+$N_0=0$ p.s.\ et $N_t<\infty$ p.s.\ (car $T_n\to\infty$).
+\end{definition}
+
+\begin{proposition}[dictionnaire $N\leftrightarrow T$]\label{C9:dico}
+Pour $n\ge1$ et $0\le s<t$ :
+\begin{gather*}\{N_t\ge n\}=\{T_n\le t\},\qquad \{N_t=n\}=\{T_n\le t<T_{n+1}\},\\
+\{N_t\le n\}=\{T_{n+1}>t\},\qquad \{N_s<n\le N_t\}=\{s<T_n\le t\}.\end{gather*}
+\end{proposition}
+\begin{idee}
+Si $T_n(\omega)\le t$, comme $T_1\le\dots\le T_n$, on a $T_j(\omega)\le t$ pour $j\le n$, donc $N_t(\omega)\ge n$ ; réciproquement,
+$N_t(\omega)\ge n$ force $T_j(\omega)\le t$ pour $j\le n$. Le reste par complémentaire :
+$\{N_t\le n\}=\{N_t\ge n+1\}^c=\{T_{n+1}\le t\}^c$, et $\{N_t=n\}=\{N_t\ge n\}\cap\{N_t\le n\}$.
+\end{idee}
+
+\section*{2. Processus de Poisson}
+
+\begin{definition}[processus de Poisson d'intensité $\lambda>0$, slides]\label{C9:def}
+Un processus de comptage $N=(N_t)_{t\ge0}$ tel que
+\begin{enumerate}
+  \item $N_0=0$ ;
+  \item \textbf{accroissements indépendants} : pour $0\le t_1<\dots<t_n$, $N_{t_1},N_{t_2}-N_{t_1},\dots,N_{t_n}-N_{t_{n-1}}$ sont indépendantes ;
+  \item \textbf{accroissements stationnaires} : pour $s,t\ge0$, $N_{t+s}-N_s$ a même loi que $N_t$ ;
+  \item pour tout $t\ge0$, $N_t\sim\Poi(\lambda t)$.
+\end{enumerate}
+C'est un processus de Lévy (accroissements indépendants et stationnaires).
+\end{definition}
+
+\begin{theoreme}[poly : les accroissements suffisent]\label{C9:thm34}
+Si $N$ est un processus de comptage à accroissements indépendants et stationnaires (Déf.~33 du poly), il existe $\lambda>0$ tel que
+pour $0\le s<t$ : $N_t-N_s\sim\Poi(\lambda(t-s))$, i.e.\ $\PP(N_t-N_s=k)=e^{-\lambda(t-s)}\frac{(\lambda(t-s))^k}{k!}$.
+En particulier $N_t\sim\Poi(\lambda t)$, et $\lambda=\E(N_{t+1}-N_t)$ est le nombre moyen d'arrivées par unité de temps.
+\end{theoreme}
+\begin{idee}
+$G_t(u)=\E(u^{N_t})$ vérifie, par indépendance puis stationnarité, $G_t(u)=\E(u^{N_t-N_s})\E(u^{N_s})=G_{t-s}(u)G_s(u)$,
+d'où $G_t(u)=(G_1(u))^t=e^{-t\lambda(u)}$ ; il reste à montrer $\lambda(u)=\lambda(0)(1-u)$, fonction génératrice de Poisson.
+\end{idee}
+
+\begin{theoreme}[première arrivée et attente résiduelle]\label{C9:T1}
+$T_1\sim\Expo(\lambda)$. Pour tout $s\ge0$, l'attente après $s$ de la première arrivée, $T_{N_s+1}-s$, suit aussi $\Expo(\lambda)$.
+\end{theoreme}
+\begin{idee}
+$\{T_1>t\}=\{N_t\ge1\}^c=\{N_t=0\}$ donc $\PP(T_1>t)=e^{-\lambda t}$, la queue de $\Expo(\lambda)$.
+$\{T_{N_s+1}-s>t\}=\{N_{s+t}-N_s=0\}$ (aucune arrivée dans $]s,s+t]$), de probabilité $\PP(N_t=0)=e^{-\lambda t}$ par stationnarité.
+\end{idee}
+
+\begin{theoreme}[propriété de Markov forte, poly Thm~36]\label{C9:markov}
+Soit $S$ un $\Ff^N$-temps d'arrêt avec $S<\infty$ p.s., et $N^S_t=N_{S+t}-N_S$. Alors $(N^S_t)_{t\ge0}$ est un processus de Poisson
+d'intensité $\lambda$, indépendant de $\F^N_S$. ($N^S$ compte les arrivées $T^S_n=T_{N_S+n}-S$ après $S$.)
+\end{theoreme}
+% À VÉRIFIER : le poly écrit « Assume that {S < infinity} » (lu : S < infini p.s.) et « Then (N_t) is a Poisson process » (lu : N^S).
+\begin{remarque}
+\emph{Hors cours :} $\F^N_S=\{A\in\F,\ A\cap\{S\le t\}\in\F^N_t\ \forall t\}$ est l'information disponible à l'instant aléatoire $S$.
+\end{remarque}
+
+\begin{theoreme}[inter-arrivées, slides Thm~21 / poly Thm~37]\label{C9:interarrivees}
+Si $N$ est un processus de Poisson d'intensité $\lambda$, les $(\tau_n)_{n\ge1}$ sont \textbf{indépendantes et identiquement distribuées}
+de loi $\Expo(\lambda)$.
+\end{theoreme}
+\begin{idee}
+$\tau_1=T_1\sim\Expo(\lambda)$ (Thm~\ref{C9:T1}). Markov forte avec $S=T_1$ : $N^{T_1}$ est un Poisson($\lambda$) indépendant de
+$\F^N_{T_1}\ni\tau_1$, et sa première arrivée est $T_2-T_1=\tau_2$. On itère.
+\end{idee}
+
+\begin{theoreme}[réciproque, poly Thm~38]\label{C9:construction}
+Si $(\tau_n)_{n\ge1}$ sont indépendantes de loi $\Expo(\lambda)$, $T_0=0$, $T_n=\sum_{i=1}^n\tau_i$ et $N_t=\sup\{j\ge1,\ T_j\le t\}$, alors
+$(N_t)_{t\ge0}$ est un processus de Poisson d'intensité $\lambda$.
+\end{theoreme}
+
+\begin{theoreme}[comportement en temps long, poly Thm~39]\label{C9:asympt}
+$\dfrac{N_t}{t}\xrightarrow[t\to+\infty]{\text{p.s.}}\lambda$ \quad et \quad
+$\dfrac{N_t-\lambda t}{\sqrt{\lambda t}}\xrightarrow[t\to+\infty]{\text{loi}}\Nc(0,1)$.
+\end{theoreme}
+\begin{idee}
+$N_n=\sum_{i=1}^n(N_i-N_{i-1})$, somme de v.a.\ i.i.d.\ $\Poi(\lambda)$ : LGN puis TCL aux temps entiers (C4) ; on contrôle ensuite
+$\frac{N_t}{t}=\frac{N_{[t]}}{[t]}\cdot\frac{[t]}{t}+\frac{N_t-N_{[t]}}{t}$ avec $\sup_{n<t<n+1}\frac{N_t-N_n}{n}\to0$ (« encore un peu de travail »).
+\end{idee}
+
+\begin{horscours}[à savoir, standard]\label{C9:hc}
+$\E(N_t)=\Var(N_t)=\lambda t$. $T_n$ (somme de $n$ exponentielles indépendantes) suit la loi d'Erlang / Gamma$(n,\lambda)$ (densité rappelée dans les TD4 et TD5) :
+$f_{T_n}(t)=\lambda^n\frac{t^{n-1}}{(n-1)!}e^{-\lambda t}\1_{t>0}$. Si $X\sim\Poi(\lambda)\indep Y\sim\Poi(\mu)$, $X+Y\sim\Poi(\lambda+\mu)$.
+Absence de mémoire de l'exponentielle : $\PP(\tau>s+t\mid\tau>s)=\PP(\tau>t)$.
+\end{horscours}
+
+\begin{liens}
+\[\text{Déf.~\ref{C9:def} (accroissements + loi de Poisson)}\iff\text{inter-arrivées i.i.d.\ }\Expo(\lambda)\quad(\text{Thm~\ref{C9:interarrivees} et \ref{C9:construction}})\]
+\begin{itemize}
+  \item Accroissements indépendants et accroissements stationnaires sont deux hypothèses distinctes : aucune n'entraîne l'autre.
+  Par exemple, un processus de Poisson d'intensité variable $\lambda(t)$ (hors cours) garde des accroissements indépendants mais
+  non stationnaires. Réciproquement, \emph{stationnaires $\not\Rightarrow$ indépendants} (hors cours) : processus de Poisson \emph{mélangé}, où $\Lambda$ vaut 1 ou 2 avec probabilité $\frac12$ et, sachant $\Lambda$, $N$ est un Poisson d'intensité $\Lambda$. Ses accroissements sont stationnaires, mais $\Cov(N_1,N_2-N_1)=\Var(\Lambda)=\frac14>0$.
+  \item Poisson $\Rightarrow$ $N_t\sim\Poi(\lambda t)$ pour tout $t$ ; mais les lois marginales $(N_t)$ seules ne déterminent pas la loi du processus : il faut les lois fini-dimensionnelles (C8) ou les hypothèses sur les accroissements.
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item $\Expo(\lambda)$ a pour moyenne $1/\lambda$ ; $\Poi(\lambda t)$ a pour moyenne $\lambda t$ ; ne pas confondre intensité et durée moyenne.
+  \item $\{N_t\ge n\}=\{T_n\le t\}$ : le sens des inégalités s'inverse entre $N$ et $T$.
+  \item L'intervalle $T_{N_t+1}-T_{N_t}$ \emph{qui contient} $t$ n'est pas de loi $\Expo(\lambda)$ : il est en moyenne plus long
+  (paradoxe de l'autobus, TD5, ex.~11). En revanche l'attente résiduelle $T_{N_t+1}-t$ est bien $\Expo(\lambda)$.
+  \item Pour calculer une probabilité sur $T_n$, penser à la traduire en événement sur $N_t$ (et réciproquement).
+  \item Les accroissements doivent porter sur des intervalles \emph{disjoints} pour être indépendants.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[calcul via le dictionnaire]\label{C9:ex1}
+$\lambda=1{,}5$ par heure, $t=2$ h, donc $\lambda t=3$. $\PP(N_2=3)=e^{-3}\frac{3^3}{3!}=4{,}5\,e^{-3}\approx0{,}224$.
+$\PP(T_3\le2)=\PP(N_2\ge3)=1-e^{-3}\bigl(1+3+\frac92\bigr)=1-8{,}5\,e^{-3}\approx0{,}577$.
+\end{exemple}
+
+\begin{exemple}[attente résiduelle]\label{C9:ex2}
+Clients à $\lambda=2$ par minute. Quel que soit le passé (indépendance vis-à-vis de $\F^N_s$, Thm~\ref{C9:markov} avec $S=s$), la probabilité qu'aucun client n'arrive dans les 30 prochaines secondes est
+$\PP(T_{N_s+1}-s>\frac12)=e^{-2\cdot\frac12}=e^{-1}\approx0{,}368$ (Thm~\ref{C9:T1}), et l'attente moyenne est $\frac1\lambda=30$ s.
+\end{exemple}
+
+\end{document}

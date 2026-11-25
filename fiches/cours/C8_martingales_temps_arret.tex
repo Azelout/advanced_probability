@@ -1,0 +1,142 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C8}{Processus, martingales, temps d'arrêt}{Random process, martingale and stopping time}
+
+\textit{Source : slides, chapitre 9 (Déf.~60--66, Thm~18--20) ; poly « Gaussian vector » (Déf.~25--31, Thm~28--32).
+Le cours est écrit en temps continu ; les TD sont surtout en temps discret ($t=n\in\N$) : les adaptations sont signalées.}
+
+\section*{1. Processus aléatoires}
+
+Cadre : espace probabilisé filtré $(\Omega,\F,\Ff,\PP)$, $\Ff=(\F_t)_{t\in I}$ filtration, $I=[0,T]$ ou $\R_+$ (ou $\N$).
+Un \emph{processus} est une famille $(X_t)_{t\in I}$ de v.a.\ ; pour $\omega$ fixé, $t\mapsto X_t(\omega)$ est une \emph{trajectoire}.
+La loi de $X$ est déterminée par les lois fini-dimensionnelles de $(X_{t_1},\dots,X_{t_n})$.
+$X$ est \emph{continu} si toutes ses trajectoires le sont.
+
+\begin{definition}[indépendance, adaptation, filtration naturelle]\label{C8:adapte}\leavevmode
+\begin{itemize}
+  \item $(X_t)$ et $(Y_t)$ sont indépendants si $(X_{t_1},\dots,X_{t_n})\indep(Y_{s_1},\dots,Y_{s_m})$ pour tous $n$, $t_1<\dots<t_n$,
+  $m$, $s_1<\dots<s_m$.
+  \item $X$ est \emph{adapté} si $X_t$ est $\F_t$-mesurable pour tout $t$.
+  \item Filtration naturelle : $\F^X_t=\sigma(X_s,\ s\le t)$ (la plus petite qui rende $X$ adapté).
+  \item « Conditions habituelles » (finance) : tribus complètes et filtration continue à droite, $\F_t=\bigcap_{s>t}\F_s$.
+\end{itemize}
+\end{definition}
+
+\section*{2. Martingales}
+
+\begin{definition}[(sous-/sur-)martingale]\label{C8:mart}
+Un processus réel $(X_t)_{0\le t\le T}$ est une $(\Ff,\PP)$-\emph{sous-martingale} / \emph{martingale} / \emph{sur-martingale} si
+\begin{enumerate}[label=(\roman*)]
+  \item $X_t$ est $\F_t$-mesurable pour tout $t$ (adapté) ;
+  \item $\E|X_t|<+\infty$ pour tout $t$ (intégrable) ;
+  \item pour tous $s\le t$, $\PP$-p.s. : $\E(X_t\mid\F_s)\ge X_s$ (sous-) ; $=X_s$ (martingale) ; $\le X_s$ (sur-).
+\end{enumerate}
+La définition dépend de la filtration $\Ff$ \textbf{et} de la probabilité $\PP$.
+\end{definition}
+
+\begin{proposition}\label{C8:prop-mart}\leavevmode
+\begin{enumerate}
+  \item (martingale seulement) (iii) $\iff X_t=\E(X_T\mid\F_t)$ p.s.\ pour tout $0\le t\le T$.
+  \item Par la tour : $t\mapsto\E(X_t)$ est croissante (sous-), constante (martingale), décroissante (sur-).
+  \item Une $\Ff$-(sous/sur)-martingale l'est aussi pour sa filtration naturelle $\Ff^X$.
+\end{enumerate}
+\end{proposition}
+\begin{idee}
+3 : $\F^X_s\subset\F_s$ car $X$ est adapté ; par la tour, $\E(X_t\mid\F_s^X)=\E(\E(X_t\mid\F_s)\mid\F^X_s)=\E(X_s\mid\F^X_s)=X_s$.
+\end{idee}
+
+\begin{horscours}[temps discret]\label{C8:discret}
+Pour $(X_n)_{n\in\N}$ adapté et intégrable, il suffit de vérifier $\E(X_{n+1}\mid\F_n)=X_n$ (resp.\ $\ge,\le$) pour tout $n$ :
+par la tour, $\E(X_{n+k}\mid\F_n)=\E(\E(X_{n+k}\mid\F_{n+k-1})\mid\F_n)=\dots=X_n$.
+\end{horscours}
+
+\begin{theoreme}[inégalités de Doob]\label{C8:doob}
+Soit $(X_t)_{t\ge0}$ une martingale \textbf{continue}, $\Ff$-adaptée, avec $\E(X_t^2)<\infty$, et $X_t^*:=\sup_{0\le s\le t}|X_s|$.
+Pour tous $t>0$, $\lambda>0$ : $\PP(X^*_t\ge\lambda)\le\frac1{\lambda^2}\E(X_t^2)$ et $\E((X^*_t)^2)\le4\E(X_t^2)$.
+\end{theoreme}
+
+\section*{3. Temps d'arrêt}
+
+\begin{definition}[temps d'arrêt, \emph{stopping time}]\label{C8:ta}
+$\tau:(\Omega,\F)\to\R\cup\{+\infty\}$ est un $\Ff$-temps d'arrêt si $\forall t$, $\{\tau\le t\}\in\F_t$
+(« à la date $t$, on sait si l'on s'est déjà arrêté »).
+\emph{Temps discret (standard) :} pour $\tau$ à valeurs dans $\N\cup\{+\infty\}$, équivaut à $\{\tau=n\}\in\F_n$ pour tout $n\in\N$.
+\end{definition}
+
+\begin{theoreme}[temps d'entrée]\label{C8:entree}
+Soit $X$ un processus $\Ff$-adapté à valeurs dans $\R^d$ et $A\in\Bc(\R^d)$. Alors
+$\tau_A=\inf\{s\ge0,\ X_s\in A\}$ (convention $\inf\emptyset=+\infty$) est un $\Ff$-temps d'arrêt.
+\end{theoreme}
+\begin{remarque}
+En temps discret c'est immédiat : $\{\tau_A\le n\}=\bigcup_{k\le n}\{X_k\in A\}\in\F_n$.
+En temps continu, l'énoncé général demande des hypothèses supplémentaires (hors cours : $X$ progressivement mesurable, par ex.\ à trajectoires continues à droite, et conditions habituelles) ;
+% À VÉRIFIER : les slides énoncent le Thm 19 sans hypothèse de continuité ni condition habituelle.
+le cas « $X$ continu, $A$ fermé » se traite à la main (TD5, ex.~1).
+\end{remarque}
+
+\begin{definition}[processus arrêté]\label{C8:arrete}
+Pour $X$ adapté et $\tau$ temps d'arrêt : $X^\tau_t(\omega)=X_{t\wedge\tau(\omega)}(\omega)$, i.e.\ $X_t$ sur $\{t\le\tau\}$ et $X_\tau$ sur $\{t>\tau\}$.
+\end{definition}
+
+\begin{theoreme}[arrêt de Doob, temps d'arrêt borné]\label{C8:arret}
+Soit $X$ adapté \textbf{continu} (hypothèse des slides ; inutile en temps discret) et $\tau$ un temps d'arrêt avec $\PP(\tau\le T)=1$ pour un $T\in\R$.
+\begin{enumerate}
+  \item Si $X$ est une $(\Ff,\PP)$-martingale : $\E(X_\tau\mid\F_t)=X_{t\wedge\tau}$ p.s. En particulier $\E(X_\tau)=\E(X_0)$.
+  \item Si $X$ est une sur-martingale (resp.\ sous-) : $\E(X_\tau\mid\F_t)\le X_{t\wedge\tau}$ (resp.\ $\ge$) p.s.
+\end{enumerate}
+\end{theoreme}
+
+\begin{horscours}[outils pour $\tau$ non borné, standard]\label{C8:nonborne}\leavevmode
+\begin{enumerate}
+  \item Le processus arrêté $(X_{n\wedge\tau})_n$ d'une martingale est une martingale ; donc $\E(X_{n\wedge\tau})=\E(X_0)$ pour tout $n$
+  ($n\wedge\tau$ est un temps d'arrêt borné).
+  \item Pour passer à la limite $n\to\infty$ : si $\tau<\infty$ p.s., $X_{n\wedge\tau}\to X_\tau$ p.s. ; si de plus
+  $|X_{n\wedge\tau}|\le Y\in L^1$ (ex.\ $X^\tau$ borné), convergence dominée : $\E(X_\tau)=\E(X_0)$.
+  Pour des quantités positives croissantes en $n$ ($\tau\wedge n$, $c^{-\tau\wedge n}$ avec $0<c\le1$…) : convergence monotone.
+  \item \emph{Martingale régulière} (uniformément intégrable, \emph{fermée}) : il existe $X_\infty\in L^1$ avec $X_n=\E(X_\infty\mid\F_n)$ ;
+  une martingale dominée par une v.a.\ intégrable l'est.
+  \item Convergence : une martingale (ou sous-martingale) telle que $\sup_n\E|X_n|<\infty$ converge p.s. ; une martingale bornée
+  (ex.\ à valeurs dans $[0,1]$) converge p.s.\ et dans $L^1$.
+\end{enumerate}
+\end{horscours}
+
+\begin{liens}
+\begin{itemize}
+  \item Martingale $\Rightarrow$ espérance constante ; réciproque fausse : $X_n=n\varepsilon$ avec $\varepsilon=\pm1$ équiprobable
+  et $\F_n=\sigma(\varepsilon)$ pour $n\ge1$ : $\E X_n=0$ pour tout $n$ mais $\E(X_2\mid\F_1)=2\varepsilon\neq X_1$.
+  \item Martingale $=$ sous- et sur-martingale ; $X$ sous-martingale $\iff-X$ sur-martingale.
+  \item (Standard) Martingale et $\Phi$ convexe $\Rightarrow\Phi(X)$ sous-martingale (si intégrable) : Jensen conditionnel (C6). Pour une \emph{sous}-martingale, il faut $\Phi$ convexe \emph{croissante} (TD5, ex.~5--6).
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item Ne jamais oublier (i) adaptation et (ii) intégrabilité avant de calculer $\E(X_{n+1}\mid\F_n)$.
+  \item $\E(X_\tau)=\E(X_0)$ peut être \textbf{faux} si $\tau$ n'est pas borné : marche simple symétrique $S$ et
+  $\tau=\inf\{n,\ S_n=1\}$ ; $\tau<\infty$ p.s.\ (récurrence de la marche, admis) et $S_\tau=1$, mais $\E(S_0)=0$. Il faut borner $\tau$ ou dominer $X^\tau$.
+  \item Le \emph{dernier} passage dans un ensemble n'est pas en général un temps d'arrêt (il dépend du futur).
+  \item Une martingale l'est pour un couple $(\Ff,\PP)$ : changer de probabilité (C7) ou de filtration peut tout casser
+  (une martingale pour $\Ff$ l'est pour une filtration plus petite à laquelle elle est adaptée, pas nécessairement pour une plus grosse).
+  \item Les inégalités de Doob portent sur $\sup|X_s|$ et demandent $X$ martingale continue de carré intégrable.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[martingale quadratique]\label{C8:ex-quad}
+$(Z_i)$ i.i.d., $\PP(Z_i=\pm1)=\frac12$, $S_n=Z_1+\dots+Z_n$, $\F_n=\sigma(Z_1,\dots,Z_n)$, $M_n=S_n^2-n$.
+Adapté, intégrable ($|M_n|\le n^2+n$). $\E(S_{n+1}^2\mid\F_n)=S_n^2+2S_n\E(Z_{n+1})+\E(Z_{n+1}^2)=S_n^2+1$
+($S_n$ connu, $Z_{n+1}\indep\F_n$), donc $\E(M_{n+1}\mid\F_n)=M_n$ : martingale. ($S$ est elle-même une martingale.)
+\end{exemple}
+
+\begin{exemple}[sortie d'un intervalle, arrêt optionnel]\label{C8:ex-sortie}
+Même $S$, $a,b\in\N^*$, $\tau=\inf\{n,\ S_n\in\{-a,b\}\}$.
+\emph{$\tau<\infty$ p.s.} : $\E(M_{n\wedge\tau})=0$ donne $\E(n\wedge\tau)=\E(S_{n\wedge\tau}^2)\le\max(a,b)^2$ ; par convergence monotone
+$\E(\tau)<\infty$.
+\emph{Probabilité de sortie par le haut} : $|S_{n\wedge\tau}|\le\max(a,b)$, convergence dominée dans $\E(S_{n\wedge\tau})=0$ :
+$b\,\PP(S_\tau=b)-a(1-\PP(S_\tau=b))=0$, donc $\PP(S_\tau=b)=\frac a{a+b}$.
+\emph{Durée moyenne} : dans $\E(\tau\wedge n)=\E(S_{\tau\wedge n}^2)$, convergence monotone à gauche et dominée à droite donnent $\E(\tau)=\E(S_\tau^2)=b^2\frac a{a+b}+a^2\frac b{a+b}=ab$.
+\end{exemple}
+
+\end{document}

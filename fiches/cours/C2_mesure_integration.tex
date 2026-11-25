@@ -1,0 +1,163 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C2}{Mesure, densité et théorème de transfert}{A bit of measure theory}
+
+\textit{Source : slides, chapitre 4. Objectif du chapitre : intégrer une fonction $f$ par rapport à une mesure $\mu$
+(Lebesgue, comptage, ou mesure à densité) et calculer $\E(g(X))$.}
+
+\section*{1. Mesures de référence}
+
+\begin{definition}[Mesure, standard]\label{C2:mesure}
+Sur un espace mesurable $(E,\Ec)$, une \emph{mesure} est une application $\mu:\Ec\to[0,+\infty]$ telle que
+$\mu(\emptyset)=0$ et $\mu\bigl(\bigsqcup_n A_n\bigr)=\sum_n\mu(A_n)$ pour toute suite d'éléments deux à deux disjoints.
+$(E,\Ec,\mu)$ est un \emph{espace mesuré}. Une probabilité est une mesure de masse totale 1.
+\end{definition}
+
+\begin{theoreme}[Mesure de Lebesgue, \emph{Lebesgue measure}]\label{C2:lebesgue}
+La mesure de Lebesgue $\lambda$ est l'unique mesure sur $(\R,\Bc(\R))$
+\begin{enumerate*}[label=(\arabic*)]
+  \item invariante par translation et
+  \item telle que $\lambda([0,1])=1$.
+\end{enumerate*}
+La mesure d'un intervalle est sa longueur. Sur $(\R^d,\Bc(\R^d))$, $\lambda_d$ est l'unique mesure qui associe
+à un hypercube son volume ; c'est la mesure produit $\lambda^{\otimes d}$.
+\end{theoreme}
+
+\begin{definition}[Mesure de comptage, \emph{counting measure}]\label{C2:comptage}
+Sur $(E,\Ec)$ : $\mu(A)=\card(A)$ si $A$ est fini, $\mu(A)=+\infty$ sinon.
+\end{definition}
+
+\begin{proposition}\label{C2:denombrable-nul}
+Tout ensemble fini ou dénombrable est de mesure de Lebesgue nulle.
+\end{proposition}
+\begin{idee}
+$\{a\}=\bigcap_{n\ge1}\,]a-\frac1n,a+\frac1n[$, suite décroissante d'ensembles de mesure finie, donc
+$\lambda(\{a\})=\lim\downarrow\lambda(]a-\frac1n,a+\frac1n[)=\lim \frac2n=0$ ; puis $\sigma$-additivité pour une union dénombrable de points.
+\end{idee}
+
+\begin{definition}[Négligeable, presque partout, \emph{a.e./a.s.}]\label{C2:negligeable}
+$A$ est \emph{$\mu$-négligeable} s'il existe $B\in\Ec$ tel que $A\subset B$ et $\mu(B)=0$.
+Une propriété $\mathcal P(\omega)$ est vraie \emph{$\mu$-presque partout} (ou \emph{presque sûrement}, p.p./p.s.)
+si $\{\omega,\ \mathcal P(\omega)\text{ fausse}\}$ est $\mu$-négligeable.
+Exemples : un ensemble fini ou dénombrable est Lebesgue-négligeable ; pour la mesure de comptage, seul $\emptyset$ est négligeable.
+\end{definition}
+
+\section*{2. Intégrale et densités}
+
+Trois cas (dans les bons cas : $f\ge0$ ou $f$ intégrable) :
+\begin{itemize}
+  \item $\mu$ = comptage : $\displaystyle\int_E f\dd\mu=\sum_{x\in E}f(x)$ ;
+  \item $\mu$ = Lebesgue : $\int_E f\dd\mu$ est l'intégrale de Lebesgue, qui se calcule souvent comme une intégrale de Riemann
+  (revoir les primitives usuelles) ;
+  \item $\mu$ a une densité par rapport à Lebesgue ou au comptage : voir ci-dessous.
+\end{itemize}
+
+\begin{lemme}[Mesure à densité]\label{C2:densite}
+Soit $(E,\Ec,\mu)$ avec $E=\R,\R^d,\N$ ou $\N^d$ et $\mu$ la mesure de Lebesgue ou de comptage. Soit
+$f\ge0$, $f\in L^1_{\R_+}(E,\Ec,\mu)$, et $\nu(B):=\int_B f\dd\mu$ pour $B\in\Ec$. Alors $\nu$ est une mesure sur
+$(E,\Ec)$, de densité $f$ par rapport à $\mu$ ; on note $\nu=f\cdot\mu$.
+Si $\int_E f\dd\mu=1$, $f$ est une \emph{densité de probabilité} et $\nu$ une probabilité.
+\end{lemme}
+
+\begin{definition}[Loi, densité d'une v.a.]\label{C2:loi}
+La \emph{loi} de $X:(\Omega,\F,\PP)\to(E,\Ec)$ est la probabilité image $\PP_X(B):=\PP(X\in B)$, $B\in\Ec$.
+$X$ a pour densité $f_X$ par rapport à $\mu$ si $\PP_X=f_X\cdot\mu$, i.e.\ $\PP(X\in B)=\int_B f_X\dd\mu$ pour tout $B\in\Ec$.
+\end{definition}
+
+\begin{theoreme}[Théorème de transfert, \emph{Transfer theorem}]\label{C2:transfert}
+% Slides : « Let X in L^1_K(Omega,T,mu) » (hypothese peu claire) ; remplacee ici par « des que tout est bien defini ».
+Soit $X:(\Omega,\F,\PP)\to(K,\Bc(K))$ avec $K=\R,\R^d,\N$ ou $\N^d$, et $g:(K,\Bc(K))\to(K',\Bc(K'))$ \textbf{mesurable}.
+Alors, dès que tout est bien défini,
+\[\E(g(X))=\int_\Omega g(X(\omega))\,\PP(\dd\omega)=\int_K g(x)\,\PP_X(\dd x).\]
+Si $g\ge0$, l'égalité est toujours vraie (dans $[0,+\infty]$). Pour $g=\mathrm{id}$ : $\E(X)=\int_K x\,\PP_X(\dd x)$.
+\end{theoreme}
+\begin{idee}
+Vrai pour $g=\1_B$ (c'est la définition de $\PP_X$), donc pour les fonctions étagées par linéarité, puis pour $g\ge0$
+par limite croissante de fonctions étagées et convergence monotone (TD2, ex.~1) ; enfin $g=g^+-g^-$ si $g(X)\in L^1$.
+\end{idee}
+
+\begin{corollaire}[calcul pratique, standard]\label{C2:calcul}
+Si $\PP_X=f_X\cdot\lambda_d$ : $\E(g(X))=\int_{\R^d}g(x)f_X(x)\dd x$.
+Si $X$ est à valeurs dans $\N$ : $\E(g(X))=\sum_{k\in\N}g(k)\PP(X=k)$.
+(Valable si $g\ge0$, ou si $\int|g(x)|f_X(x)\dd x<\infty$, resp.\ $\sum_k|g(k)|\PP(X=k)<\infty$.)
+\end{corollaire}
+
+\begin{methode}[Méthode : identifier une loi par la « fonction muette »]
+Pour trouver la loi de $Y=\varphi(X)$ : calculer $\E(h(Y))=\E(h(\varphi(X)))$ par transfert pour toute $h\ge0$ mesurable
+(ou continue bornée), faire un changement de variables pour l'écrire $\int h(y)\,g(y)\dd y$ ; alors $g$ est une densité de $Y$.
+Alternative : calculer la fonction de répartition $F_Y(y)=\PP(\varphi(X)\le y)$ puis dériver.
+\end{methode}
+
+\begin{horscours}[changement de variables en dimension 1]\label{C2:chgt-var}
+Si $X$ a une densité $f_X$ nulle hors d'un ouvert $U$ et si $\varphi:U\to V$ est un $C^1$-difféomorphisme, alors
+$Y=\varphi(X)$ a pour densité $f_Y(y)=f_X(\varphi^{-1}(y))\,\bigl|(\varphi^{-1})'(y)\bigr|\,\1_V(y)$.
+En dimension $d$ : remplacer $|(\varphi^{-1})'|$ par la valeur absolue du jacobien de $\varphi^{-1}$.
+\end{horscours}
+
+\begin{horscours}[lois usuelles à connaître]\label{C2:lois}
+\small
+\renewcommand{\arraystretch}{1.25}\leavevmode\par\noindent
+\begin{tabularx}{\linewidth}{@{}lXll@{}}
+\toprule
+Loi & Masse / densité & $\E$ & $\Var$\\\midrule
+Bernoulli $\mathcal B(p)$ & $\PP(X=1)=p=1-\PP(X=0)$ & $p$ & $p(1-p)$\\
+Binomiale $\mathcal B(n,p)$ & $\binom nk p^k(1-p)^{n-k}$, $0\le k\le n$ & $np$ & $np(1-p)$\\
+Poisson $\Poi(\lambda)$ & $e^{-\lambda}\lambda^k/k!$, $k\in\N$ & $\lambda$ & $\lambda$\\
+Géométrique sur $\N^*$ & $(1-p)^{k-1}p$, $k\ge1$ & $1/p$ & $(1-p)/p^2$\\
+Uniforme $\mathcal U([a,b])$ & $\frac1{b-a}\1_{[a,b]}(x)$ & $\frac{a+b}2$ & $\frac{(b-a)^2}{12}$\\
+Exponentielle $\Expo(\lambda)$ & $\lambda e^{-\lambda x}\1_{x>0}$ & $1/\lambda$ & $1/\lambda^2$\\
+Erlang / Gamma$(n,\lambda)$ & $\lambda^n\frac{x^{n-1}}{(n-1)!}e^{-\lambda x}\1_{x>0}$ & $n/\lambda$ & $n/\lambda^2$\\
+Gaussienne $\Nc(m,\sigma^2)$ & voir fiche C5 & $m$ & $\sigma^2$\\\bottomrule
+\end{tabularx}
+
+Fonction génératrice de Poisson : $\E(u^X)=e^{\lambda(u-1)}$. Exponentielle : $\PP(X>x)=e^{-\lambda x}$ pour $x\ge0$, et
+\emph{absence de mémoire} : $\PP(X>s+t\mid X>s)=\PP(X>t)$ pour tous $s,t\ge0$.
+\end{horscours}
+
+\section*{3. Exemple de la finance (slides)}
+
+Sous la probabilité « risque-neutre », le cours suppose $\ln\frac{S_T}{s_0}\sim\Nc(r,\sigma^2T)$.
+% À VÉRIFIER : les slides écrivent bien N(r, sigma^2 T). Dans le modèle de Black-Scholes usuel (hors cours),
+% la moyenne serait (r - sigma^2/2) T ; on reproduit ici l'énoncé des slides.
+Le prix du call de payoff $H=(S_T-K)_+$ est, par transfert appliqué à $g(x)=(s_0e^x-K)_+\ge0$ :
+\[\E\bigl((S_T-K)_+\bigr)=\int_\Omega\bigl(s_0e^{\ln(S_T(\omega)/s_0)}-K\bigr)_+\PP(\dd\omega)
+=\int_\R (s_0e^x-K)_+\,\frac{1}{\sqrt{2\pi\sigma^2T}}\,e^{-\frac{(x-r)^2}{2\sigma^2T}}\dd x.\]
+
+\begin{liens}
+\begin{itemize}
+  \item Probabilité = mesure de masse 1 ; « p.s. » = « $\PP$-presque partout ».
+  \item $X$ à densité par rapport à Lebesgue $\Rightarrow$ $\PP(X=a)=0$ pour tout $a$ (Prop.~\ref{C2:denombrable-nul}).
+  Réciproque fausse : il existe des lois sans atome et sans densité (ex.\ loi de Cantor, hors cours).
+  \item Deux v.a.\ de même loi ont même $\E(g(\cdot))$ : le transfert ne dépend que de $\PP_X$.
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item Le transfert exige $g$ \textbf{mesurable} et ($g\ge0$ ou $g(X)\in L^1$) : vérifier l'intégrabilité avant de couper une intégrale en deux.
+  \item Une densité n'est pas une probabilité : $f_X(x)$ peut dépasser 1 ; seule $\int f_X=1$ compte. Une densité est
+  définie à un ensemble Lebesgue-négligeable près.
+  \item « Densité » se dit \emph{par rapport à une mesure} : par rapport au comptage, c'est la fonction de masse $k\mapsto\PP(X=k)$.
+  \item Négligeable $\neq$ vide (pour Lebesgue, $\Q$ est négligeable) ; « p.s. » ne veut pas dire « pour tout $\omega$ ».
+  \item Changement de variables : ne pas oublier la valeur absolue du jacobien ni l'indicatrice du nouveau support.
+  \item Paramètre de $\Expo(\lambda)$ : moyenne $1/\lambda$, pas $\lambda$.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[espérance par transfert, cas à densité]\label{C2:ex1}
+$X\sim\Expo(\lambda)$, $g(x)=x^2\ge0$ :
+$\E(X^2)=\int_0^{+\infty}x^2\lambda e^{-\lambda x}\dd x=\frac{2}{\lambda^2}$ (deux intégrations par parties).
+D'où $\Var(X)=\E(X^2)-\E(X)^2=\frac2{\lambda^2}-\frac1{\lambda^2}=\frac1{\lambda^2}$.
+\end{exemple}
+
+\begin{exemple}[loi d'une image, méthode de la fonction muette]\label{C2:ex2}
+$U\sim\mathcal U([0,1])$, $Y=-\frac1\lambda\ln U$. Pour $h\ge0$ mesurable :
+$\E(h(Y))=\int_0^1h\bigl(-\tfrac1\lambda\ln u\bigr)\dd u$. Avec $y=-\frac1\lambda\ln u$, $u=e^{-\lambda y}$,
+$\dd u=-\lambda e^{-\lambda y}\dd y$ et $u\in]0,1[\iff y\in]0,+\infty[$ :
+$\E(h(Y))=\int_0^{+\infty}h(y)\,\lambda e^{-\lambda y}\dd y$. Donc $Y\sim\Expo(\lambda)$ (méthode de simulation par inversion).
+\end{exemple}
+
+\end{document}

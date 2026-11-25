@@ -1,0 +1,322 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+% Encadré local pour les résultats (macro absente du préambule)
+\newtcolorbox{resultat}{fichebox,colback=gray!6,colframe=black!55}
+\newcommand{\question}[1]{\par\medskip\noindent\textbf{Question #1.}~}
+\begin{document}
+\fiche{TD6}{Corrigé -- Martingales et théorème d'arrêt}{Doob's stopping time theorem}
+
+\textit{Corrigé rédigé du TD6. Renvois : « C8.11 » = fiche de cours C8, énoncé n°11 ; « C6.5, point 7 » = item 7 de la
+proposition C6.5. Les théorèmes de convergence monotone et dominée (pour l'espérance) sont ceux de l'intégration, rappelés
+dans C8.11, point 2 ; leurs versions conditionnelles sont C6.7. En temps discret, une suite adaptée et intégrable est une
+martingale dès que $\E(X_{n+1}\mid\F_n)=X_n$ p.s.\ pour tout $n$ (C8.4).}
+
+% =====================================================================
+\begin{exo}[{Martingale trigonométrique et sortie de $]-a,a[$}]
+
+\begin{alerte}
+\begin{itemize}
+  \item L'énoncé ne dit pas que les $Z_i$ sont \textbf{indépendantes}, et écrit « pour $i\in\{1,\dots,n\}$ ».
+  On suppose dans tout l'exercice que $(Z_i)_{i\ge1}$ est une suite \textbf{i.i.d.}\ de loi $\PP(Z_i=1)=\PP(Z_i=-1)=\frac12$
+  (marche aléatoire simple symétrique) : sans indépendance, la question 1 est fausse en général.
+  \item « $\F_0=(\Omega,\emptyset)$ » désigne la tribu triviale $\{\emptyset,\Omega\}$ ; $(\cos\lambda)^{-n\wedge\tau}$ se lit
+  $(\cos\lambda)^{-(n\wedge\tau)}$.
+  \item « Martingale régulière » (question 4) = martingale \emph{uniformément intégrable}, ou \emph{fermée} : notion
+  \textbf{hors cours} (seulement mentionnée en C8.11, point 3).
+\end{itemize}
+% À VÉRIFIER : énoncé (p. 1) sans hypothèse d'indépendance des Z_i ; on la suppose.
+\end{alerte}
+
+\textbf{Préliminaires.} Comme $a\in\N^*$, $0<\lambda<\frac\pi{2a}\le\frac\pi2$, donc $0<\cos\lambda<1$ ; de plus
+$0<\lambda a<\frac\pi2$, donc $\cos(\lambda a)>0$. Par C3.11 (paquets disjoints), $Z_{n+1}$ est indépendante de
+$(Z_1,\dots,Z_n)$, donc de $\F_n=\sigma(Z_1,\dots,Z_n)$. Enfin $\tau$ est le temps d'entrée de la suite adaptée $(S_n)$ dans
+le borélien $\{-a,a\}$ : c'est un $(\F_n)$-temps d'arrêt (C8.7 et la remarque qui le suit : $\{\tau\le n\}=\bigcup_{k\le n}\{|S_k|=a\}\in\F_n$).
+
+\question{1} \emph{Montrer que $X_n=(\cos\lambda)^{-n}\cos(\lambda S_n)$ est une martingale.}
+
+On vérifie les trois points de C8.2.
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{Adaptation.} $S_n=Z_1+\dots+Z_n$ est $\F_n$-mesurable, et $X_n=g(S_n)$ avec $g$ continue, donc $X_n$ est
+  $\F_n$-mesurable ($X_0=1$ est constante, donc $\F_0$-mesurable).
+  \item \emph{Intégrabilité.} $|X_n|\le(\cos\lambda)^{-n}$ : $X_n$ est bornée, donc dans $L^1$.
+  \item \emph{Propriété de martingale.} Par la formule d'addition,
+  \[\cos(\lambda S_{n+1})=\cos(\lambda S_n+\lambda Z_{n+1})=\cos(\lambda S_n)\cos(\lambda Z_{n+1})-\sin(\lambda S_n)\sin(\lambda Z_{n+1}).\]
+  Tous les termes sont bornés. Par linéarité (C6.5, point 2), « sortir ce qui est connu » ($\cos(\lambda S_n)$ et
+  $\sin(\lambda S_n)$ sont $\F_n$-mesurables bornées, C6.5, point 4) puis indépendance de $Z_{n+1}$ et $\F_n$ (C6.5, point 7) :
+  \[\E\bigl(\cos(\lambda S_{n+1})\mid\F_n\bigr)=\cos(\lambda S_n)\,\E\cos(\lambda Z_{n+1})-\sin(\lambda S_n)\,\E\sin(\lambda Z_{n+1})\quad\text{p.s.}\]
+  Or $\E\cos(\lambda Z_{n+1})=\frac12\bigl(\cos\lambda+\cos(-\lambda)\bigr)=\cos\lambda$ et
+  $\E\sin(\lambda Z_{n+1})=\frac12\bigl(\sin\lambda+\sin(-\lambda)\bigr)=0$ (parité). Donc
+  $\E(\cos(\lambda S_{n+1})\mid\F_n)=\cos\lambda\,\cos(\lambda S_n)$ p.s., et en multipliant par la constante $(\cos\lambda)^{-(n+1)}$ :
+  \[\E(X_{n+1}\mid\F_n)=(\cos\lambda)^{-(n+1)}\cos\lambda\,\cos(\lambda S_n)=X_n\quad\text{p.s.}\]
+\end{enumerate}
+\begin{resultat}
+$(X_n)_{n\ge0}$ est une $(\F_n)$-martingale (C8.4), avec $\E(X_n)=X_0=1$. (Le calcul ne demande que $\cos\lambda\neq0$.)
+\end{resultat}
+
+\question{2} \emph{Montrer que $1=\E(X_{n\wedge\tau})\ge\cos(\lambda a)\,\E\bigl((\cos\lambda)^{-(n\wedge\tau)}\bigr)$.}
+
+\emph{Égalité.} $n\wedge\tau$ est un temps d'arrêt (minimum d'un temps d'arrêt et d'une constante :
+$\{n\wedge\tau\le k\}=\Omega$ si $k\ge n$, $=\{\tau\le k\}\in\F_k$ sinon) borné par $n$. Le théorème d'arrêt de Doob pour un
+temps d'arrêt borné (C8.10, point 1 ; l'hypothèse de continuité est inutile en temps discret), ou C8.11, point 1, donne
+$\E(X_{n\wedge\tau})=\E(X_0)=\cos 0=1$.
+
+\emph{Inégalité.} Les pas valent $\pm1$ et $S_0=0$, donc la marche ne peut pas « sauter » par-dessus $\pm a$ : par récurrence,
+$|S_k|\le a-1$ pour tout $k<\tau$ (vrai pour $k=0$ ; si $|S_k|\le a-1$ alors $|S_{k+1}|\le a$, et $|S_{k+1}|\neq a$ si $k+1<\tau$).
+Par suite $|S_{n\wedge\tau}|\le a$ partout (y compris sur $\{\tau=\infty\}$), donc $|\lambda S_{n\wedge\tau}|\le\lambda a<\frac\pi2$.
+Comme $\cos$ est paire et décroissante sur $[0,\frac\pi2]$,
+\[\cos(\lambda S_{n\wedge\tau})\ge\cos(\lambda a)>0,\qquad\text{d'où}\qquad X_{n\wedge\tau}=(\cos\lambda)^{-(n\wedge\tau)}\cos(\lambda S_{n\wedge\tau})
+\ge\cos(\lambda a)\,(\cos\lambda)^{-(n\wedge\tau)}\]
+(car $(\cos\lambda)^{-(n\wedge\tau)}>0$). Les deux membres sont bornés (par $(\cos\lambda)^{-n}$) ; on prend l'espérance (croissance).
+\begin{resultat}
+Pour tout $n\ge0$ : $\ 1=\E(X_{n\wedge\tau})\ge\cos(\lambda a)\,\E\bigl((\cos\lambda)^{-(n\wedge\tau)}\bigr)$.
+\end{resultat}
+
+\question{3} \emph{En déduire $\E((\cos\lambda)^{-\tau})\le(\cos\lambda a)^{-1}$ et que $\tau<\infty$ p.s.}
+
+Posons $\theta=(\cos\lambda)^{-1}>1$. La suite $\theta^{n\wedge\tau}$ est positive et croissante en $n$, de limite $\theta^\tau$
+(avec $\theta^\tau=+\infty$ sur $\{\tau=+\infty\}$, puisque $\theta>1$). Par convergence monotone (C8.11, point 2) et la question 2
+(on divise par $\cos(\lambda a)>0$) :
+\[\E\bigl((\cos\lambda)^{-\tau}\bigr)=\lim_{n\to\infty}\uparrow\E\bigl((\cos\lambda)^{-(n\wedge\tau)}\bigr)\le\frac1{\cos(\lambda a)}<+\infty.\]
+Une v.a.\ positive d'espérance finie est finie p.s. ; or $(\cos\lambda)^{-\tau}=+\infty$ exactement sur $\{\tau=\infty\}$, donc
+$\PP(\tau=\infty)=0$.
+\begin{resultat}
+$\E\bigl((\cos\lambda)^{-\tau}\bigr)\le\dfrac1{\cos(\lambda a)}$, et $\tau<+\infty$ p.s.
+\end{resultat}
+
+\question{4} \emph{Montrer que $(X_{n\wedge\tau})_{n\ge0}$ est une martingale régulière.}
+
+\textbf{Hors cours :} martingale régulière (C8.11, point 3) : il existe $X_\infty\in L^1$ telle que $M_n=\E(X_\infty\mid\F_n)$ p.s.\
+pour tout $n$ ; c'est équivalent à l'uniforme intégrabilité $\lim_{K\to\infty}\sup_n\E\bigl(|M_n|\1_{\{|M_n|>K\}}\bigr)=0$. On montre les deux.
+
+\emph{Martingale.} Le processus arrêté d'une martingale est une martingale (C8.11, point 1 ; C8.9).
+
+\emph{Domination.} On a $|\cos(\lambda S_{n\wedge\tau})|\le1$ et $n\wedge\tau\le\tau$ avec $\theta>1$, donc
+\[|X_{n\wedge\tau}|\le(\cos\lambda)^{-(n\wedge\tau)}\le(\cos\lambda)^{-\tau}=:Y,\qquad Y\in L^1\ \text{(question 3)}.\]
+
+\emph{Uniforme intégrabilité.} $\sup_n\E\bigl(|X_{n\wedge\tau}|\1_{\{|X_{n\wedge\tau}|>K\}}\bigr)\le\E(Y\1_{\{Y>K\}})\to0$ quand
+$K\to\infty$ (convergence dominée : $Y\1_{\{Y>K\}}\to0$ p.s.\ car $Y<\infty$ p.s., et $\le Y\in L^1$).
+
+\emph{Fermeture.} Comme $\tau<\infty$ p.s., $X_{n\wedge\tau}=X_\tau$ dès que $n\ge\tau$, donc $X_{n\wedge\tau}\to X_\tau$ p.s., et
+$|X_\tau|\le Y$ donc $X_\tau\in L^1$. Pour $m\ge n$, $\E(X_{m\wedge\tau}\mid\F_n)=X_{n\wedge\tau}$ p.s.\ (martingale) ; quand $m\to\infty$,
+la convergence dominée conditionnelle (C6.7, point 3, domination par $Y$) donne $\E(X_{m\wedge\tau}\mid\F_n)\to\E(X_\tau\mid\F_n)$ p.s.
+\begin{resultat}
+$(X_{n\wedge\tau})_n$ est une martingale dominée par $(\cos\lambda)^{-\tau}\in L^1$, donc uniformément intégrable, et fermée :
+$X_{n\wedge\tau}=\E(X_\tau\mid\F_n)$ p.s.\ pour tout $n$ (martingale régulière).
+\end{resultat}
+
+\question{5} \emph{Calculer $\E((\cos\lambda)^{-\tau})$.}
+
+On passe à la limite dans $\E(X_{n\wedge\tau})=1$ : $X_{n\wedge\tau}\to X_\tau$ p.s.\ et $|X_{n\wedge\tau}|\le Y\in L^1$, donc par
+convergence dominée (C8.11, point 2), $\E(X_\tau)=1$. Or $|S_\tau|=a$ sur $\{\tau<\infty\}$ (de probabilité 1) et $\cos$ est
+paire, donc $\cos(\lambda S_\tau)=\cos(\lambda a)$ et $X_\tau=\cos(\lambda a)\,(\cos\lambda)^{-\tau}$ p.s. Ainsi
+$\cos(\lambda a)\,\E((\cos\lambda)^{-\tau})=1$.
+\begin{resultat}
+\[\E\bigl((\cos\lambda)^{-\tau}\bigr)=\frac1{\cos(\lambda a)}\qquad\Bigl(0<\lambda<\frac\pi{2a}\Bigr)\quad\text{: il y a égalité dans la question 3.}\]
+\end{resultat}
+\emph{Contrôles.} Pour $a=1$, $\tau=1$ p.s.\ et l'on retrouve $\E((\cos\lambda)^{-1})=1/\cos\lambda$. Un calcul numérique exact (itération
+de la loi de la marche tuée en $\pm a$, avec awk) pour $a=3$, $\lambda=0{,}4$ donne $2{,}76$, égal à $1/\cos(1{,}2)\approx2{,}76$.
+En développant à l'ordre 2 en $\lambda\to0$ ($(\cos\lambda)^{-\tau}\approx1+\tau\frac{\lambda^2}2$, $\frac1{\cos\lambda a}\approx1+\frac{a^2\lambda^2}2$),
+on retrouve (formellement) $\E(\tau)=a^2$, conforme à C8.13 avec $b=a$.
+
+\question{6} \emph{$\tau$ est-il dans $L^p$ pour $p\ge1$ ?}
+
+Fixons $\lambda\in\,]0,\frac\pi{2a}[$, par ex.\ $\lambda=\frac\pi{4a}$, et posons $c=-\ln(\cos\lambda)>0$. Alors
+$(\cos\lambda)^{-\tau}=e^{c\tau}$ et $\E(e^{c\tau})=\frac1{\cos(\lambda a)}<\infty$ (question 5). Pour $p\ge1$, la fonction
+$x\mapsto x^pe^{-cx}$ est bornée sur $\R_+$ par $C_p=\bigl(\frac p{ce}\bigr)^p$ (maximum en $x=p/c$), donc $\tau^p\le C_p\,e^{c\tau}$ p.s.\ et
+\[\E(\tau^p)\le C_p\,\E(e^{c\tau})=\frac{C_p}{\cos(\lambda a)}<\infty.\]
+\begin{resultat}
+Oui : $\tau$ admet un moment exponentiel, donc $\tau\in L^p$ pour tout $p\ge1$ (et même tout $p>0$). Par ex.\ $\E(\tau)=a^2$ (C8.13).
+\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Théorème d'arrêt de Doob et ruine de l'investisseur]
+
+\begin{alerte}
+\begin{itemize}
+  \item L'énoncé ne précise ni l'indépendance des résultats successifs, ni la filtration, ni ce qui se passe après $T$. On suppose :
+  $(\varepsilon_k)_{k\ge1}$ i.i.d., $\PP(\varepsilon_k=1)=p$, $\PP(\varepsilon_k=-1)=1-p$ ; $\F_0$ triviale, $\F_n=\sigma(\varepsilon_1,\dots,\varepsilon_n)$ ;
+  $W_n=100+10(\varepsilon_1+\dots+\varepsilon_n)$ (richesse « sans arrêt ») et $X_n=W_{n\wedge T}$ (l'investisseur sort en $T$).
+  La phrase « $X_n$ est une martingale conditionnellement à $T$ » est interprétée comme portant sur ce processus arrêté.
+  \item $\E(X_{n+1}\mid\F_n)=X_n+10(2p-1)$ sur $\{n<T\}$ : $(X_n)$ n'est une \textbf{martingale que si $p=\frac12$}
+  (sous-martingale si $p>\frac12$, sur-martingale si $p<\frac12$). La question 1 n'est donc vraie que pour $p=\frac12$.
+  \item L'affirmation des questions 2 et 7, « $X_T=150$ avec probabilité $p$ », est \textbf{fausse} : pour $p=\frac12$, on trouve
+  $\PP(X_T=150)=\frac23\neq\frac12$ ; pour $p\neq\frac12$, la valeur correcte est donnée en \eqref{eq:ruine}. On démontre le
+  résultat correct, sans forcer celui de l'énoncé.
+  \item Les questions 6 à 10 reprennent les questions 1 à 5 (Q6 : autre méthode ; Q10 : rôle de $A$).
+\end{itemize}
+% À VÉRIFIER : énoncé (p. 2) : "XT takes the value 150 with probability p" -- faux ; corrigé avec la valeur exacte.
+\end{alerte}
+
+\textbf{Préliminaires.} En unités de $10$, la richesse part de $10$, les barrières sont $0$ et $15$, et les pas valent $\pm1$.
+$T=\inf\{n\ge0:\ W_n\in\{0,150\}\}$ est un temps d'arrêt (temps d'entrée de $(W_n)$ adapté dans $\{0,150\}$, C8.7) et
+$T\ge5$. Comme à l'exercice 1 (pas de $\pm10$, niveaux multiples de $10$, pas de saut par-dessus les barrières) :
+$0\le X_n\le150$ pour tout $n$ ; et $X_T\in\{0,150\}$ sur $\{T<\infty\}$. Enfin $X_n$ est $\F_n$-mesurable :
+$X_n=\sum_{k=0}^{n-1}W_k\1_{\{T=k\}}+W_n\1_{\{T\ge n\}}$ (C8.9), et $\{T>n\}=\{T\le n\}^c\in\F_n$.
+
+\emph{Lemme ($T<\infty$ p.s., pour tout $p\in\,]0,1[$).} Depuis tout niveau de $\{10,20,\dots,140\}$, $15$ gains consécutifs font
+atteindre $150$. Soit $B_k=\{\varepsilon_{15(k-1)+1}=\dots=\varepsilon_{15k}=1\}$, de probabilité $p^{15}$. Alors
+$\{T>15k\}\subset\{T>15(k-1)\}\cap B_k^c$, et $\{T>15(k-1)\}\in\F_{15(k-1)}$ est indépendant de $B_k$ (paquets disjoints, C3.11). D'où
+$\PP(T>15k)\le(1-p^{15})\,\PP(T>15(k-1))\le(1-p^{15})^k\to0$, et par continuité monotone (C1.11, point 4)
+$\PP(T=\infty)=\lim_k\PP(T>15k)=0$. (On obtient même $\E(T)=\sum_{n\ge0}\PP(T>n)\le15\sum_k(1-p^{15})^k<\infty$.)
+
+\question{1} \emph{Montrer que, pour $n<T$, $\E[X_{n+1}\mid\F_n]=X_n$.}
+
+On a $X_{n+1}-X_n=10\,\varepsilon_{n+1}\1_{\{T>n\}}$ (après $T$, la richesse ne bouge plus). Les deux variables sont bornées,
+$\1_{\{T>n\}}$ est $\F_n$-mesurable, et $\varepsilon_{n+1}$ est indépendante de $\F_n$ (C3.11). Par C6.5, points 2, 4 et 7 :
+\[\E(X_{n+1}\mid\F_n)=X_n+10\,\1_{\{T>n\}}\,\E(\varepsilon_{n+1})=X_n+10(2p-1)\,\1_{\{T>n\}}\quad\text{p.s.},\]
+car $\E(\varepsilon_{n+1})=p-(1-p)=2p-1$. L'intégrabilité est claire ($0\le X_n\le150$).
+Comme $\PP(T>0)=1$, on a $\E(X_1)=100+10(2p-1)$, qui vaut $100=\E(X_0)$ seulement si $p=\frac12$.
+\begin{resultat}
+Sur $\{n<T\}$ : $\E(X_{n+1}\mid\F_n)=X_n+10(2p-1)$ p.s. Donc $(X_n)$ est une martingale \textbf{si et seulement si $p=\frac12$} ;
+c'est une sous-martingale si $p>\frac12$ et une sur-martingale si $p<\frac12$ (C8.2).
+\end{resultat}
+\emph{Martingale qui marche pour tout $p$ (hors cours, « ruine du joueur »).} Soit $r=\frac{1-p}p$ et $M_n=r^{X_n/10}$. Sur $\{T>n\}$,
+par le gel (C6.6) ou le calcul ci-dessus,
+$\E(M_{n+1}\mid\F_n)=r^{X_n/10}\bigl(p\,r+(1-p)\,r^{-1}\bigr)=r^{X_n/10}\bigl((1-p)+p\bigr)=M_n$, et sur $\{T\le n\}$, $M_{n+1}=M_n$.
+$M_n$ est adaptée et bornée ($0<M_n\le\max(1,r^{15})$) : $(M_n)$ est une martingale pour tout $p\in\,]0,1[$.
+
+\question{2} \emph{Théorème d'arrêt : loi de $X_T$.}
+
+\emph{Cas $p=\frac12$.} $(X_n)=(W_{n\wedge T})$ est une martingale (Q1). $n\wedge T$ est un temps d'arrêt borné : $\E(X_n)=\E(X_0)=100$
+(C8.10, point 1, ou C8.11, point 1). $T$ n'est \emph{pas} borné : on passe à la limite. Par le lemme, $T<\infty$ p.s., donc
+$X_n\to X_T$ p.s. ; et $0\le X_n\le150$, donc par convergence dominée (C8.11, point 2), $\E(X_T)=100$. Comme $X_T\in\{0,150\}$ p.s. :
+$150\,\PP(X_T=150)=100$, d'où $\PP(X_T=150)=\frac23$. (C'est C8.13 avec, en unités de $10$, $a=10$ pas vers le bas et $b=5$ vers le haut :
+$\frac a{a+b}=\frac{10}{15}$.)
+
+\emph{Cas $p\neq\frac12$} ($r\neq1$). Même schéma avec $M_n=r^{X_n/10}$ : $\E(M_n)=M_0=r^{10}$ (temps borné $n\wedge T$),
+$M_n\to r^{X_T/10}$ p.s.\ ($T<\infty$ p.s.) et $0<M_n\le\max(1,r^{15})$, donc par convergence dominée $\E(r^{X_T/10})=r^{10}$.
+Avec $q=\PP(X_T=150)$ : $q\,r^{15}+(1-q)\,r^0=r^{10}$, soit
+\begin{equation}\label{eq:ruine}
+\PP(X_T=150)=\frac{1-r^{10}}{1-r^{15}},\qquad r=\frac{1-p}p,\qquad\text{et plus généralement}\quad
+\PP(X_T=A)=\frac{1-r^{X_0/d}}{1-r^{A/d}}.
+\end{equation}
+\begin{resultat}
+$\PP(X_T=150)\neq p$ en général : $\PP(X_T=150)=\frac23$, $\PP(X_T=0)=\frac13$ si $p=\frac12$ ; $\PP(X_T=150)=\dfrac{1-r^{10}}{1-r^{15}}$ si $p\neq\frac12$.
+Par ex.\ $p=0{,}6$ : $0{,}985$ ; $p=0{,}4$ : $0{,}130$.
+\end{resultat}
+(Valeurs recalculées avec awk, et contrôlées par itération exacte de la loi de la chaîne tuée en $0$ et $15$.)
+
+\question{3} \emph{Calculer $\E[X_T]$ en fonction de $p$ et $A$.}
+
+$X_T\in\{0,A\}$ p.s., donc $\E(X_T)=A\,\PP(X_T=A)+0$. Avec $X_0=100$, $d=10$, $A\in10\N$, $A>X_0$ et \eqref{eq:ruine} :
+\begin{resultat}
+\[\E(X_T)=A\,\frac{1-r^{X_0/d}}{1-r^{A/d}}=A\,\frac{1-r^{10}}{1-r^{A/10}}\quad(p\neq\tfrac12),\qquad \E(X_T)=X_0=100\quad(p=\tfrac12).\]
+Pour $A=150$ : $\E(X_T)\approx147{,}7$ si $p=0{,}6$ ; $\approx19{,}5$ si $p=0{,}4$. (La formule « $\E(X_T)=pA$ » qui découlerait de
+l'énoncé est fausse.)
+\end{resultat}
+\emph{Remarque.} Pour tout $p$, $N_n=X_n-10(2p-1)(n\wedge T)$ est une martingale (Q1) dominée par $150+10T\in L^1$ ; l'arrêt donne
+$\E(X_T)-100=10(2p-1)\,\E(T)$ : le gain moyen est « dérive par période $\times$ durée moyenne ». Numériquement $\E(T)\approx23{,}9$ ($p=0{,}6$),
+$50$ ($p=\frac12$, $=ab$ par C8.13), $40{,}3$ ($p=0{,}4$).
+
+\question{4} \emph{Interprétation financière ; probabilité de profit si $p>0{,}5$.}
+
+Le modèle est une marche aléatoire de pas $\pm10$ avec règle de sortie \emph{take-profit} à $150$ et \emph{stop-loss} à $0$.
+\begin{itemize}
+  \item $p=\frac12$ (marché « équitable », martingale) : quelle que soit la règle de sortie par temps d'arrêt (avec processus arrêté
+  borné et $T<\infty$ p.s.), $\E(X_T)=X_0$ : \emph{aucune stratégie d'arrêt ne crée de gain moyen}. Elle ne fait que redistribuer : ici gain de $50$
+  avec probabilité $\frac23$, perte de $100$ avec probabilité $\frac13$.
+  \item $p>\frac12$ : $(X_n)$ est une sous-martingale, $\E(X_T)>X_0$ : investir est favorable. Pour $p=0{,}6$, la probabilité de
+  finir en profit (atteindre $150$) est $\approx0{,}985$ ; pour $p=0{,}55$, $\approx0{,}910$. « À long terme » sans objectif
+  ($A\to\infty$), la probabilité de n'être jamais ruiné vaut $1-r^{10}$ ($\approx0{,}983$ pour $p=0{,}6$, $\approx0{,}866$ pour $p=0{,}55$).
+  \item Stratégie : n'investir que si $p>\frac12$ ; plus $p$ est grand, plus la probabilité d'atteindre l'objectif est élevée
+  (elle croît avec $p$ : $\PP(X_T=150)=\frac{1+r^5}{1+r^5+r^{10}}=1-\frac{r^{10}}{1+r^5+r^{10}}$ est décroissante en $r$, et $r=\frac{1-p}{p}$ décroît avec $p$).
+\end{itemize}
+\begin{resultat}
+Si $p>\frac12$ : $\PP(\text{profit})=\PP(X_T=150)=\frac{1-r^{10}}{1-r^{15}}>\frac23$ (ex.\ $0{,}985$ pour $p=0{,}6$), et $\E(X_T)>100$.
+\end{resultat}
+
+\question{5} \emph{Et si $p<0{,}5$ ?}
+
+Alors $r>1$, $(X_n)$ est une sur-martingale et $\E(X_T)<X_0=100$ (C8.10, point 2, appliqué en $n\wedge T$ puis convergence dominée) :
+toute règle de sortie fait perdre en moyenne. $\PP(X_T=150)=\frac{r^{10}-1}{r^{15}-1}\approx r^{-5}$ pour $r$ grand, est faible :
+$0{,}334$ pour $p=0{,}45$, $0{,}130$ pour $p=0{,}4$. Sans objectif ($A\to\infty$), $\frac{r^{10}-1}{r^{A/10}-1}\to0$ : la ruine est
+\emph{certaine} à long terme (c'est aussi le cas pour $p=\frac12$, puisque $\frac{X_0}A\to0$).
+\begin{resultat}
+$p<\frac12$ : espérance de gain négative ($\E(X_T)\approx19{,}5$ pour $p=0{,}4$), probabilité de profit faible ($0{,}130$ pour $p=0{,}4$),
+ruine certaine si l'on ne fixe pas d'objectif.
+\end{resultat}
+
+\question{6} \emph{Montrer, par la formule des probabilités totales, que $\E(X_{n+1}\mid\F_n)=X_n$ avant l'arrêt.}
+
+Sur $\{T>n\}$, $X_{n+1}=X_n+10$ si $\varepsilon_{n+1}=1$ et $X_n-10$ sinon ; les événements $\{\varepsilon_{n+1}=1\}$, $\{\varepsilon_{n+1}=-1\}$
+forment une partition de $\Omega$ (version conditionnelle de C1.13) :
+\[\1_{\{T>n\}}X_{n+1}=\1_{\{T>n\}}\bigl[(X_n+10)\1_{\{\varepsilon_{n+1}=1\}}+(X_n-10)\1_{\{\varepsilon_{n+1}=-1\}}\bigr].\]
+Comme $\1_{\{T>n\}}(X_n\pm10)$ est $\F_n$-mesurable et bornée (C6.5, point 4) et
+$\E(\1_{\{\varepsilon_{n+1}=\pm1\}}\mid\F_n)=\PP(\varepsilon_{n+1}=\pm1)$ par indépendance (C6.5, point 7) :
+\[\1_{\{T>n\}}\E(X_{n+1}\mid\F_n)=\1_{\{T>n\}}\bigl[p\,(X_n+10)+(1-p)(X_n-10)\bigr]=\1_{\{T>n\}}\bigl[X_n+10(2p-1)\bigr].\]
+\begin{resultat}
+Avant l'arrêt, $\E(X_{n+1}\mid\F_n)=p(X_n+10)+(1-p)(X_n-10)=X_n+10(2p-1)$ : égal à $X_n$ si et seulement si $p=\frac12$ (même conclusion qu'en Q1).
+\end{resultat}
+
+\question{7} \emph{Doob : $X_T=150$ avec probabilité $p$ ?} Voir Q2 : l'arrêt de Doob (temps borné $n\wedge T$, puis $T<\infty$ p.s.\ et
+convergence dominée) donne $\PP(X_T=150)=\frac{X_0}{A}=\frac23$ si $p=\frac12$ et \eqref{eq:ruine} sinon ; l'affirmation
+« $\PP(X_T=150)=p$ » est fausse en général (pour $p=\frac12$ : $\frac23\neq\frac12$). Numériquement (awk, dichotomie), l'égalité
+$\frac{1-r^{10}}{1-r^{15}}=p$ n'a lieu, dans $]0,1[$, que pour la valeur isolée $p\approx0{,}472$ : simple coïncidence.
+
+\question{8} \emph{$\E(X_T)$ par les propriétés de martingale.} Voir Q3 : $\E(X_T)=\E(X_0)=100$ pour $p=\frac12$ (martingale arrêtée bornée) ;
+pour $p\neq\frac12$, la martingale $r^{X_n/10}$ donne $\E(X_T)=A\frac{1-r^{10}}{1-r^{A/10}}$.
+
+\question{9} \emph{Interprétation : $p$ = probabilité de rendement positif, $A$ = seuil.} Voir Q4--Q5 : $p$ fixe le signe de la dérive
+$10(2p-1)$ par période, donc le caractère favorable ($p>\frac12$), équitable ($p=\frac12$) ou défavorable ($p<\frac12$) de l'investissement ;
+la règle (seuils $0$ et $A$) ne change pas ce signe, elle fixe seulement le compromis probabilité de gain / taille du gain.
+
+\question{10} \emph{Effet de $p$ et de $A$.} Valeurs de $\PP(X_T=A)$ et $\E(X_T)$ ($X_0=100$, $d=10$, calcul awk) :
+\begin{center}
+\small\begin{tabular}{@{}lccccc@{}}
+\toprule
+$p$ & $0{,}40$ & $0{,}45$ & $0{,}50$ & $0{,}55$ & $0{,}60$\\\midrule
+$A=150$ : $\PP(X_T=A)$ / $\E(X_T)$ & $0{,}130$ / $19{,}5$ & $0{,}334$ / $50{,}1$ & $0{,}667$ / $100$ & $0{,}910$ / $137$ & $0{,}985$ / $148$\\
+$A=200$ : $\PP(X_T=A)$ / $\E(X_T)$ & $0{,}0170$ / $3{,}41$ & $0{,}119$ / $23{,}7$ & $0{,}500$ / $100$ & $0{,}881$ / $176$ & $0{,}983$ / $197$\\\bottomrule
+\end{tabular}
+\end{center}
+\begin{resultat}
+$\PP(X_T=A)$ croît avec $p$ et décroît avec $A$. $\E(X_T)=A\,\PP(X_T=A)$ vaut toujours $X_0$ si $p=\frac12$ ; si $p>\frac12$ elle
+croît avec $A$ ($\sim A(1-r^{10})$) ; si $p<\frac12$ elle tend vers $0$ quand $A\to\infty$ (ruine quasi certaine).
+\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Sortie d'un intervalle asymétrique]
+
+On suppose, comme à l'exercice 1, $S_n=Z_1+\dots+Z_n$ avec $(Z_i)$ i.i.d.\ de loi $\PP(Z_i=\pm1)=\frac12$ et $\F_n=\sigma(Z_1,\dots,Z_n)$.
+On note $c=\frac{b-a}2$.
+
+\question{1} \emph{Montrer que $Y_n=\dfrac{\cos\bigl(\lambda[S_n-c]\bigr)}{(\cos\lambda)^n}$ est une martingale si $\cos\lambda\neq0$.}
+
+$Y_n$ est $\F_n$-mesurable (fonction continue de $S_n$) et $|Y_n|\le|\cos\lambda|^{-n}$, donc intégrable. Avec $x_n=\lambda(S_n-c)$,
+$\F_n$-mesurable, et $Z_{n+1}$ indépendante de $\F_n$ (C3.11), le gel (C6.6) ou C6.5, points 2, 4, 7 donnent comme à l'exercice 1 :
+\[\E\bigl(\cos(x_n+\lambda Z_{n+1})\mid\F_n\bigr)=\cos x_n\,\E\cos(\lambda Z_{n+1})-\sin x_n\,\E\sin(\lambda Z_{n+1})=\cos\lambda\,\cos x_n\quad\text{p.s.}\]
+Donc $\E(Y_{n+1}\mid\F_n)=(\cos\lambda)^{-(n+1)}\cos\lambda\cos x_n=Y_n$ p.s.
+\begin{resultat}
+Pour tout $\lambda$ tel que $\cos\lambda\neq0$, $(Y_n)$ est une $(\F_n)$-martingale (C8.4), de valeur initiale $Y_0=\cos(\lambda c)=\cos\bigl(\tfrac12\lambda(b-a)\bigr)$.
+\end{resultat}
+
+\question{2} \emph{Pour $T$ le temps d'absorption en $-a$ ou $b$ ($a,b\in\N^*$) et $0<\lambda<\frac\pi{a+b}$, montrer
+$\E\bigl((\cos\lambda)^{-T}\bigr)=\dfrac{\cos(\frac12\lambda(b-a))}{\cos(\frac12\lambda(b+a))}$.}
+
+On reprend les étapes de l'exercice 1.
+\begin{enumerate}
+  \item \emph{Signes.} $a+b\ge2$, donc $0<\lambda<\frac\pi2$ et $0<\cos\lambda<1$ ; et $0<\frac12\lambda(a+b)<\frac\pi2$, donc
+  $\cos(\frac12\lambda(a+b))>0$. $T=\inf\{n:\ S_n\in\{-a,b\}\}$ est un temps d'arrêt (C8.7).
+  \item \emph{Encadrement.} Pas de $\pm1$ : $-a\le S_{n\wedge T}\le b$, donc $S_{n\wedge T}-c\in\bigl[-\frac{a+b}2,\frac{a+b}2\bigr]$
+  et $|\lambda(S_{n\wedge T}-c)|\le\frac12\lambda(a+b)<\frac\pi2$. Par parité et décroissance de $\cos$ sur $[0,\frac\pi2]$ :
+  $\cos(\lambda(S_{n\wedge T}-c))\ge\cos(\frac12\lambda(a+b))>0$.
+  \item \emph{Arrêt borné.} $\E(Y_{n\wedge T})=Y_0=\cos(\frac12\lambda(b-a))$ (C8.10, point 1, temps d'arrêt $n\wedge T\le n$), d'où
+  $\cos(\frac12\lambda(a+b))\,\E((\cos\lambda)^{-(n\wedge T)})\le\cos(\frac12\lambda(b-a))$.
+  \item \emph{$T<\infty$ p.s.} Convergence monotone ($(\cos\lambda)^{-(n\wedge T)}\uparrow(\cos\lambda)^{-T}$, $=+\infty$ sur $\{T=\infty\}$) :
+  $\E((\cos\lambda)^{-T})\le\frac{\cos(\frac12\lambda(b-a))}{\cos(\frac12\lambda(a+b))}<\infty$, donc $T<\infty$ p.s.
+  \item \emph{Passage à la limite.} $|Y_{n\wedge T}|\le(\cos\lambda)^{-T}\in L^1$ et $Y_{n\wedge T}\to Y_T$ p.s. : par convergence dominée
+  (C8.11, point 2), $\E(Y_T)=\cos(\frac12\lambda(b-a))$.
+  \item \emph{Valeur en $T$.} Si $S_T=b$ : $S_T-c=\frac{a+b}2$ ; si $S_T=-a$ : $S_T-c=-\frac{a+b}2$. Par parité,
+  $\cos(\lambda(S_T-c))=\cos(\frac12\lambda(a+b))$ p.s., d'où $Y_T=\cos(\frac12\lambda(a+b))\,(\cos\lambda)^{-T}$.
+\end{enumerate}
+\begin{resultat}
+\[\E\bigl((\cos\lambda)^{-T}\bigr)=\frac{\cos\bigl(\frac12\lambda(b-a)\bigr)}{\cos\bigl(\frac12\lambda(b+a)\bigr)},\qquad0<\lambda<\frac\pi{a+b}.\]
+Pour $a=b$ on retrouve l'exercice 1, Q5.
+\end{resultat}
+\emph{Contrôle numérique} (itération exacte de la loi, awk) : $a=2$, $b=3$, $\lambda=0{,}5$ : $3{,}07$ des deux côtés.
+Comme à l'exercice 1, $T$ a un moment exponentiel, donc $T\in L^p$ pour tout $p$ ; à l'ordre 2 en $\lambda$ on retrouve $\E(T)=ab$ (C8.13).
+\end{exo}
+
+\end{document}

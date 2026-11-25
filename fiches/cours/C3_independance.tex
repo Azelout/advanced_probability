@@ -1,0 +1,167 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C3}{Indépendance}{Independence}
+
+\textit{Source : slides, chapitre 5. Cadre : $(\Omega,\F,\PP)$ espace probabilisé.}
+
+\section*{1. Événements indépendants}
+
+\begin{definition}[Deux événements]\label{C3:deux-ev}
+$A,B\in\F$ sont \emph{indépendants} si $\PP(A\cap B)=\PP(A)\PP(B)$.
+\end{definition}
+\begin{remarque}
+Si $\PP(A)=0$ (ou $\PP(B)=0$), $A$ et $B$ sont indépendants : $0\le\PP(A\cap B)\le\PP(A)=0$.
+L'indépendance \textbf{dépend de la probabilité} $\PP$ choisie.
+\end{remarque}
+
+\begin{definition}[Famille d'événements, indépendance mutuelle]\label{C3:mutuelle}
+Soit $I$ non vide. $(A_i)_{i\in I}\subset\F$ sont (mutuellement) indépendants si pour toute sous-famille \emph{finie}
+$i_1<\dots<i_k$ de $I$ ($k\ge1$) :
+$\PP(A_{i_1}\cap\dots\cap A_{i_k})=\PP(A_{i_1})\cdots\PP(A_{i_k})$.
+\end{definition}
+
+\begin{exemple}[deux à deux $\not\Rightarrow$ mutuellement, slides]\label{C3:ex-2a2}
+$\Omega=\{\omega_1,\dots,\omega_4\}$, $\PP(\{\omega_i\})=\frac14$, $A_1=\{\omega_1,\omega_4\}$, $A_2=\{\omega_2,\omega_4\}$,
+$A_3=\{\omega_3,\omega_4\}$. Pour $i\ne j$ : $\PP(A_i\cap A_j)=\PP(\{\omega_4\})=\frac14=\frac12\cdot\frac12=\PP(A_i)\PP(A_j)$.
+Mais $\PP(A_1\cap A_2\cap A_3)=\frac14\neq\frac18=\PP(A_1)\PP(A_2)\PP(A_3)$.
+\end{exemple}
+
+\section*{2. Limites sup/inf et lemme de Borel--Cantelli}
+
+\begin{definition}[Limites supérieure et inférieure]\label{C3:limsup}
+Pour $(A_n)_{n\in\N}\subset\F$ :
+\begin{gather*}\limsup_n A_n=\bigcap_{k\in\N}\bigcup_{n\ge k}A_n \quad(\text{« une infinité de }A_n\text{ sont réalisés »}),\\
+\liminf_n A_n=\bigcup_{k\in\N}\bigcap_{n\ge k}A_n \quad(\text{« tous les }A_n\text{ à partir d'un rang »}).\end{gather*}
+Ce sont des événements, et $(\limsup A_n)^c=\liminf A_n^c$ : « seul un nombre fini de $A_n$ sont réalisés ».
+\end{definition}
+
+\begin{theoreme}[Borel--Cantelli]\label{C3:BC}
+Soit $(A_n)_{n\in\N}\subset\F$.
+\begin{enumerate}
+  \item (\emph{sans hypothèse d'indépendance}) $\displaystyle\sum_{n\ge0}\PP(A_n)<\infty\ \Rightarrow\ \PP\bigl(\limsup_n A_n\bigr)=0$.
+  \item Si les $(A_n)$ sont \textbf{indépendants} : $\displaystyle\sum_{n\ge0}\PP(A_n)=+\infty\iff\PP\bigl(\limsup_n A_n\bigr)=1$.
+\end{enumerate}
+Loi du 0--1 : pour des $A_n$ indépendants, $\PP(\limsup A_n)\in\{0,1\}$ selon la nature de la série.
+\end{theoreme}
+\begin{idee}
+1. $\PP(\limsup A_n)\le\PP\bigl(\bigcup_{n\ge k}A_n\bigr)\le\sum_{n\ge k}\PP(A_n)\to0$ (reste d'une série convergente).
+2. Les $A_n^c$ sont encore indépendants ; avec $1-x\le e^{-x}$ : $\PP\bigl(\bigcap_{n=k}^{N}A_n^c\bigr)=\prod_{n=k}^N(1-\PP(A_n))\le e^{-\sum_{n=k}^N\PP(A_n)}\xrightarrow[N\to\infty]{}0$,
+donc $\PP\bigl(\bigcap_{n\ge k}A_n^c\bigr)=0$ pour tout $k$, et $\PP(\liminf A_n^c)\le\sum_k0=0$.
+\end{idee}
+
+\section*{3. Tribus et variables aléatoires indépendantes}
+
+\begin{definition}[Tribus indépendantes]\label{C3:tribus}
+Des sous-tribus $(\F_i)_{i\in I}$ de $\F$ sont indépendantes si pour toute sous-famille finie $i_1,\dots,i_N$ et tous
+$A_k\in\F_{i_k}$ : $\PP(A_1\cap\dots\cap A_N)=\PP(A_1)\cdots\PP(A_N)$.
+\end{definition}
+
+\begin{definition}[Variables aléatoires indépendantes]\label{C3:va}
+Les v.a.\ $X_i:(\Omega,\F)\to(E_i,\Ec_i)$, $i\in I$, sont indépendantes si les tribus $(\sigma(X_i))_{i\in I}$ le sont, i.e.\
+pour toute sous-famille finie $i_1,\dots,i_N$ de $I$ et tous $A_k\in\Ec_{i_k}$ :
+$\PP(X_{i_1}\in A_1,\dots,X_{i_N}\in A_N)=\prod_{k=1}^N\PP(X_{i_k}\in A_k)$. Notation : $X\indep Y$.
+\end{definition}
+
+\begin{lemme}[critère des fonctions de répartition]\label{C3:fdr}
+$X_1,\dots,X_n$ réelles sont indépendantes $\iff$ $\forall(x_1,\dots,x_n)\in\R^n$,
+$\PP(X_1\le x_1,\dots,X_n\le x_n)=\prod_{i=1}^n\PP(X_i\le x_i)$.
+\end{lemme}
+
+\begin{lemme}[fonctions de v.a.\ indépendantes]\label{C3:fonctions}
+Si $(X_i)_{i\in I}$ sont indépendantes et $f_i:(E_i,\Ec_i)\to(F_i,\mathcal{H}_i)$ \textbf{mesurables}, alors $(f_i(X_i))_{i\in I}$
+sont indépendantes.
+\end{lemme}
+
+\begin{horscours}[regroupement par paquets, standard]\label{C3:paquets}
+Si $X_1,\dots,X_n$ sont indépendantes, des fonctions mesurables de paquets \emph{disjoints} sont indépendantes ;
+ex.\ $X_1+X_2\indep X_3$, ou $(X_1,\dots,X_k)\indep(X_{k+1},\dots,X_n)$.
+\end{horscours}
+
+\begin{theoreme}[mesure produit]\label{C3:produit}
+Pour des espaces $(\Omega_i,\F_i,\PP_i)$, $i=1..n$ : la tribu produit $\F_1\otimes\dots\otimes\F_n$ est la plus petite tribu
+contenant les pavés $A_1\times\dots\times A_n$ ($A_i\in\F_i$) ; $\Bc(\R)^{\otimes n}=\Bc(\R^n)$. Il existe une unique probabilité
+$\PP_1\otimes\dots\otimes\PP_n$ sur cette tribu telle que $\PP_1\otimes\dots\otimes\PP_n(A_1\times\dots\times A_n)=\prod_i\PP_i(A_i)$.
+\end{theoreme}
+
+\begin{lemme}[loi jointe]\label{C3:loi-jointe}
+$X_1,\dots,X_N$ sont indépendantes $\iff$ $\PP_{(X_1,\dots,X_N)}=\PP_{X_1}\otimes\dots\otimes\PP_{X_N}$.
+\end{lemme}
+
+\begin{theoreme}[espérance d'un produit]\label{C3:esp-produit}
+Pour $X_i:(\Omega,\F,\PP)\to(E_i,\Ec_i)$, $i=1..n$, sont équivalents :
+\begin{enumerate}
+  \item $X_1,\dots,X_n$ sont indépendantes ;
+  \item pour toutes $h_i:E_i\to\R$ mesurables \textbf{positives}, $\E\bigl(\prod_i h_i(X_i)\bigr)=\prod_i\E(h_i(X_i))$ ;
+  \item pour toutes $h_i\in L^1_\R(E_i,\Ec_i,\PP_{X_i})$, la même égalité (en particulier pour $h_i$ \textbf{bornées}).
+\end{enumerate}
+\end{theoreme}
+\begin{idee}
+$1\Rightarrow2$ : vrai pour des indicatrices (définition), puis fonctions étagées et limites croissantes.
+$2\Rightarrow1$ : prendre $h_i=\1_{A_i}$.
+\end{idee}
+
+\begin{corollaire}\label{C3:EXY}
+Si $X_1,\dots,X_n\in L^1$ sont indépendantes, $X_1\cdots X_n\in L^1$ et $\E(X_1\cdots X_n)=\prod_i\E(X_i)$.
+En particulier (standard) : $X\indep Y$ dans $L^2$ $\Rightarrow\Cov(X,Y)=0$ et $\Var(X+Y)=\Var X+\Var Y$ ; et pour des
+fonctions caractéristiques, $\varphi_{X+Y}(t)=\varphi_X(t)\varphi_Y(t)$ (développer $e^{itX}e^{itY}$ en quatre produits de fonctions $\cos$, $\sin$ bornées et appliquer le point 3).
+\end{corollaire}
+
+\begin{theoreme}[densités et indépendance]\label{C3:densites}
+Soit $\QQ=\QQ_1\otimes\dots\otimes\QQ_n$ (mesures de référence, ex.\ Lebesgue ou comptage).
+\begin{enumerate}
+  \item Si $X_1,\dots,X_n$ sont indépendantes et $\PP_{X_i}=f_{X_i}\cdot\QQ_i$, alors $(X_1,\dots,X_n)$ a pour densité
+  $(x_1,\dots,x_n)\mapsto\prod_i f_{X_i}(x_i)$ par rapport à $\QQ$.
+  \item Réciproquement, si $(X_1,\dots,X_n)$ a une densité \emph{produit} $\prod_i f_i(x_i)$ par rapport à $\QQ$
+  ($f_i\in L^1_{\R_+}(E_i,\Ec_i,\QQ_i)$), alors $\PP_{X_i}=c_if_i\cdot\QQ_i$ (constante de normalisation $c_i$) et les
+  $X_i$ sont indépendantes.
+  % NB : les slides écrivent « c_i f_i . mu_i » ; il s'agit de Q_i.
+\end{enumerate}
+\end{theoreme}
+
+\begin{liens}
+\begin{itemize}
+  \item Mutuellement indépendants $\Rightarrow$ deux à deux indépendants ; réciproque fausse (Ex.~\ref{C3:ex-2a2}).
+  \item Indépendantes (et $L^2$) $\Rightarrow$ non corrélées ; réciproque fausse : $X$ uniforme sur $\{-1,0,1\}$ et $Y=X^2$ :
+  $\Cov(X,Y)=\E(X^3)-\E X\,\E X^2=0$, mais $\PP(X=0,Y=1)=0\neq\frac13\cdot\frac23$.
+  (Exception : vecteur \emph{gaussien}, fiche C5.)
+  \item Borel--Cantelli 2 a besoin de l'indépendance : sur $([0,1],\Bc,\lambda)$, $A_n=]0,\frac1n[$ ($n\ge1$) donne
+  $\sum\PP(A_n)=+\infty$ mais $\limsup A_n=\bigcap_k\,]0,\frac1k[=\emptyset$.
+  \item Densité jointe (par rapport à une mesure produit) $=$ produit de fonctions séparées, support produit compris, $\iff$ indépendance (Thm~\ref{C3:densites}).
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item \emph{Indépendants} $\neq$ \emph{incompatibles} : si $A\cap B=\emptyset$ avec $\PP(A),\PP(B)>0$, alors
+  $\PP(A\cap B)=0\neq\PP(A)\PP(B)$ : ils ne sont \emph{pas} indépendants.
+  \item L'indépendance d'une famille se vérifie sur \textbf{toutes} les sous-familles finies, pas seulement deux à deux
+  ni seulement sur la famille entière.
+  \item Utiliser BC2 sans vérifier l'indépendance ; oublier que BC1 n'en a pas besoin.
+  \item $\E(XY)=\E X\,\E Y$ ne suffit pas à conclure $X\indep Y$ : il faut $\E(h(X)k(Y))=\E h(X)\,\E k(Y)$ pour \emph{toutes} $h,k$ mesurables bornées (ou positives).
+  \item Densité de la forme $f(x)g(y)$ \emph{mais sur un support non produit} (ex.\ $\1_{0<x<y}$) : ce n'est pas une
+  densité produit, les variables ne sont pas indépendantes.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[modèle à deux périodes, slides]\label{C3:ex-arbre}
+Avec le modèle de l'exemple C1 ($\PP(UU)=p^2$, $\PP(UD)=\PP(DU)=p(1-p)$, $\PP(DD)=(1-p)^2$, $0<p<1$),
+$A=\{UU,UD\}$ et $B=\{DU,UD\}$ : $\PP(A)=p$, $\PP(B)=2p(1-p)$, $\PP(A\cap B)=\PP(UD)=p(1-p)$.
+$A\indep B\iff p(1-p)=p\cdot2p(1-p)\iff p=\frac12$ (on divise par $p(1-p)\neq0$).
+\end{exemple}
+
+\begin{exemple}[Borel--Cantelli et pile ou face]
+On lance une infinité de fois une pièce équilibrée (lancers indépendants), $A_n=\{\text{pile au lancer }n\}$.
+$\sum\PP(A_n)=\sum\frac12=+\infty$ et les $A_n$ sont indépendants : $\PP(\limsup A_n)=1$, pile sort p.s.\ une infinité de fois.
+Avec $B_n=\{\text{les lancers }n,\dots,2n\text{ donnent tous pile}\}$ : $\PP(B_n)=2^{-(n+1)}$, série convergente, donc (BC1, sans
+indépendance -- les $B_n$ ne sont d'ailleurs pas indépendants) p.s.\ seul un nombre fini de $B_n$ sont réalisés.
+\end{exemple}
+
+\begin{exemple}[densité produit]
+$(X,Y)$ de densité $e^{-x-y}\1_{x>0}\1_{y>0}=\bigl(e^{-x}\1_{x>0}\bigr)\bigl(e^{-y}\1_{y>0}\bigr)$ : par le Thm~\ref{C3:densites},
+$X\indep Y$ et $X,Y\sim\Expo(1)$.
+\end{exemple}
+
+\end{document}

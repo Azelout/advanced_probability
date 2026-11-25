@@ -1,0 +1,107 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C7}{Changement de loi}{Change of law}
+
+\textit{Source : slides, chapitre 8 (Déf.~57, Thm~16, 17) ; poly « Gaussian vector » (Déf.~22, Thm~23, 24).
+Motivation : en finance coexistent la probabilité « historique » (\emph{physical}) et la probabilité « risque-neutre »
+(\emph{pricing / martingale measure}) ; on veut passer de l'une à l'autre en gardant les mêmes événements impossibles et certains.}
+
+\section*{1. Comparaison de deux probabilités}
+
+\begin{definition}[absolue continuité, équivalence, singularité]\label{C7:def}
+Soient $\PP,\QQ$ deux probabilités sur un même espace mesurable $(\Omega,\F)$.
+\begin{itemize}
+  \item $\QQ$ est \emph{absolument continue} par rapport à $\PP$, noté $\QQ\ll\PP$, si
+  $\forall A\in\F$, $\PP(A)=0\Rightarrow\QQ(A)=0$. Les événements impossibles (resp.\ certains) sous $\PP$ le restent sous $\QQ$.
+  \item $\PP$ et $\QQ$ sont \emph{équivalentes}, $\PP\sim\QQ$, si $\PP\ll\QQ$ et $\QQ\ll\PP$ : mêmes événements impossibles (et certains).
+  \item $\PP$ et $\QQ$ sont \emph{étrangères} (\emph{singular}), $\PP\perp\QQ$, s'il existe $N\in\F$ avec $\PP(N)=0$ et $\QQ(N^c)=0$.
+\end{itemize}
+\end{definition}
+
+\begin{exemple}[slides]
+$\lambda\perp\delta_0$ sur $(\R,\Bc(\R))$ : $N=\{0\}$ vérifie $\lambda(\{0\})=0$ et $\delta_0(\{0\}^c)=0$.
+(Les définitions s'étendent aux mesures quelconques ; $\lambda$ n'est pas une probabilité.)
+\end{exemple}
+
+\section*{2. Théorème de Radon--Nikodym}
+
+\begin{proposition}\label{C7:densite-ac}
+Si $\QQ$ a une densité $f$ (mesurable, positive) par rapport à $\PP$ (i.e.\ $\QQ(A)=\int_A f\dd\PP$), alors $\QQ\ll\PP$ :
+si $\PP(A)=0$, $\QQ(A)=\int\1_Af\dd\PP=0$.
+\end{proposition}
+
+\begin{theoreme}[Radon--Nikodym]\label{C7:RN}
+Pour $\QQ,\PP$ probabilités sur $(\Omega,\F)$, sont équivalents :
+\begin{enumerate}
+  \item $\QQ\ll\PP$ ;
+  \item il existe $f\in L^1_{\R_+}(\Omega,\F,\PP)$, \textbf{unique $\PP$-p.s.}, telle que $\QQ=f\cdot\PP$, i.e.\
+  $\QQ(A)=\int\1_Af\dd\PP=\E_\PP(\1_Af)$ pour tout $A\in\F$.
+\end{enumerate}
+$f$ est la \emph{dérivée de Radon--Nikodym}, notée $f=\frac{\dd\QQ}{\dd\PP}$. Cas discret : $\QQ(\{\omega\})=f(\omega)\PP(\{\omega\})$.
+\end{theoreme}
+
+\begin{corollaire}[standard]\label{C7:EQ}
+Si $\QQ=f\cdot\PP$ : $\E_\PP(f)=\QQ(\Omega)=1$ ; pour $X\ge0$ (ou $Xf\in L^1(\PP)$) : $\E_\QQ(X)=\E_\PP(Xf)$.
+\emph{Hors cours :} $\QQ\sim\PP\iff f>0$ $\PP$-p.s., et alors $\frac{\dd\PP}{\dd\QQ}=\frac1f$.
+\end{corollaire}
+\begin{idee}
+Vrai pour $X=\1_A$ (définition), puis fonctions étagées et limites croissantes (même schéma que le transfert, C2).
+\end{idee}
+
+\section*{3. Formule de Bayes conditionnelle}
+
+\begin{theoreme}[Bayes, \emph{Bayes formula}]\label{C7:bayes}
+Soit $\G\subset\F$ une sous-tribu et $L:\Omega\to\R_+^*$ une v.a.\ telle que $\E_\PP(L)=1$. On pose $\QQ(A)=\E_\PP(\1_AL)$ :
+$\QQ$ est une probabilité de densité $L=\frac{\dd\QQ}{\dd\PP}$ ($\QQ=L\cdot\PP$). Pour toute v.a.\ $X$ réelle (ou vecteur de $\R^d$)
+$\QQ$-intégrable,
+\[\E_\QQ(X\mid\G)=\frac{\E_\PP(XL\mid\G)}{\E_\PP(L\mid\G)}\qquad\PP\text{-p.s.}\]
+\end{theoreme}
+\begin{idee}
+Soit $Z$ le membre de droite ($\G$-mesurable ; $\E_\PP(L\mid\G)>0$ car $L>0$). Pour $G\in\G$ :
+$\E_\QQ(\1_GZ)=\E_\PP(\1_GZL)=\E_\PP(\1_GZ\,\E_\PP(L\mid\G))=\E_\PP(\1_G\E_\PP(XL\mid\G))=\E_\PP(\1_GXL)=\E_\QQ(\1_GX)$
+(tour et « sortir ce qui est connu », C6).
+\end{idee}
+
+\begin{liens}
+\begin{itemize}
+  \item Densité $\Rightarrow$ absolue continuité (Prop.~\ref{C7:densite-ac}) ; Radon--Nikodym donne la réciproque.
+  \item $\QQ\ll\PP$ $\not\Rightarrow$ $\PP\ll\QQ$ : sur $\{U,D\}$, $\PP(U)=\PP(D)=\frac12$ et $\QQ=\delta_U$. On a $\QQ\ll\PP$
+  (le seul ensemble $\PP$-négligeable est $\emptyset$), mais $\QQ(\{D\})=0<\PP(\{D\})$.
+  \item Équivalentes $\neq$ égales : mêmes ensembles négligeables, probabilités différentes.
+  \item Le théorème de Radon--Nikodym donne l'existence de l'espérance conditionnelle dans $L^1$ (C6).
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item $\ll$ n'est pas symétrique ; préciser « par rapport à quelle probabilité ».
+  \item Dans Bayes, diviser par $\E_\PP(L\mid\G)$ (une v.a.), \emph{pas} par $\E_\PP(L)=1$.
+  \item Une espérance change avec la probabilité : écrire $\E_\PP$ ou $\E_\QQ$, jamais $\E$ tout court quand deux probabilités coexistent.
+  \item La propriété de martingale et l'indépendance dépendent de la probabilité (C3, C8).
+  \item La densité $\frac{\dd\QQ}{\dd\PP}$ est définie $\PP$-p.s.\ seulement.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[deux états, slides]\label{C7:ex-UD}
+$\Omega=\{U,D\}$, $\PP(\{U\})=p=1-\PP(\{D\})$, $0<p<1$, et $\QQ$ « équitable » : $\QQ(\{U\})=\QQ(\{D\})=\frac12$.
+$f(U)=\frac{\QQ(\{U\})}{\PP(\{U\})}=\frac1{2p}$, $f(D)=\frac1{2(1-p)}$, et $\QQ(\omega)=f(\omega)\PP(\omega)$.
+Comme $\PP(\{U\}),\PP(\{D\})>0$ (et de même pour $\QQ$), $\PP\sim\QQ$.
+\end{exemple}
+
+\begin{exemple}[Bayes sur l'arbre à deux périodes]\label{C7:ex-arbre}
+Modèle C1 sous $\PP$ (paramètre $0<p<1$, pour que $L$ soit défini) ; sous $\QQ$ chaque chemin a probabilité $\frac14$, donc $L(\omega)=\frac{1/4}{\PP(\{\omega\})}$.
+Sur $A_U$ : $\E_\PP(S_2L\1_{A_U})=\frac14s_0u^2+\frac14s_0ud$ et $\E_\PP(L\1_{A_U})=\QQ(A_U)=\frac12$, d'où
+$\E_\QQ(S_2\mid\F_1)=\frac{u+d}{2}\,s_0u$ sur $A_U$ et, de même, $\frac{u+d}2\,s_0d$ sur $A_D$ : $\E_\QQ(S_2\mid\F_1)=\frac{u+d}2S_1$.
+C'est la formule de l'exemple C6 avec $p$ remplacé par $\frac12$.
+\end{exemple}
+
+\begin{exemple}[translation gaussienne, hors cours]\label{C7:ex-gauss}
+Sous $\PP$, $X\sim\Nc(0,1)$ ; $L=e^{\theta X-\theta^2/2}>0$ vérifie $\E_\PP L=1$. Pour $h\ge0$ :
+$\E_\QQ(h(X))=\int h(x)e^{\theta x-\frac{\theta^2}2}\frac{e^{-x^2/2}}{\sqrt{2\pi}}\dd x=\int h(x)\frac{e^{-(x-\theta)^2/2}}{\sqrt{2\pi}}\dd x$ :
+sous $\QQ$, $X\sim\Nc(\theta,1)$. On a changé la moyenne sans changer les événements négligeables.
+\end{exemple}
+
+\end{document}

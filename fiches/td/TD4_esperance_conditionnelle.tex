@@ -1,0 +1,81 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD4}{Espérance conditionnelle}{Conditional Expectation}
+
+\textit{À lire avant de chercher le TD. Renvois : « C6.9 » = fiche C6, énoncé n°9. Fiches associées : \textbf{C6}, \textbf{C3}, \textbf{C5}, \textbf{C2}.}
+
+\begin{exo}[Somme de Poisson indépendantes]
+\outils Loi de Poisson et fonction génératrice $\E(u^X)=e^{\lambda(u-1)}$ (C2.11) ; espérance d'un produit indépendant (C3.14) ;
+regroupement par paquets (C3.11).
+
+\meth Fonction génératrice : $\E\bigl(u^{X_1+\dots+X_N}\bigr)=\prod_n\E(u^{X_n})$. Variante : convolution discrète pour deux variables
+($\PP(X+Y=k)=\sum_{j=0}^k\PP(X=j)\PP(Y=k-j)$ et binôme de Newton), puis récurrence.
+
+\rep $\sum_{n=1}^NX_n\sim\Poi\bigl(\sum_{n=1}^N\lambda_n\bigr)$.
+\end{exo}
+
+\begin{exo}[Loi conditionnelle multinomiale]
+\outils Probabilité conditionnelle (C1.12) ; indépendance (C3.8) ; exercice 1 ; espérance conditionnelle discrète (C6.2).
+
+\meth Noter $S=X_1+\dots+X_p$ et $\Lambda=\sum\lambda_i$. L'événement $\{X_1=n_1,\dots,X_{p-1}=n_{p-1},S=n\}$ est égal à
+$\{X_1=n_1,\dots,X_{p-1}=n_{p-1},X_p=n-\sum_{i<p}n_i\}$ : on factorise par indépendance et on divise par $\PP(S=n)$ (exercice~1).
+
+\rep 1. Pour $n_p:=n-\sum_{i<p}n_i\ge0$ :
+$\dfrac{n!}{n_1!\cdots n_p!}\prod_{i=1}^p\Bigl(\dfrac{\lambda_i}{\Lambda}\Bigr)^{n_i}$ (et $0$ sinon). Sachant $S=n$, $(X_1,\dots,X_p)$ suit la loi
+\emph{multinomiale} $\mathcal M\bigl(n;\frac{\lambda_1}\Lambda,\dots,\frac{\lambda_p}\Lambda\bigr)$ ; $(X_1,\dots,X_{p-1})$ en est la marginale, avec $X_p=n-\sum_{i<p}X_i$.
+2. Sachant $X_1+X_2=n$, $X_1\sim\mathcal B\bigl(n,\frac{\lambda_1}{\lambda_1+\lambda_2}\bigr)$, d'où
+$\E(X_1\mid X_1+X_2)=\dfrac{\lambda_1}{\lambda_1+\lambda_2}(X_1+X_2)$.
+\end{exo}
+
+\begin{exo}[Mélange Poisson--exponentielle]
+\outils Densité par rapport à une mesure produit (comptage $\otimes$ Lebesgue, C2.6) ; densité conditionnelle par analogie avec C6.9 (cas mixte non traité dans le cours) ; loi d'Erlang (C2.11).
+
+\meth La loi jointe a pour « densité » $(k,y)\mapsto\PP(X=k\mid Y=y)f_Y(y)=e^{-y}\frac{y^k}{k!}\,e^{-y}\1_{y>0}$ par rapport à
+comptage $\otimes$ Lebesgue. Marginale de $X$ : intégrer en $y$ (fonction $\Gamma$ : $\int_0^\infty y^ke^{-2y}\dd y=\frac{k!}{2^{k+1}}$).
+Loi de $Y$ sachant $X=k$ : jointe divisée par la marginale.
+
+\rep $\PP(X=k)=\dfrac1{2^{k+1}}$, $k\in\N$ (géométrique sur $\N$ de paramètre $\frac12$, i.e.\ $X+1\sim\mathcal G(\frac12)$) ;
+sachant $X=k$, $Y$ a pour densité $2^{k+1}\dfrac{y^k}{k!}e^{-2y}\1_{y>0}$ : loi d'Erlang d'ordre $k+1$ et de paramètre $2$.
+\end{exo}
+
+\begin{exo}[Maximum et minimum]
+\outils Indépendance et fonctions de répartition (C3.9) ; densité conditionnelle et $\E(g(X,Y)\mid X)$ (C6.9).
+
+\meth $\{X\le x\}=\bigcap_i\{X_i\le x\}$ et $\{Y>y\}=\bigcap_i\{X_i>y\}$ ; pour le couple, $\{X\le x,Y>y\}=\bigcap_i\{y<X_i\le x\}$.
+La densité jointe s'obtient par $\frac{\partial^2}{\partial x\partial y}$ de la fonction de répartition. Attention à l'ordre $(Y,X)$ dans l'énoncé.
+
+\rep 1. $F_X=F^n$, $F_Y=1-(1-F)^n$ ; $F_{(X,Y)}(x,y)=F(x)^n$ si $x\le y$, et $F(x)^n-(F(x)-F(y))^n$ si $x>y$.
+2. $f_Y=nf(1-F)^{n-1}$.
+4. $f_Y^{X=x}(y)=(n-1)\dfrac{f(y)(F(x)-F(y))^{n-2}}{F(x)^{n-1}}\1_{y<x}$ et $\E(Y\mid X)=\psi(X)$ avec $\psi(x)=\int y\,f_Y^{X=x}(y)\dd y$.
+5. Uniforme sur $[0,1]$ : $f_Y^{X=x}(y)=(n-1)\frac{(x-y)^{n-2}}{x^{n-1}}\1_{0<y<x}$ et $\E(Y\mid X)=\dfrac Xn$.
+\end{exo}
+
+\begin{exo}[Régression gaussienne]
+\outils Thm C6.10 (cas gaussien) ; Hors cours C6.11 (résidu indépendant, loi conditionnelle) ; Thm des blocs C5.12 ; lemme de gel C6.6.
+
+\meth Lire $\Var X=4$, $C=(\Cov(X,Y_1),\Cov(X,Y_2))=(1,2)$, $\Sigma_Y=\begin{pmatrix}9&-3\\-3&4\end{pmatrix}$, puis $\Lambda=\Sigma_Y^{-1}C$.
+Q2 : vérifier $\Cov(X-\Lambda^tY,Y_j)=0$ et invoquer C5.12. Q3 : le résidu est indépendant de $(Y_1,Y_2)$ (C6.5, point 7).
+Q4 : $X=\E(X\mid Y)+R$ avec $R\indep Y$ (lemme de gel).
+
+\rep $\Sigma_Y^{-1}=\frac1{27}\begin{pmatrix}4&3\\3&9\end{pmatrix}$, $\Lambda=\bigl(\frac{10}{27},\frac{21}{27}\bigr)$.
+1. $\E(X\mid Y_1,Y_2)=\dfrac{10Y_1+21Y_2}{27}$.
+3. $\E\bigl((X-\E(X\mid Y))^2\mid Y\bigr)=4-\frac{52}{27}=\dfrac{56}{27}$ (une constante).
+4. Sachant $(Y_1,Y_2)$, $X\sim\Nc\bigl(\frac{10Y_1+21Y_2}{27},\ \frac{56}{27}\bigr)$.
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Loi d'une somme de v.a.\ entières indépendantes & Fonction génératrice $\E(u^{S})=\prod\E(u^{X_i})$ ou convolution.\\
+Loi de $X$ sachant $\{S=n\}$, discret & $\PP(\cdot\mid S=n)=\frac{\PP(\cdot\,\cap\{S=n\})}{\PP(S=n)}$ ; réécrire l'intersection avec des variables indépendantes.\\
+$\E(X\mid Y)$, $Y$ discrète & $\phi(y)=\E(X\mid Y=y)$ par la loi conditionnelle, puis $\E(X\mid Y)=\phi(Y)$ (C6.2).\\
+Loi jointe « mixte » (discret + continu) & Densité par rapport à comptage $\otimes$ Lebesgue ; marginaliser par somme ou intégrale.\\
+Max, min de v.a.\ i.i.d. & Fonctions de répartition via $\bigcap_i\{X_i\le x\}$ ; densités par dérivation (C3.9).\\
+$\E(g(X,Y)\mid X)$ avec densité & $f_Y^{X=x}=f/f_X$, puis $\psi(x)=\int g(x,y)f_Y^{X=x}(y)\dd y$, et $\E(\cdot\mid X)=\psi(X)$ (C6.9).\\
+$\E(X\mid Y)$ dans un vecteur gaussien & $\E X+\Lambda^t(Y-\E Y)$, $\Lambda=\Sigma_Y^{-1}C$ (C6.10) ; résidu indépendant et loi conditionnelle (C6.11).\\\bottomrule
+\end{tabularx}
+
+\end{document}

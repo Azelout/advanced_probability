@@ -1,0 +1,208 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+% Encadré local pour les résultats (macro absente du préambule)
+\newtcolorbox{resultat}{fichebox,colback=gray!6,colframe=black!55}
+\newcommand{\question}[1]{\par\medskip\noindent\textbf{Question #1.}~}
+\begin{document}
+\fiche{TD1}{Corrigé -- Tribus et mesures de probabilité}{Sigma-algebra, Probability Measure}
+
+\textit{Corrigé rédigé du TD1. Renvois : « C1.4 » = fiche de cours C1, énoncé n°4 ; « C1.11, point 2 » = item 2 de
+la proposition C1.11. Tout au long, $\Omega$ est un ensemble non vide et « tribu » = \emph{sigma-algebra} au sens de C1.1 :
+contient $\emptyset$, stable par complémentaire (axiome (ii)) et par union dénombrable (axiome (iii)).}
+
+% =====================================================================
+\begin{exo}[Tribu engendrée par un ensemble]
+
+\question{1} \emph{Soit $(\Tc_i)_{i\in I}$ une famille de tribus sur $\Omega$. Montrer que $\Tc:=\bigcap_{i\in I}\Tc_i$ est une tribu.}
+
+On suppose $I\neq\emptyset$ ; $I$ est \emph{quelconque} (fini, dénombrable ou non). (Pour $I=\emptyset$, la convention
+$\bigcap_{i\in\emptyset}\Tc_i=\Pc(\Omega)$ donne encore une tribu, C1.3, point 2.) Rappelons que
+$A\in\Tc\iff\forall i\in I,\ A\in\Tc_i$. On vérifie les trois axiomes de C1.1.
+\begin{enumerate}[label=(\roman*)]
+  \item Pour tout $i$, $\emptyset\in\Tc_i$ car $\Tc_i$ est une tribu (C1.1 (i)) ; donc $\emptyset\in\Tc$.
+  \item Soit $A\in\Tc$. Pour tout $i$, $A\in\Tc_i$, donc $A^c\in\Tc_i$ (C1.1 (ii) pour $\Tc_i$). Ainsi $A^c\in\Tc_i$ pour tout $i$, i.e.\ $A^c\in\Tc$.
+  \item Soit $(A_n)_{n\in\N}\subset\Tc$. Pour $i$ fixé, $(A_n)_n\subset\Tc_i$, donc $\bigcup_nA_n\in\Tc_i$ (C1.1 (iii) pour $\Tc_i$).
+  C'est vrai pour tout $i$, donc $\bigcup_nA_n\in\Tc$.
+\end{enumerate}
+Enfin $\Tc\subset\Tc_{i_0}\subset\Pc(\Omega)$ pour un $i_0\in I$.
+\begin{resultat}
+Toute intersection (même non dénombrable) de tribus sur $\Omega$ est une tribu sur $\Omega$.
+\end{resultat}
+
+\question{2} \emph{Exemple de deux tribus $\Tc_1,\Tc_2$ telles que $\Tc_1\cup\Tc_2$ ne soit pas une tribu.}
+
+Soit $\Omega=\{1,2,3\}$, $\Tc_1=\{\emptyset,\{1\},\{2,3\},\Omega\}$ et $\Tc_2=\{\emptyset,\{2\},\{1,3\},\Omega\}$.
+Ce sont des tribus : ce sont les tribus des partitions $\{\{1\},\{2,3\}\}$ et $\{\{2\},\{1,3\}\}$ (C1.3, point 3, et
+exercice 2 ci-dessous), c'est-à-dire $\Tc_1=\sigma(\{\{1\}\})$, $\Tc_2=\sigma(\{\{2\}\})$. Alors
+\[\Tc_1\cup\Tc_2=\bigl\{\emptyset,\{1\},\{2\},\{2,3\},\{1,3\},\Omega\bigr\}.\]
+On a $\{1\}\in\Tc_1\cup\Tc_2$ et $\{2\}\in\Tc_1\cup\Tc_2$, mais $\{1\}\cup\{2\}=\{1,2\}\notin\Tc_1\cup\Tc_2$.
+Or une tribu est stable par union finie (remarque suivant C1.1 : compléter la suite par des $\emptyset$ et appliquer (iii)).
+Donc $\Tc_1\cup\Tc_2$ n'est pas une tribu. (Elle contient $\emptyset$ et est stable par complémentaire : seul l'axiome (iii) échoue.)
+\begin{resultat}
+$\Omega=\{1,2,3\}$, $\Tc_1=\sigma(\{1\})$, $\Tc_2=\sigma(\{2\})$ : $\{1,2\}\notin\Tc_1\cup\Tc_2$, donc $\Tc_1\cup\Tc_2$ n'est pas une tribu.
+\end{resultat}
+
+% À VÉRIFIER : interprétation de T1 x T2 comme famille des pavés.
+\question{3} \emph{Exemple de deux tribus $\Tc_1,\Tc_2$ telles que $\Tc_1\times\Tc_2$ ne soit pas une tribu.}
+
+\begin{alerte}
+L'énoncé ne précise pas les ensembles. On prend $\Tc_1$ tribu sur $\Omega_1$, $\Tc_2$ tribu sur $\Omega_2$, et on interprète
+$\Tc_1\times\Tc_2$ comme la famille des \emph{pavés} $\{A\times B,\ A\in\Tc_1,\ B\in\Tc_2\}\subset\Pc(\Omega_1\times\Omega_2)$
+(le produit cartésien des familles, ensemble de couples $(A,B)$, n'est pas une famille de parties d'un ensemble, donc la question
+n'aurait pas de sens). C'est l'interprétation de C3.12.
+\end{alerte}
+
+Soit $\Omega_1=\Omega_2=\{0,1\}$ et $\Tc_1=\Tc_2=\Pc(\{0,1\})$ (tribus par C1.3, point 2). Le pavé $C=\{0\}\times\{0\}=\{(0,0)\}$
+appartient à $\Tc_1\times\Tc_2$. Son complémentaire dans $\Omega_1\times\Omega_2$ est
+\[C^c=\{(0,1),(1,0),(1,1)\}.\]
+Supposons $C^c=A\times B$ avec $A,B\subset\{0,1\}$. Comme $(0,1)\in A\times B$, on a $0\in A$ ; comme $(1,0)\in A\times B$, on a $0\in B$.
+Donc $(0,0)\in A\times B=C^c$, contradiction. Ainsi $C^c\notin\Tc_1\times\Tc_2$ : l'axiome (ii) de C1.1 est violé.
+\begin{resultat}
+Avec $\Tc_1=\Tc_2=\Pc(\{0,1\})$, le complémentaire de $\{(0,0)\}$ n'est pas un pavé : $\Tc_1\times\Tc_2$ n'est pas une tribu.
+C'est pourquoi la tribu produit est \emph{définie} par $\Tc_1\otimes\Tc_2:=\sigma(\Tc_1\times\Tc_2)$ (C3.12).
+\end{resultat}
+\textit{Remarque.} $\Tc_1\times\Tc_2$ est tout de même stable par intersection finie : $(A\times B)\cap(A'\times B')=(A\cap A')\times(B\cap B')$.
+
+\question{4} \emph{Pour $\Cc\subset\Pc(\Omega)$, montrer qu'il existe une plus petite tribu contenant $\Cc$.}
+
+Soit $\mathcal S=\{\Tc\ \text{tribu sur }\Omega,\ \Cc\subset\Tc\}$.
+\begin{itemize}
+  \item $\mathcal S\neq\emptyset$ : $\Pc(\Omega)$ est une tribu (C1.3, point 2) et contient $\Cc$.
+  \item Posons $\sigma(\Cc):=\bigcap_{\Tc\in\mathcal S}\Tc$ (famille de tribus indexée par $I=\mathcal S\neq\emptyset$).
+  Par la question 1, $\sigma(\Cc)$ est une tribu.
+  \item Elle contient $\Cc$ : si $C\in\Cc$, alors $C\in\Tc$ pour tout $\Tc\in\mathcal S$, donc $C\in\sigma(\Cc)$. Ainsi $\sigma(\Cc)\in\mathcal S$.
+  \item Elle est la plus petite : si $\Tc'$ est une tribu contenant $\Cc$, alors $\Tc'\in\mathcal S$, donc $\sigma(\Cc)=\bigcap_{\Tc\in\mathcal S}\Tc\subset\Tc'$.
+  \item Unicité : si $\Tc^*$ et $\Tc^{**}$ sont deux plus petits éléments de $\mathcal S$, on a $\Tc^*\subset\Tc^{**}$ et $\Tc^{**}\subset\Tc^*$, donc $\Tc^*=\Tc^{**}$.
+\end{itemize}
+\begin{resultat}
+$\sigma(\Cc)=\bigcap\{\Tc\ \text{tribu},\ \Cc\subset\Tc\}$ est l'unique plus petite tribu contenant $\Cc$ (C1.4).
+Conséquence utile : si $\Tc$ est une tribu et $\Cc\subset\Tc$, alors $\sigma(\Cc)\subset\Tc$.
+\end{resultat}
+
+\question{5} \emph{Contre-exemple à $\sigma(\Cc_1)\cap\sigma(\Cc_2)=\sigma(\Cc_1\cap\Cc_2)$.}
+
+Soit $\Omega=\{1,2\}$ (ou tout $\Omega$ avec $A\notin\{\emptyset,\Omega\}$), $A=\{1\}$, $\Cc_1=\{A\}$ et $\Cc_2=\{A^c\}=\{\{2\}\}$.
+\begin{itemize}
+  \item $\sigma(\Cc_1)=\{\emptyset,A,A^c,\Omega\}$ : cette famille est une tribu (tribu de la partition $\{A,A^c\}$, C1.3, point 3),
+  elle contient $A$, et toute tribu contenant $A$ contient $A^c$ (axiome (ii)), $\emptyset$ (axiome (i)) et $\Omega=\emptyset^c$ ;
+  on conclut par la minimalité de C1.4. De même $\sigma(\Cc_2)=\{\emptyset,A^c,A,\Omega\}$. Donc
+  $\sigma(\Cc_1)\cap\sigma(\Cc_2)=\{\emptyset,A,A^c,\Omega\}$ ($=\Pc(\Omega)$ si $\Omega=\{1,2\}$).
+  \item $\Cc_1\cap\Cc_2=\emptyset$ (famille vide) car $A\neq A^c$. Or $\sigma(\emptyset)=\{\emptyset,\Omega\}$ :
+  la tribu triviale (C1.3, point 1) contient la famille vide, et toute tribu contient $\emptyset$ et $\Omega$, donc la contient.
+\end{itemize}
+Comme $A\notin\{\emptyset,\Omega\}$, les deux tribus diffèrent.
+\begin{resultat}
+$\Cc_1=\{A\}$, $\Cc_2=\{A^c\}$ avec $A\neq\emptyset,\Omega$ :
+$\sigma(\Cc_1)\cap\sigma(\Cc_2)=\{\emptyset,A,A^c,\Omega\}\neq\{\emptyset,\Omega\}=\sigma(\Cc_1\cap\Cc_2)$.
+\end{resultat}
+\textit{Remarque.} L'inclusion $\sigma(\Cc_1\cap\Cc_2)\subset\sigma(\Cc_1)\cap\sigma(\Cc_2)$ est, elle, toujours vraie :
+$\sigma(\Cc_1)\cap\sigma(\Cc_2)$ est une tribu (question 1) contenant $\Cc_1\cap\Cc_2$, puis minimalité (C1.4).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Tribu engendrée par une partition]
+Soit $(A_i)_{i\in I}$ une partition dénombrable de $\Omega$ : $I$ est au plus dénombrable, les $A_i$ sont deux à deux disjoints
+et $\bigcup_{i\in I}A_i=\Omega$. Ainsi tout $\omega\in\Omega$ appartient à \emph{exactement un} $A_i$ ; notons $i(\omega)$ cet indice.
+On note $A_J:=\bigcup_{j\in J}A_j$ pour $J\subset I$, de sorte que $\Tc=\{A_J,\ J\subset I\}$.
+
+\question{1} \emph{Montrer que $\Tc$ est une tribu.}
+
+Observation clé : pour $J\subset I$, $\omega\in A_J\iff i(\omega)\in J$ (si $\omega\in A_j$ avec $j\in J$, alors $j=i(\omega)$ par unicité).
+\begin{enumerate}[label=(\roman*)]
+  \item $J=\emptyset$ donne $A_\emptyset=\emptyset$ (union vide), donc $\emptyset\in\Tc$.
+  \item Pour $J\subset I$ : $\omega\in(A_J)^c\iff i(\omega)\notin J\iff i(\omega)\in I\setminus J\iff\omega\in A_{I\setminus J}$.
+  Donc $(A_J)^c=A_{I\setminus J}\in\Tc$.
+  \item Pour $(J_n)_{n\in\N}$ parties de $I$ : $\bigcup_nA_{J_n}=\bigcup_n\bigcup_{j\in J_n}A_j=\bigcup_{j\in J}A_j=A_J$ avec
+  $J:=\bigcup_nJ_n\subset I$. Donc $\bigcup_nA_{J_n}\in\Tc$.
+\end{enumerate}
+\begin{resultat}
+$\Tc=\bigl\{\bigcup_{j\in J}A_j,\ J\subset I\bigr\}$ est une tribu (c'est la tribu de partition de C1.3, point 3).
+\end{resultat}
+\textit{Remarque.} Cette question n'utilise pas la dénombrabilité de $I$ ; seule l'hypothèse de \emph{partition} sert (au point (ii)).
+
+\question{2} \emph{Montrer que $\Tc=\sigma(\{A_i,\ i\in I\})$.}
+
+Par double inclusion.
+\begin{itemize}
+  \item $\sigma(\{A_i\})\subset\Tc$ : $\Tc$ est une tribu (question 1) qui contient chaque $A_i=A_{\{i\}}$. Par minimalité de la
+  tribu engendrée (C1.4, ex.~1 question 4), $\sigma(\{A_i,\ i\in I\})\subset\Tc$.
+  \item $\Tc\subset\sigma(\{A_i\})$ : soit $J\subset I$. Comme $I$ est au plus dénombrable, $J$ aussi. Si $J=\emptyset$, $A_J=\emptyset\in\sigma(\{A_i\})$.
+  Sinon, on énumère $J=\{j_0,j_1,\dots\}$ (en répétant un indice si $J$ est fini) ; $A_J=\bigcup_{n\in\N}A_{j_n}$ est une union
+  dénombrable d'éléments de $\sigma(\{A_i\})$, donc appartient à $\sigma(\{A_i\})$ (C1.1 (iii)).
+\end{itemize}
+\begin{resultat}
+$\Tc=\sigma(\{A_i,\ i\in I\})$ : les événements de la tribu engendrée par une partition dénombrable sont exactement les unions de blocs.
+\end{resultat}
+\textit{Remarque.} La dénombrabilité de $I$ est indispensable pour la seconde inclusion : pour la partition de $\R$ en singletons,
+$\sigma(\{\{x\},\ x\in\R\})$ est la tribu des parties dénombrables ou de complémentaire dénombrable, strictement plus petite que $\Tc=\Pc(\R)$
+(par exemple $[0,1]\notin\sigma(\{\{x\}\})$). \emph{Hors cours} : ce fait n'est pas démontré dans le cours.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Compatibilité de probabilités]
+\question{a} \emph{Peut-on construire une probabilité $\PP$ sur $(\Omega,\Tc)$ avec $\PP(A)=0{,}7$, $\PP(B)=0{,}9$, $\PP(A\cap B)=0{,}5$ ?}
+
+On a $A,B\in\Tc$, donc $A\cap B$ et $A\cup B$ sont dans $\Tc$ (remarque suivant C1.1), et $\PP(A\cup B)$ est défini.
+Supposons qu'une telle $\PP$ existe. Par C1.11, point 2 (formule d'inclusion--exclusion, conséquence de la $\sigma$-additivité appliquée à
+$A\cup B=A\sqcup(B\setminus A)$ et $B=(A\cap B)\sqcup(B\setminus A)$) :
+\[\PP(A\cup B)=\PP(A)+\PP(B)-\PP(A\cap B)=0{,}7+0{,}9-0{,}5=1{,}1.\]
+Or $A\cup B\subset\Omega$, donc par monotonie (C1.11, point 1) et C1.10 (i), $\PP(A\cup B)\le\PP(\Omega)=1$. Contradiction.
+(Les autres contraintes sont satisfaites : $\PP(A\cap B)=0{,}5\le\min(0{,}7;0{,}9)$ ; c'est uniquement la borne sur l'union qui échoue.)
+\begin{resultat}
+Impossible, quels que soient $\Omega$, $\Tc$, $A$, $B$ : on aurait $\PP(A\cup B)=1{,}1>1$.
+De façon équivalente, C1.11, point 2 impose $\PP(A\cap B)\ge\PP(A)+\PP(B)-1=0{,}6>0{,}5$.
+\end{resultat}
+
+\question{b} \emph{Minorer $\PP(A\cup B)$ à l'aide de $\PP(A)$ et $\PP(B)$, pour tous $A,B\in\Tc$.}
+
+Comme $A\subset A\cup B$ et $B\subset A\cup B$, la monotonie (C1.11, point 1) donne $\PP(A\cup B)\ge\PP(A)$ et $\PP(A\cup B)\ge\PP(B)$.
+
+\emph{Cette borne est optimale.} Soient $a,b\in[0,1]$, disons $a\le b$. Sur $\Omega=\{1,2,3\}$, $\Tc=\Pc(\Omega)$, posons
+$\PP(\{1\})=a$, $\PP(\{2\})=b-a$, $\PP(\{3\})=1-b$ (poids $\ge0$ de somme $1$, la $\sigma$-additivité est immédiate sur $\Omega$ fini : c'est une probabilité au sens de C1.10), $A=\{1\}$, $B=\{1,2\}$.
+Alors $\PP(A)=a$, $\PP(B)=b$ et $\PP(A\cup B)=\PP(B)=b=\max(a,b)$ : aucune minoration meilleure, fonction de $\PP(A),\PP(B)$ seuls, n'est possible.
+\begin{resultat}
+$\max\bigl(\PP(A),\PP(B)\bigr)\le\PP(A\cup B)\ \bigl(\le\min(1,\PP(A)+\PP(B))\bigr)$, et la minoration est atteinte (cas $A\subset B$ ou $B\subset A$).
+\end{resultat}
+\textit{À ne pas confondre :} la minoration de l'\emph{intersection} $\PP(A\cap B)\ge\PP(A)+\PP(B)-1$ (C1.11, point 2), qui découle de $\PP(A\cup B)\le1$.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Gérants bien ou mal informés]
+\emph{Un gérant pris au hasard achète un titre ; le cours monte. Probabilité que le gérant soit mal informé ?}
+
+\textbf{Modélisation.} On travaille sur un espace probabilisé $(\Omega,\F,\PP)$ avec les événements
+$I=$ « le gérant choisi est bien informé » et $H=$ « le cours du titre monte ». Les données se traduisent par
+(probabilités conditionnelles, C1.12) :
+\[\PP(I)=\tfrac1{10}=0{,}1,\qquad \PP(H\mid I)=0{,}8,\qquad \PP(H^c\mid I^c)=0{,}6.\]
+« Choisi au hasard » signifie que $\PP(I)$ est la proportion de gérants bien informés. On a $\PP(I)=0{,}1>0$ et $\PP(I^c)=0{,}9>0$
+(C1.11, point 1), donc les conditionnements par $I$ et $I^c$ sont licites.
+
+\begin{alerte}
+L'énoncé donne la probabilité de \emph{baisse} pour un gérant mal informé. On suppose implicitement que le cours
+\emph{monte ou baisse} (pas de cours inchangé), i.e.\ « baisse » $=H^c$. C'est l'interprétation retenue (et celle de la fiche TD1).
+Si un cours stable était possible, les données ne suffiraient pas à déterminer $\PP(H\mid I^c)$.
+\end{alerte}
+% À VÉRIFIER : hypothèse implicite « baisse » = complémentaire de « hausse ».
+
+\textbf{Étape 1 : $\PP(H\mid I^c)$.} $I^c=(H\cap I^c)\sqcup(H^c\cap I^c)$ (union disjointe), donc par additivité (C1.10 (iii)),
+$\PP(H\cap I^c)+\PP(H^c\cap I^c)=\PP(I^c)$ ; en divisant par $\PP(I^c)>0$ (C1.12) :
+\[\PP(H\mid I^c)=1-\PP(H^c\mid I^c)=1-0{,}6=0{,}4.\]
+
+\textbf{Étape 2 : $\PP(H)$ (probabilités totales).} $\{I,I^c\}$ est une partition de $\Omega$ en événements de probabilité $>0$.
+Comme $H=(H\cap I)\sqcup(H\cap I^c)$, l'additivité (C1.10 (iii)) puis la définition C1.12 ($\PP(H\cap I)=\PP(H\mid I)\PP(I)$) donnent
+\[\PP(H)=\PP(H\mid I)\PP(I)+\PP(H\mid I^c)\PP(I^c)=0{,}8\times0{,}1+0{,}4\times0{,}9=0{,}08+0{,}36=0{,}44.\]
+C'est la formule des probabilités totales (C1.13, \emph{Hors cours} : elle est redémontrée ici en une ligne).
+
+\textbf{Étape 3 : Bayes.} Puisque $\PP(H)=0{,}44>0$, $\PP(I^c\mid H)$ est défini et, par C1.12 (deux fois),
+\[\PP(I^c\mid H)=\frac{\PP(I^c\cap H)}{\PP(H)}=\frac{\PP(H\mid I^c)\PP(I^c)}{\PP(H)}=\frac{0{,}36}{0{,}44}=\frac{9}{11}.\]
+(Formule de Bayes, C1.13 — \emph{Hors cours}, mais rien d'autre que la définition C1.12 n'est utilisé.)
+Vérification numérique (awk) : $0{,}36/0{,}44=0{,}818182$.
+\begin{resultat}
+$\PP(\text{mal informé}\mid\text{le cours monte})=\PP(I^c\mid H)=\dfrac{9}{11}\approx0{,}818$.
+\end{resultat}
+\textit{Interprétation.} A priori $\PP(I^c)=0{,}9$ ; observer une hausse ne fait baisser cette probabilité que légèrement (à $0{,}818$),
+car les mal informés sont très majoritaires et font tout de même monter le titre dans $40\,\%$ des cas.
+Symétriquement, $\PP(I\mid H)=0{,}08/0{,}44=2/11\approx0{,}182$.
+\end{exo}
+
+\end{document}

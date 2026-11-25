@@ -1,0 +1,414 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+% ---------- Macros locales au corrigé ----------
+\newtcolorbox{resultat}{enhanced,boxrule=0.6pt,arc=2pt,colback=blue!3,colframe=blue!45!black,
+  left=5pt,right=5pt,top=2pt,bottom=2pt}
+\newcommand{\question}[2]{\par\medskip\noindent\textbf{#1}~\textit{#2}\par\smallskip}
+\begin{document}
+\fiche{TD5}{Corrigé -- Processus, martingales, temps d'arrêt, Poisson}{Random Process, Martingale, Stopping Time and Poisson Processes}
+
+\textit{Renvois : « C8.6 » = fiche C8, énoncé n°6 ; « C6.5, point 6 » = point 6 de la proposition C6.5. Toutes les égalités entre
+espérances conditionnelles sont p.s.}
+
+% =====================================================================
+\begin{exo}[Temps d'arrêt]
+Cadre : $(\Omega,\F,\Ff,\PP)$, $\Ff=(\F_t)_{t\ge0}$ filtration (C1.6) ; $\tau:\Omega\to[0,+\infty]$ est un temps d'arrêt si
+$\{\tau\le t\}\in\F_t$ pour tout $t\ge0$ (C8.6).
+
+\question{1.}{Un temps déterministe est un temps d'arrêt.}
+Soit $\tau\equiv t_0\in[0,+\infty]$. Pour tout $t\ge0$, $\{\tau\le t\}=\Omega$ si $t_0\le t$ et $\{\tau\le t\}=\emptyset$ sinon.
+Or $\emptyset,\Omega\in\F_t$ (C1.1). Donc $\tau$ est un temps d'arrêt (C8.6).
+\begin{resultat}Tout temps constant $t_0$ est un $\Ff$-temps d'arrêt, quelle que soit la filtration.\end{resultat}
+
+\question{2.}{$\tau_1\vee\tau_2$ et $\tau_1\wedge\tau_2$ sont des temps d'arrêt.}
+Pour $t\ge0$ : $\max(\tau_1,\tau_2)\le t\iff(\tau_1\le t\text{ et }\tau_2\le t)$, et $\min(\tau_1,\tau_2)\le t\iff(\tau_1\le t\text{ ou }\tau_2\le t)$. Donc
+\[\{\tau_1\vee\tau_2\le t\}=\{\tau_1\le t\}\cap\{\tau_2\le t\},\qquad\{\tau_1\wedge\tau_2\le t\}=\{\tau_1\le t\}\cup\{\tau_2\le t\}.\]
+Les deux événements de droite sont dans $\F_t$ (C8.6), et une tribu est stable par intersection et réunion finies (C1.1).
+\begin{resultat}$\tau_1\vee\tau_2$ et $\tau_1\wedge\tau_2$ sont des $\Ff$-temps d'arrêt.\end{resultat}
+
+\question{3.}{$X$ réel, $\Ff$-adapté, à trajectoires continues ; $F\subset\R$ fermé ; $\tau=\inf\{t\ge0,\ X_t\in F\}$ est un temps d'arrêt.}
+Si $F=\emptyset$, $\tau\equiv+\infty$ est déterministe (question 1). On suppose $F\neq\emptyset$ et on pose $d(x,F)=\inf_{y\in F}|x-y|$.
+
+\emph{Deux faits d'analyse.} (a) $|d(x,F)-d(y,F)|\le|x-y|$, donc $d(\cdot,F)$ est continue (donc borélienne) ;
+(b) $d(x,F)=0\iff x\in\overline F=F$ car $F$ est fermé.
+
+Fixons $t\ge0$ et $D_t=([0,t]\cap\Q)\cup\{t\}$ : c'est une partie \emph{dénombrable} et dense de $[0,t]$. Posons
+$I_t=\inf_{s\in D_t}d(X_s,F)$. Montrons que $\{\tau\le t\}=\{I_t=0\}$.
+
+\emph{($\subset$)} Soit $\omega$ avec $\tau(\omega)\le t<+\infty$. L'ensemble $A(\omega)=\{s\ge0,\ X_s(\omega)\in F\}$ est non vide (sinon
+$\tau(\omega)=\inf\emptyset=+\infty$) et fermé, image réciproque du fermé $F$ par l'application continue $s\mapsto X_s(\omega)$. Sa
+borne inférieure est donc atteinte : $X_{\tau(\omega)}(\omega)\in F$, i.e.\ $d(X_{\tau(\omega)}(\omega),F)=0$. Par densité, il existe
+$s_k\in D_t$ avec $s_k\to\tau(\omega)\in[0,t]$. Par continuité de $s\mapsto d(X_s(\omega),F)$, $d(X_{s_k}(\omega),F)\to0$, donc $I_t(\omega)=0$.
+
+\emph{($\supset$)} Si $I_t(\omega)=0$, il existe $s_k\in D_t\subset[0,t]$ avec $d(X_{s_k}(\omega),F)\to0$. Comme $[0,t]$ est compact, quitte à extraire,
+$s_k\to s^*\in[0,t]$, et par continuité $d(X_{s^*}(\omega),F)=0$, donc $X_{s^*}(\omega)\in F$ par (b). Ainsi $\tau(\omega)\le s^*\le t$.
+
+\emph{Mesurabilité.} Pour $s\in D_t$, $s\le t$ donc $\F_s\subset\F_t$ (C1.6) ; $X_s$ est $\F_s$-mesurable ($X$ adapté, C8.1), et $d(X_s,F)$ aussi,
+par composition avec une fonction continue. \emph{Hors cours (standard) :} un infimum \emph{dénombrable} de v.a.\ $\F_t$-mesurables est
+$\F_t$-mesurable, car $\{I_t<a\}=\bigcup_{s\in D_t}\{d(X_s,F)<a\}$ est une réunion dénombrable d'éléments de $\F_t$. Donc
+$\{\tau\le t\}=I_t^{-1}(\{0\})\in\F_t$ pour tout $t$.
+\begin{resultat}$\{\tau\le t\}=\bigl\{\inf_{s\in([0,t]\cap\Q)\cup\{t\}}d(X_s,F)=0\bigr\}\in\F_t$ : $\tau$ est un $\Ff$-temps d'arrêt
+(cas particulier de C8.7).\end{resultat}
+\textit{Remarques.} La réduction à un ensemble dénombrable d'instants est essentielle : $\bigcup_{s\le t}\{X_s\in F\}$ est une réunion non
+dénombrable, a priori non mesurable. Continuité des trajectoires et fermeture de $F$ servent toutes deux dans ($\supset$) (pour $F$ ouvert, il
+faudrait la continuité à droite de la filtration, hors cours ; cf.\ la remarque sous C8.7).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Martingales multiplicatives et logarithmiques]
+On lit l'énoncé avec une suite $(X_k)_{k\ge1}$ i.i.d.\ (le processus est indexé par $n\ge1$). $\F_n=\sigma(X_1,\dots,X_n)$.
+\emph{Fait utilisé deux fois :} $\sigma(X_{n+1})$ est indépendante de $\F_n$, par regroupement par paquets (C3.11) :
+$(X_1,\dots,X_n)\indep X_{n+1}$.
+
+\question{1.}{$X_k>-1$, $\E|\ln(1+X_1)|<\infty$. Trouver $a$ tel que $(\ln P_n-an)_{n\ge1}$ soit une $\Ff$-martingale.}
+Posons $L_k=\ln(1+X_k)$ (bien défini car $X_k>-1$), $m=\E(L_1)$ et $M_n=\ln P_n-an=\sum_{k=1}^nL_k-an$.
+\begin{itemize}
+  \item \emph{Adapté :} $M_n$ est une fonction borélienne de $(X_1,\dots,X_n)$, donc $\F_n$-mesurable.
+  \item \emph{Intégrable :} $\E|M_n|\le\sum_{k=1}^n\E|L_k|+|a|n=n\bigl(\E|L_1|+|a|\bigr)<\infty$, les $L_k$ ayant la loi de $L_1$.
+  \item \emph{Espérance conditionnelle :} $M_{n+1}=M_n+L_{n+1}-a$. Par linéarité (C6.5, point 2), $M_n$ étant $\F_n$-mesurable
+  (C6.5, point 4) et $L_{n+1}$ indépendante de $\F_n$ (C6.5, point 7) :
+  \[\E(M_{n+1}\mid\F_n)=M_n+\E(L_{n+1})-a=M_n+(m-a)\quad\text{p.s.}\]
+\end{itemize}
+Par le critère en temps discret (C8.4, avec C8.2), $(M_n)$ est une martingale si et seulement si $m-a=0$ (si $a\neq m$, l'égalité
+$\E(M_{n+1}\mid\F_n)=M_n$ est fausse avec probabilité 1).
+\begin{resultat}$a=\E\bigl(\ln(1+X_1)\bigr)$ (et c'est la seule valeur possible).\end{resultat}
+
+\question{2.}{$\E|X_1|<\infty$. Trouver $b$ tel que $(P_n/b^n)_{n\ge1}$ soit une $\Ff$-martingale.}
+Posons $\mu=\E(X_1)$ et $Q_n=P_n/b^n$ (avec $b\neq0$ pour que $Q_n$ ait un sens).
+\begin{itemize}
+  \item \emph{Adapté :} $P_n=\prod_{k\le n}(1+X_k)$ est une fonction borélienne de $(X_1,\dots,X_n)$.
+  \item \emph{Intégrable :} les $1+X_k$ sont indépendantes (C3.10) et intégrables, donc $P_n\in L^1$ et $\E(P_n)=(1+\mu)^n$ (C3.15).
+  \item \emph{Espérance conditionnelle :} $P_{n+1}=P_n(1+X_{n+1})$, avec $P_n$ $\F_n$-mesurable et $P_n(1+X_{n+1})=P_{n+1}\in L^1$ ; on
+  sort $P_n$ (C6.5, point 4) puis on utilise $X_{n+1}\indep\F_n$ (C6.5, point 7) :
+  \[\E(P_{n+1}\mid\F_n)=P_n\,\E(1+X_{n+1}\mid\F_n)=(1+\mu)P_n,\qquad\text{donc}\qquad\E(Q_{n+1}\mid\F_n)=\frac{1+\mu}{b}\,Q_n\quad\text{p.s.}\]
+\end{itemize}
+Si $b=1+\mu\neq0$, $(Q_n)$ est une martingale (C8.4). Réciproquement, si $(Q_n)$ est une martingale,
+$\bigl(\frac{1+\mu}b-1\bigr)Q_1=0$ p.s. ; or $\PP(Q_1\neq0)=\PP(X_1\neq-1)>0$ dès que $\mu\neq-1$, d'où $b=1+\mu$.
+\begin{resultat}$b=\E(1+X_1)=1+\E(X_1)$, sous l'hypothèse $\E(X_1)\neq-1$.\end{resultat}
+% Cas E(X_1) = -1 : E(P_{n+1}|F_n) = 0, aucune valeur de b ne convient sauf si X_1 = -1 p.s.
+\textit{Remarque.} Si $\E X_1=-1$, alors $\E(P_{n+1}\mid\F_n)=0$ et aucun $b$ ne convient (sauf le cas trivial $X_1=-1$ p.s.).
+Sous les hypothèses communes aux deux questions, Jensen ($\ln$ concave) donne $a=\E\ln(1+X_1)\le\ln\E(1+X_1)=\ln b$.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Casino : on ne bat pas un jeu équitable]
+Les $X_i$ sont indépendantes (parties indépendantes), intégrables, centrées ; $S_0=0$, $S_n=X_1+\dots+X_n$,
+$\F_0=\{\emptyset,\Omega\}$, $\F_n=\sigma(X_1,\dots,X_n)$. Comme en exercice 2, $X_{n+1}\indep\F_n$ (C3.11).
+
+\subsection*{Partie A : mise constante}
+\question{1.}{Que représente $\F_n$ ?}
+$\F_n$ est l'information disponible après les $n$ premières parties : un événement est dans $\F_n$ si l'on sait, au vu des résultats
+$X_1,\dots,X_n$, s'il est réalisé. Les deux descriptions coïncident car $S_k=\sum_{i\le k}X_i$ et $X_k=S_k-S_{k-1}$ : chaque famille est
+fonction mesurable de l'autre, donc $\sigma(S_1,\dots,S_n)=\sigma(X_1,\dots,X_n)$ (C1.4).
+\begin{resultat}$\F_n$ = information (historique des gains) après $n$ parties.\end{resultat}
+
+\question{2.}{Calculer $\E(S_{n+1}\mid\F_n)$.}
+$S_{n+1}=S_n+X_{n+1}\in L^1$. $S_n$ est $\F_n$-mesurable (C6.5, point 4) et $X_{n+1}\indep\F_n$ (C6.5, point 7) :
+\[\E(S_{n+1}\mid\F_n)=S_n+\E(X_{n+1})=S_n\quad\text{p.s.}\]
+\begin{resultat}$\E(S_{n+1}\mid\F_n)=S_n$ : $(S_n)$ est une $\Ff$-martingale (adaptée, intégrable, C8.4).\end{resultat}
+
+\subsection*{Partie B : stratégie de mise}
+\question{1.}{Hypothèses raisonnables sur $H_n$.}
+\begin{itemize}
+  \item \emph{Mesurabilité :} la mise de la $n$-ième partie est choisie \emph{avant} de la jouer, au vu des $n-1$ premiers résultats :
+  $H_n$ est $\F_{n-1}$-mesurable ($H$ est \emph{prévisible} ; $H_1$ est constante car $\F_0$ est triviale).
+  \item \emph{Intégrabilité :} il faut $H_nX_n\in L^1$. Il suffit que $H_n\in L^1$ : comme $\sigma(H_n)\subset\F_{n-1}$ et
+  $X_n\indep\F_{n-1}$, $H_n\indep X_n$ et $\E|H_nX_n|=\E|H_n|\,\E|X_n|<\infty$ (C3.14, point 2, avec $h_1=h_2=|\cdot|$). Le cas
+  le plus simple : $H_n$ bornée (mise plafonnée).
+\end{itemize}
+\begin{resultat}$H_n$ est $\F_{n-1}$-mesurable (prévisible) et intégrable (par exemple bornée).\end{resultat}
+
+\question{2.}{Calculer $\E(\tilde S_{n+1}\mid\F_n)$. Commentaires.}
+$\tilde S_n=\sum_{k\le n}H_kX_k$ est $\F_n$-mesurable ($H_k$ est $\F_{k-1}\subset\F_n$-mesurable, $X_k$ est $\F_n$-mesurable) et
+intégrable (somme finie de v.a.\ de $L^1$). Puisque $H_{n+1}$ est $\F_n$-mesurable et $H_{n+1}X_{n+1}\in L^1$, on sort $H_{n+1}$ (C6.5, point 4),
+puis on utilise l'indépendance (C6.5, point 7) :
+\[\E(\tilde S_{n+1}\mid\F_n)=\tilde S_n+H_{n+1}\,\E(X_{n+1}\mid\F_n)=\tilde S_n+H_{n+1}\E(X_{n+1})=\tilde S_n\quad\text{p.s.}\]
+\begin{resultat}$\E(\tilde S_{n+1}\mid\F_n)=\tilde S_n$ : $(\tilde S_n)$ est encore une martingale, donc $\E(\tilde S_n)=\E(\tilde S_1)=H_1\E X_1=0$ (C8.3, point 2).\end{resultat}
+\textit{Commentaires.} Aucune stratégie de mise \emph{prévisible} ne rend favorable un jeu équitable (transformée de martingale).
+L'hypothèse de prévisibilité est indispensable : avec $H_n=\operatorname{signe}(X_n)$ (on « mise après avoir vu le résultat »),
+$\tilde S_n=\sum_{k\le n}|X_k|$ et $\E\tilde S_n>0$ dès que $X_1\not\equiv0$.
+
+\subsection*{Partie C : arrêt à un instant aléatoire borné}
+On note $N$ une borne : $\tau\le N$ p.s., $\tau$ à valeurs dans $\{0,1,\dots,N\}$ (avec $S_0=0$).
+
+\question{1.}{Hypothèse raisonnable sur $\tau$.}
+La décision de s'arrêter après la $n$-ième partie ne peut dépendre que des résultats déjà observés : $\{\tau=n\}\in\F_n$ pour tout $n$.
+\begin{resultat}$\tau$ est un $\Ff$-temps d'arrêt (C8.6, version temps discret), borné.\end{resultat}
+
+\question{2.}{On suppose $\{\tau=i\}$ indépendant de $\F_i$ pour $i\ge1$. Calculer $\E(S_\tau)$.}
+\emph{Calcul sous l'hypothèse de l'énoncé.} $\tau$ étant borné, $S_\tau=\sum_{i=0}^NS_i\1_{\{\tau=i\}}$ (somme finie, donc $S_\tau\in L^1$).
+Pour $i\ge1$, $\sigma(S_i)\subset\F_i$ est indépendante de $\{\tau=i\}$, donc (C3.14, point 3, $S_i\in L^1$ et indicatrice bornée)
+$\E(S_i\1_{\{\tau=i\}})=\E(S_i)\PP(\tau=i)=0$ ; et le terme $i=0$ est nul car $S_0=0$. D'où $\E(S_\tau)=0$.
+
+\begin{alerte}
+L'hypothèse « $\{\tau=i\}$ indépendant de $\F_i$ » est dégénérée si $\tau$ est un temps d'arrêt (question 1) : $\{\tau=i\}\in\F_i$
+serait indépendant de lui-même, donc $\PP(\tau=i)=\PP(\tau=i)^2\in\{0,1\}$ pour tout $i\ge1$, et $\tau$ serait (p.s.) une constante
+$i_0$ ; alors $\E(S_\tau)=\E(S_{i_0})=0$ trivialement.
+% À VÉRIFIER : hypothèse de l'énoncé incompatible (sauf cas déterministe) avec « tau temps d'arrêt » ; on donne la version robuste ci-dessous.
+Deux lectures non dégénérées donnent le même résultat :
+(a) $\tau$ \emph{indépendant de toute la suite} $(X_i)$ (arrêt décidé « de l'extérieur ») : le calcul ci-dessus s'applique tel quel ;
+(b) $\tau$ \emph{temps d'arrêt borné}, sans hypothèse d'indépendance : preuve ci-dessous. C'est la lecture la plus naturelle.
+\end{alerte}
+
+\emph{Preuve pour un temps d'arrêt borné.} $S_\tau=\sum_{i=1}^{N}X_i\1_{\{\tau\ge i\}}$ (on somme les gains des parties jouées). Or
+$\{\tau\ge i\}=\{\tau\le i-1\}^c=\bigl(\bigcup_{k\le i-1}\{\tau=k\}\bigr)^c\in\F_{i-1}$, donc $\1_{\{\tau\ge i\}}\indep X_i$ et
+$\E(X_i\1_{\{\tau\ge i\}})=\E(X_i)\PP(\tau\ge i)=0$ (C3.14, point 3). En sommant :
+\begin{resultat}$\E(S_\tau)=0=\E(S_0)$ : on ne peut pas non plus gagner en moyenne en choisissant le moment où l'on s'arrête
+(théorème d'arrêt C8.10, valable sans continuité en temps discret).\end{resultat}
+\textit{Remarques.} $S_\tau=\tilde S_N$ pour la stratégie prévisible bornée $H_i=\1_{\{\tau\ge i\}}$ : c'est un cas particulier de la
+partie B. Le caractère borné de $\tau$ est essentiel (contre-exemple $\tau=\inf\{n,\ S_n=1\}$ pour la marche simple, piège de C8).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Jeu du capital partagé]
+$X_n\in[0,1]$, $X_0=p\in(0,1)$, $\F_n=\sigma(X_0,\dots,X_n)$. Notons $u_n=X_n+\frac{1-X_n}2=\frac{1+X_n}2$ (capital après un gain) et
+$d_n=\frac{X_n}2$ (après une perte). La règle s'écrit, pour $f:[0,1]\to\R$ borélienne bornée :
+\[\E(f(X_{n+1})\mid\F_n)=X_n\,f(u_n)+(1-X_n)\,f(d_n)\quad\text{p.s.}\tag{R}\]
+On admet, comme l'énoncé, que $X_n\to Z$ p.s. (c'est d'ailleurs vrai pour toute martingale bornée : C8.11, point 4, hors cours).
+
+\question{1.}{$(X_n)$ est une martingale.}
+$X_n$ est $\F_n$-mesurable (filtration naturelle) et intégrable ($0\le X_n\le1$). Avec $f=\mathrm{id}$ dans (R) :
+\[\E(X_{n+1}\mid\F_n)=X_n\,\frac{1+X_n}2+(1-X_n)\frac{X_n}2=\frac{X_n}2\bigl(1+X_n+1-X_n\bigr)=X_n\quad\text{p.s.}\]
+\begin{resultat}$(X_n)_{n\ge0}$ est une $\Ff$-martingale (C8.4) ; en particulier $\E(X_n)=\E(X_0)=p$ pour tout $n$ (C8.3, point 2).\end{resultat}
+
+\question{2.}{Justifier $\E(X_{n+1}^2)=\frac14\E(3X_n^2+X_n)$ ; en déduire $\E(Z^2)=\E(Z)=p$.}
+Avec $f(x)=x^2$ dans (R) :
+\[\E(X_{n+1}^2\mid\F_n)=X_n\frac{(1+X_n)^2}4+(1-X_n)\frac{X_n^2}4=\frac14\bigl(X_n+2X_n^2+X_n^3+X_n^2-X_n^3\bigr)=\frac14\bigl(3X_n^2+X_n\bigr).\]
+En prenant l'espérance (espérance totale, C6.5, point 1) : $\E(X_{n+1}^2)=\frac14\E(3X_n^2+X_n)$.
+
+\emph{Passage à la limite.} $X_n\to Z$ p.s. et $X_n\in[0,1]$, donc $Z\in[0,1]$ p.s. et $X_n^2\to Z^2$ p.s. Les suites $(X_n)$ et $(X_n^2)$ sont
+dominées par la constante $1\in L^1$ : par convergence dominée (C6.7, point 3, avec $\G=\{\emptyset,\Omega\}$, pour laquelle
+$\E(\cdot\mid\G)=\E(\cdot)$ par C6.5, point 7, la tribu triviale étant indépendante de tout, une égalité p.s.\ entre constantes étant une égalité ; c'est le théorème de convergence dominée usuel), $\E(X_n)\to\E(Z)$ et $\E(X_n^2)\to\E(Z^2)$. Ainsi
+\[\E(Z)=\lim_n\E(X_n)=p,\qquad \E(Z^2)=\tfrac14\bigl(3\E(Z^2)+\E(Z)\bigr)\iff\E(Z^2)=\E(Z).\]
+\begin{resultat}$\E(X_{n+1}^2)=\frac14\E(3X_n^2+X_n)$ et $\E(Z^2)=\E(Z)=p$.\end{resultat}
+
+\question{3.}{Si $W\in[0,1]$ et $\E[W(1-W)]=0$, $W$ est de Bernoulli. Loi de $Z$ ?}
+$V=W(1-W)\ge0$ et $\E(V)=0$. Par Markov (C4.11, hors cours), $\PP(V\ge\frac1k)\le k\,\E(V)=0$ pour tout $k\ge1$ ; par continuité
+monotone (C1.11, point 4), $\PP(V>0)=\lim_k\PP(V\ge\frac1k)=0$. Donc $W(1-W)=0$ p.s., i.e.\ $W\in\{0,1\}$ p.s. : $W\sim\mathcal B(q)$
+avec $q=\PP(W=1)=\E(W)$.
+
+Pour $Z$ : $Z\in[0,1]$ p.s. et $\E[Z(1-Z)]=\E(Z)-\E(Z^2)=p-p=0$ (question 2) ; donc $Z$ est de Bernoulli de paramètre $\E(Z)=p$.
+\begin{resultat}$Z\sim\mathcal B(p)$ : $\PP(Z=1)=p$, $\PP(Z=0)=1-p$.\end{resultat}
+
+\question{4.}{$Y_n=2X_{n+1}-X_n$. Calculer $\E(\1_{\{Y_n=0\}}\mid\F_n)$, $\E(\1_{\{Y_n=1\}}\mid\F_n)$ ; loi de $Y_n$.}
+\emph{Interprétation.} En cas de gain, $X_{n+1}=u_n$ et $Y_n=1+X_n-X_n=1$ ; en cas de perte, $X_{n+1}=d_n$ et $Y_n=0$.
+Ainsi $Y_n$ est l'indicatrice du gain à la partie $n+1$. Justifions-le à partir de la seule relation (R).
+
+\emph{Extension de (R).} Si $g(x,y)=\sum_{j=0}^ra_j(x)y^j$ avec $a_j$ polynomiales, alors $a_j(X_n)$ est $\F_n$-mesurable et bornée, et
+par linéarité (C6.5, point 2), « ce qui est connu » (C6.5, point 4) et (R) appliquée à $f(x)=x^j$ :
+\[\E\bigl(g(X_n,X_{n+1})\mid\F_n\bigr)=\sum_ja_j(X_n)\E(X_{n+1}^j\mid\F_n)=X_n\,g(X_n,u_n)+(1-X_n)\,g(X_n,d_n).\tag{R'}\]
+\emph{$Y_n\in\{0,1\}$ p.s.} Prenons $g(x,y)=(2y-x)^2(2y-x-1)^2$, de sorte que $g(X_n,X_{n+1})=Y_n^2(Y_n-1)^2\ge0$. Comme
+$2u_n-X_n=1$ et $2d_n-X_n=0$, on a $g(X_n,u_n)=g(X_n,d_n)=0$, donc par (R') puis espérance totale $\E\bigl(Y_n^2(Y_n-1)^2\bigr)=0$ ;
+comme à la question 3, $Y_n^2(Y_n-1)^2=0$ p.s., i.e.\ $Y_n\in\{0,1\}$ p.s.
+
+\emph{Calcul.} Donc $\1_{\{Y_n=1\}}=Y_n$ et $\1_{\{Y_n=0\}}=1-Y_n$ p.s. Par linéarité, C6.5 point 4 ($X_n$ connu) et la question 1 :
+$\E(Y_n\mid\F_n)=2\E(X_{n+1}\mid\F_n)-X_n=2X_n-X_n=X_n$.
+\begin{resultat}$\E(\1_{\{Y_n=1\}}\mid\F_n)=X_n$ et $\E(\1_{\{Y_n=0\}}\mid\F_n)=1-X_n$ p.s. ; par espérance totale (C6.5, point 1),
+$\PP(Y_n=1)=\E(X_n)=p$, donc $Y_n\sim\mathcal B(p)$.\end{resultat}
+
+\question{5.}{$Y_n\to Z$ ; $\PP(\liminf G_n)=p$, $\PP(\liminf H_n)=1-p$. Les $Y_n$ sont-elles indépendantes ?}
+Soit $\Omega'=\{X_n\to Z\}\cap\bigcap_{n\ge0}\{Y_n\in\{0,1\}\}$ : intersection dénombrable d'événements de probabilité 1, donc
+$\PP(\Omega')=1$ (sous-additivité appliquée aux complémentaires, C1.11, point 3). Sur $\Omega'$, $X_{n+1}\to Z$ aussi, donc
+$Y_n=2X_{n+1}-X_n\to2Z-Z=Z$ : \textbf{$Y_n\to Z$ p.s.}
+
+Fixons $\omega\in\Omega'$. La suite $(Y_n(\omega))$ est à valeurs dans $\{0,1\}$ et converge vers $Z(\omega)$, donc $Z(\omega)\in\{0,1\}$
+(fermé) et, dès que $|Y_n(\omega)-Z(\omega)|<\frac12$, $Y_n(\omega)=Z(\omega)$ : la suite est \emph{stationnaire} égale à $Z(\omega)$.
+Par conséquent, avec C3.5 :
+\[\omega\in\liminf_nG_n\iff Y_n(\omega)=1\text{ à partir d'un rang}\iff Z(\omega)=1,\]
+et de même $\omega\in\liminf_nH_n\iff Z(\omega)=0$. Ces événements coïncident donc avec $\{Z=1\}$ et $\{Z=0\}$ à un ensemble négligeable
+près, et la question 3 donne :
+\begin{resultat}$Y_n\to Z$ p.s. ; $\PP(\liminf_nG_n)=\PP(Z=1)=p$ et $\PP(\liminf_nH_n)=\PP(Z=0)=1-p$.\end{resultat}
+
+\emph{Indépendance.} Supposons les $Y_n$ indépendantes. Alors les événements $H_n=Y_n^{-1}(\{0\})$ sont indépendants (C3.8), avec
+$\sum_n\PP(H_n)=\sum_n(1-p)=+\infty$ ; par Borel--Cantelli 2 (C3.6), $\PP(\limsup_nH_n)=1$. Or $(\limsup H_n)^c=\liminf H_n^c$ (C3.5) et
+$H_n^c=G_n$ à un négligeable près, donc $\PP(\liminf G_n)=0$, ce qui contredit $\PP(\liminf G_n)=p>0$.
+\begin{resultat}Les $(Y_n)$ ne sont pas indépendantes (bien qu'elles aient toutes la même loi $\mathcal B(p)$).\end{resultat}
+\textit{Vérification directe.} $\1_{\{Y_0=1\}}$ est $\F_1$-mesurable, donc (C6.5, points 1 et 4, et question 4)
+$\PP(Y_0=1,Y_1=1)=\E\bigl(\1_{\{Y_0=1\}}\E(\1_{\{Y_1=1\}}\mid\F_1)\bigr)=\E(\1_{\{Y_0=1\}}X_1)$. Sur $\{Y_0=1\}$, $X_1=\frac{1+p}2$, d'où
+$\PP(Y_0=1,Y_1=1)=\frac{p(1+p)}2>p^2$ puisque $p<1$ (par ex.\ $p=0{,}3$ : $0{,}195$ contre $0{,}09$). Gagner rend plus probable de regagner.
+
+\question{6.}{Que dire de la victoire ou de la défaite du joueur ?}
+Sur $\{Z=1\}$ (probabilité $p$), le joueur gagne toutes les parties à partir d'un certain rang et son capital tend vers 1 : il finit par
+capter (asymptotiquement) tout le capital. Sur $\{Z=0\}$ (probabilité $1-p$), il perd toutes les parties à partir d'un rang et
+$X_n\to0$ : ruine asymptotique. Il n'y a pas d'issue intermédiaire.
+\begin{resultat}Victoire totale avec probabilité $p$ (sa part initiale du capital), ruine avec probabilité $1-p$ : le jeu est équitable,
+$\E(Z)=X_0$.\end{resultat}
+\textit{Remarque.} Le capital n'atteint jamais exactement 0 ou 1 : si $X_n\in(0,1)$, $u_n$ et $d_n$ sont dans $(0,1)$.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Carré d'une sous-martingale positive]
+\question{}{$M$ sous-martingale positive, $M_t\in L^2$, $N_t=M_t^2$ : $N$ est une sous-martingale.}
+\begin{itemize}
+  \item \emph{Adapté :} $N_t=M_t^2$ est une fonction continue de la v.a.\ $\F_t$-mesurable $M_t$.
+  \item \emph{Intégrable :} $\E|N_t|=\E(M_t^2)<\infty$ car $M_t\in L^2$.
+  \item \emph{Inégalité :} soit $s\le t$. Par Jensen conditionnel (C6.5, point 8) avec $\Phi(x)=x^2$ convexe et $\E|\Phi(M_t)|<\infty$ :
+  $\E(M_t^2\mid\F_s)\ge\bigl(\E(M_t\mid\F_s)\bigr)^2$. Comme $M$ est une sous-martingale positive,
+  $\E(M_t\mid\F_s)\ge M_s\ge0$ p.s. (C8.2), et $x\mapsto x^2$ est croissante sur $\R_+$ : $\bigl(\E(M_t\mid\F_s)\bigr)^2\ge M_s^2$.
+\end{itemize}
+\[\E(N_t\mid\F_s)\ge\bigl(\E(M_t\mid\F_s)\bigr)^2\ge M_s^2=N_s\quad\text{p.s.}\]
+\begin{resultat}$N=M^2$ est une $\Ff$-sous-martingale.\end{resultat}
+\textit{La positivité est nécessaire :} en temps discret, avec $\F_n$ triviale, $M_0=-1$, $M_1=0$ est une sous-martingale (déterministe
+croissante) mais $M_0^2=1>M_1^2=0$ ; en temps continu, $M_t=-\1_{\{t<1\}}$ convient de même.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Fonction convexe croissante d'une sous-martingale]
+\question{}{$M$ sous-martingale, $\Phi$ convexe croissante sur $\R$, $\E|\Phi(M_t)|<\infty$ : $N=\Phi(M)$ est une sous-martingale.}
+\begin{itemize}
+  \item \emph{Adapté :} une fonction convexe sur $\R$ est continue, donc borélienne ; $\Phi(M_t)$ est $\F_t$-mesurable.
+  \item \emph{Intégrable :} c'est l'hypothèse $\E|\Phi(M_t)|<\infty$.
+  \item \emph{Inégalité :} pour $s\le t$, Jensen conditionnel (C6.5, point 8) puis $\E(M_t\mid\F_s)\ge M_s$ (C8.2) et la croissance de $\Phi$ :
+  \[\E(\Phi(M_t)\mid\F_s)\ge\Phi\bigl(\E(M_t\mid\F_s)\bigr)\ge\Phi(M_s)\quad\text{p.s.}\]
+\end{itemize}
+\begin{resultat}$N=\Phi(M)$ est une $\Ff$-sous-martingale.\end{resultat}
+\emph{Lien avec l'exercice 5.} $x\mapsto x^2$ n'est pas croissante sur $\R$, mais $\Phi(x)=(x^+)^2$ est convexe (dérivée $2x^+$ croissante)
+et croissante sur $\R$, et $\Phi(M_t)=M_t^2$ puisque $M\ge0$. L'exercice 5 est donc le cas particulier $\Phi(x)=(x^+)^2$, avec
+$\E|\Phi(M_t)|=\E(M_t^2)<\infty$. Pour une \emph{martingale}, la convexité seule suffit (la seconde inégalité devient une égalité) ; voir
+le cadre « Liens » de C8.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Martingale fermée]
+\question{}{$Y\in L^1$, $X_t=\E(Y\mid\F_t)$ : $X$ est une martingale.}
+\begin{itemize}
+  \item \emph{Adapté :} $X_t$ est $\F_t$-mesurable par définition de l'espérance conditionnelle (C6.3, (i)).
+  \item \emph{Intégrable :} $-|Y|\le Y\le|Y|$ donne, par monotonie et linéarité (C6.5, points 3 et 2), $|X_t|\le\E(|Y|\mid\F_t)$, puis par
+  espérance totale (C6.5, point 1) $\E|X_t|\le\E|Y|<\infty$.
+  \item \emph{Propriété de martingale :} pour $s\le t$, $\F_s\subset\F_t$ (C1.6), et par la tour (C6.5, point 6) :
+  \[\E(X_t\mid\F_s)=\E\bigl(\E(Y\mid\F_t)\mid\F_s\bigr)=\E(Y\mid\F_s)=X_s\quad\text{p.s.}\]
+\end{itemize}
+\begin{resultat}$X_t=\E(Y\mid\F_t)$ définit une $\Ff$-martingale, avec $\sup_t\E|X_t|\le\E|Y|$.\end{resultat}
+\textit{Remarque.} Toute martingale sur $[0,T]$ est de cette forme avec $Y=X_T$ (C8.3, point 1) ; c'est la notion de martingale fermée
+(C8.11, point 3, hors cours).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Poisson compensé]
+\question{}{$N$ processus de Poisson d'intensité $\lambda$, $\F_n=\sigma(N_0,\dots,N_n)$ : $(N_n-\lambda n)_{n\ge0}$ est une $\Ff$-martingale.}
+Posons $M_n=N_n-\lambda n$.
+\begin{itemize}
+  \item \emph{Adapté :} $M_n$ est fonction de $N_n$, donc $\F_n$-mesurable.
+  \item \emph{Intégrable :} $N_n\ge0$ et $N_n\sim\Poi(\lambda n)$ (C9.4, point 4), donc $\E|M_n|\le\E(N_n)+\lambda n=2\lambda n<\infty$
+  (pour $Y\sim\Poi(\mu)$, $\E Y=\sum_{k\ge1}k\,e^{-\mu}\frac{\mu^k}{k!}=\mu$, C2.9).
+  \item \emph{Information :} $N_0=0$ (C9.4, point 1) et $N_k=\sum_{j=1}^k(N_j-N_{j-1})$ : $(N_0,\dots,N_n)$ et les accroissements
+  $(N_1-N_0,\dots,N_n-N_{n-1})$ sont fonctions mesurables les uns des autres, donc $\F_n=\sigma(N_1-N_0,\dots,N_n-N_{n-1})$ (pour $n=0$,
+  $\F_0$ est triviale).
+  \item \emph{Indépendance :} par C9.4 point 2 avec les instants $1<2<\dots<n+1$, les v.a.\ $N_1,N_2-N_1,\dots,N_{n+1}-N_n$ sont
+  indépendantes ; par regroupement par paquets (C3.11), $N_{n+1}-N_n$ est indépendante de $(N_1,N_2-N_1,\dots,N_n-N_{n-1})$, i.e.\ de $\F_n$.
+  \item \emph{Loi de l'accroissement :} par stationnarité (C9.4, point 3), $N_{n+1}-N_n$ a la loi de $N_1\sim\Poi(\lambda)$, d'espérance $\lambda$.
+\end{itemize}
+Donc, par C6.5 (point 4 pour $N_n$, point 7 pour l'accroissement) :
+\[\E(N_{n+1}\mid\F_n)=N_n+\E(N_{n+1}-N_n)=N_n+\lambda,\qquad\E(M_{n+1}\mid\F_n)=N_n+\lambda-\lambda(n+1)=M_n\quad\text{p.s.}\]
+\begin{resultat}$(N_n-\lambda n)_{n\ge0}$ est une $\Ff$-martingale (C8.4) : $\lambda n$ est le « compensateur » de $N_n$.\end{resultat}
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Attente résiduelle]
+\question{}{$W_1=T_{N_s+1}-s$ suit $\Expo(\lambda)$. Loi de $T_1$ ?}
+($W_1$ est une v.a. : $T_{N_s+1}=\sum_{k\ge0}T_{k+1}\1_{\{N_s=k\}}$.) Soit $u\ge0$. Sur $\{N_s=k\}$, le dictionnaire (C9.3 ; pour $k=0$, $\{T_1>s+u\}=\{N_{s+u}=0\}$ par C9.2) donne
+$\{T_{k+1}>s+u\}=\{N_{s+u}\le k\}$. Donc
+\[\{W_1>u\}=\bigcup_{k\ge0}\{N_s=k,\ N_{s+u}\le k\}=\{N_{s+u}\le N_s\}=\{N_{s+u}-N_s=0\},\]
+la dernière égalité parce que $N$ est croissant ($N_{s+u}\ge N_s$) : « aucune arrivée dans $]s,s+u]$ ». Par stationnarité des accroissements
+(C9.4, point 3) puis $N_u\sim\Poi(\lambda u)$ (C9.4, point 4) :
+\[\PP(W_1>u)=\PP(N_u=0)=e^{-\lambda u},\qquad u\ge0.\]
+Comme $W_1\ge0$, la fonction de répartition de $W_1$ est $u\mapsto(1-e^{-\lambda u})\1_{u\ge0}$, celle de $\Expo(\lambda)$, qui
+caractérise la loi.
+\begin{resultat}$W_1=T_{N_s+1}-s\sim\Expo(\lambda)$ pour tout $s\ge0$ (c'est C9.6). Pour $s=0$, $N_0=0$ et $W_1=T_1$ : $T_1\sim\Expo(\lambda)$.\end{resultat}
+\textit{Remarque.} La loi de l'attente ne dépend pas de $s$ : absence de mémoire (C9.12).
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Instants de saut et statistiques d'ordre]
+$(X_n)$ i.i.d.\ de loi $\Expo(\lambda)$, $T_n=X_1+\dots+X_n$, $N$ processus de Poisson (C9.10).
+
+\question{1.}{Densité de $(T_1,T_2,T_3,T_4)$.}
+Par indépendance (C3.16, point 1), $X=(X_1,\dots,X_4)$ a pour densité $f_X(x)=\prod_{i=1}^4\lambda e^{-\lambda x_i}\1_{x_i>0}$ sur $\R^4$,
+nulle hors de l'ouvert $U=\,]0,+\infty[^4$. On a $T=AX$ avec $A$ la matrice triangulaire inférieure remplie de 1 ; $\varphi(x)=Ax$ est une
+bijection linéaire de $U$ sur $V=\{0<t_1<t_2<t_3<t_4\}$, d'inverse $x_1=t_1$, $x_k=t_k-t_{k-1}$ ($k=2,3,4$), de jacobien $\det A^{-1}=1$.
+Par changement de variables (C2.10, version en dimension $d$, hors cours), et puisque $\sum_kx_k=t_1+\sum_{k=2}^4(t_k-t_{k-1})=t_4$ :
+\begin{resultat}$f_{(T_1,T_2,T_3,T_4)}(t_1,t_2,t_3,t_4)=\lambda^4e^{-\lambda t_4}\,\1_{\{0<t_1<t_2<t_3<t_4\}}$.\end{resultat}
+\textit{Contrôle.} Le volume de $\{0<t_1<t_2<t_3<t_4\}$ à $t_4$ fixé vaut $\frac{t_4^3}{3!}$, et
+$\int_0^\infty\lambda^4\frac{t_4^3}{6}e^{-\lambda t_4}\dd t_4=1$ ; on retrouve au passage la densité d'Erlang de $T_4$ (C9.12).
+
+\question{2.}{Densité de $(T_1,T_2,T_3)$ sachant $\{N_t=3\}$ ($t>0$ fixé).}
+Par le dictionnaire (C9.3), $B:=\{N_t=3\}=\{T_3\le t<T_4\}$, et $\PP(B)=e^{-\lambda t}\frac{(\lambda t)^3}{3!}>0$ (C9.4, point 4). Pour $h\ge0$
+borélienne sur $\R^3$, la loi conditionnelle sachant l'événement $B$ (C1.12, C6.1) vérifie
+$\E(h(T_1,T_2,T_3)\mid B)=\E\bigl(h(T_1,T_2,T_3)\1_B\bigr)/\PP(B)$. Par transfert (C2.9) avec la densité de la question 1, puis Tonelli
+(hors cours) pour intégrer d'abord en $t_4$ :
+\begin{align*}
+\E\bigl(h(T_1,T_2,T_3)\1_{\{T_3\le t<T_4\}}\bigr)
+&=\int_{\R^3}h(t_1,t_2,t_3)\1_{\{0<t_1<t_2<t_3\le t\}}\Bigl(\int_t^{+\infty}\lambda^4e^{-\lambda t_4}\dd t_4\Bigr)\dd t_1\dd t_2\dd t_3\\
+&=\int_{\R^3}h(t_1,t_2,t_3)\,\lambda^3e^{-\lambda t}\1_{\{0<t_1<t_2<t_3\le t\}}\dd t_1\dd t_2\dd t_3
+\end{align*}
+(la contrainte $t_4>t_3$ est automatique quand $t_4>t\ge t_3$). En divisant par $\PP(B)=e^{-\lambda t}\lambda^3t^3/6$ :
+\begin{resultat}Sachant $\{N_t=3\}$, $(T_1,T_2,T_3)$ a pour densité $\dfrac{3!}{t^3}\,\1_{\{0<t_1<t_2<t_3<t\}}$ (uniforme sur le simplexe ordonné).\end{resultat}
+\textit{Commentaire (hors cours).} C'est la loi des statistiques d'ordre de 3 v.a.\ i.i.d.\ uniformes sur $[0,t]$ : sachant qu'il y a eu
+3 arrivées dans $[0,t]$, elles sont placées « au hasard uniformément ». La densité ne dépend pas de $\lambda$.
+\end{exo}
+
+% =====================================================================
+\begin{exo}[Le paradoxe de l'autobus]
+$Z_t=t-T_{N_t}$ (avec $T_0=0$, ce qui donne bien $Z_t=t$ si $t<T_1$) : temps écoulé depuis la dernière arrivée ; $W_t=T_{N_t+1}-t$ : attente
+de la prochaine. On a $0\le Z_t\le t$ et $W_t\ge0$.
+
+\question{1.}{Fonction de répartition de $(Z_t,W_t)$ ; indépendance ; $W_t\sim\Expo(\lambda)$.}
+\emph{Étape 1 : traduction en accroissements.} Soient $0\le z\le t$ et $w\ge0$.
+\begin{itemize}
+  \item $\{Z_t\ge z\}=\{N_t-N_{t-z}=0\}$ (aucune arrivée dans $]t-z,t]$). En effet, si $N_{t-z}=N_t=k$, alors $T_k\le t-z$ (C9.3 si $k\ge1$ ;
+  $T_0=0\le t-z$ si $k=0$), donc $Z_t\ge z$. Réciproquement, si $T_{N_t}\le t-z$ avec $k=N_t\ge1$, C9.3 donne $N_{t-z}\ge k=N_t$, donc
+  $N_{t-z}=N_t$ ($N$ croissant) ; si $N_t=0$, alors $N_{t-z}=0$.
+  \item $\{W_t>w\}=\{N_{t+w}-N_t=0\}$ (exercice 9 avec $s=t$).
+\end{itemize}
+Donc $\{Z_t\ge z,\ W_t>w\}=\{N_{t+w}-N_{t-z}=0\}$, et par stationnarité (C9.4, points 3 et 4) :
+\[G(z,w):=\PP(Z_t\ge z,\ W_t>w)=\PP(N_{z+w}=0)=e^{-\lambda z}e^{-\lambda w}\qquad(0\le z\le t,\ w\ge0),\]
+et $G(z,w)=0$ si $z>t$ (car $Z_t\le t$).
+
+\emph{Vérification par l'indication de l'énoncé.} En décomposant selon $\{N_t=n\}=\{T_n\le t<T_n+\tau_{n+1}\}$ (C9.3), avec $T_n$ de densité
+d'Erlang (C9.12) indépendante de $\tau_{n+1}\sim\Expo(\lambda)$ (C9.9, C3.11) :
+$\PP(N_t=0,\ W_t>w)=\PP(T_1>t+w)=e^{-\lambda(t+w)}$ et, pour $n\ge1$,
+\[\PP(T_n\le t-z,\ T_n+\tau_{n+1}>t+w)=\int_0^{t-z}\lambda^n\frac{s^{n-1}}{(n-1)!}e^{-\lambda s}\,e^{-\lambda(t+w-s)}\dd s
+=e^{-\lambda(t+w)}\frac{(\lambda(t-z))^n}{n!}.\]
+En sommant sur $n\ge0$ : $G(z,w)=e^{-\lambda(t+w)}e^{\lambda(t-z)}=e^{-\lambda(z+w)}$. Même résultat.
+
+\emph{Étape 2 : fonction de répartition.} Pour $0\le z<t$, $\PP(Z_t>z,W_t>w)=\lim_{z'\downarrow z}G(z',w)=e^{-\lambda z}e^{-\lambda w}$ (continuité
+monotone, C1.11, point 4) ; pour $z\ge t$, $\PP(Z_t>z)=0$. En particulier $\PP(W_t>w)=G(0,w)=e^{-\lambda w}$ et
+$\PP(Z_t>z)=e^{-\lambda z}\1_{z<t}$ pour $z\ge0$. Par la formule $\PP(A\cap B)=1-\PP(A^c)-\PP(B^c)+\PP(A^c\cap B^c)$ (C1.11, point 2) :
+\begin{resultat}
+$F(z,w)=\PP(Z_t\le z,\ W_t\le w)=\begin{cases}(1-e^{-\lambda z})(1-e^{-\lambda w}) & 0\le z<t,\ w\ge0,\\ 1-e^{-\lambda w} & z\ge t,\ w\ge0,\\ 0 & z<0\text{ ou }w<0.\end{cases}$
+\par\smallskip
+Donc $F(z,w)=F_{Z_t}(z)F_{W_t}(w)$ avec $F_{W_t}(w)=(1-e^{-\lambda w})\1_{w\ge0}$ et
+$F_{Z_t}(z)=(1-e^{-\lambda z})\1_{0\le z<t}+\1_{z\ge t}$ : $Z_t\indep W_t$ (C3.9) et $W_t\sim\Expo(\lambda)$.
+\end{resultat}
+(Les marginales s'obtiennent en faisant $z\to+\infty$, resp.\ $w\to+\infty$, par continuité monotone.)
+
+\question{2.}{Loi de $Z_t$ ; comparaison avec $\min(T_1,t)$ ; limite quand $t\to\infty$.}
+$Z_t$ a une loi mixte : densité $\lambda e^{-\lambda z}$ sur $[0,t[$ et un atome en $t$ de masse $\PP(Z_t=t)=\PP(N_t=0)=e^{-\lambda t}$.
+Avec $T_1\sim\Expo(\lambda)$ (exercice 9) : $\PP(\min(T_1,t)\le z)=\PP(T_1\le z)=1-e^{-\lambda z}$ pour $0\le z<t$, et $=1$ pour $z\ge t$ :
+même fonction de répartition que $Z_t$, donc même loi. Enfin, pour $z\ge0$ fixé, dès que $t>z$, $F_{Z_t}(z)=1-e^{-\lambda z}=F_{T_1}(z)$
+(et $F_{Z_t}(z)=0=F_{T_1}(z)$ pour $z<0$).
+\begin{resultat}$Z_t\overset{\text{loi}}{=}\min(T_1,t)$, et $F_{Z_t}\to F_{T_1}$ en tout point quand $t\to\infty$ :
+$Z_t\xrightarrow[t\to\infty]{\text{loi}}\Expo(\lambda)$ (C4.7, point 1).\end{resultat}
+
+\question{3.}{$\E(Z_t+W_t)$ et sa limite. Commentaires.}
+Par transfert (C2.9) avec la densité de $T_1$ :
+\[\E(Z_t)=\E(\min(T_1,t))=\int_0^ts\,\lambda e^{-\lambda s}\dd s+t\,e^{-\lambda t}=\Bigl(-te^{-\lambda t}+\frac{1-e^{-\lambda t}}\lambda\Bigr)+te^{-\lambda t}
+=\frac{1-e^{-\lambda t}}\lambda,\]
+(intégration par parties), et $\E(W_t)=\frac1\lambda$.
+\begin{resultat}$\E(Z_t+W_t)=\dfrac{2-e^{-\lambda t}}\lambda\xrightarrow[t\to\infty]{}\dfrac2\lambda$.\end{resultat}
+\textit{Commentaires.} $Z_t+W_t=T_{N_t+1}-T_{N_t}$ est la longueur de l'intervalle entre deux arrivées \emph{qui contient} $t$. Sa moyenne tend
+vers $\frac2\lambda$, le double de la moyenne $\frac1\lambda$ d'une inter-arrivée $\tau_n$ (C9.9) : c'est le \emph{paradoxe de
+l'inspection}. Un instant fixé tombe plus volontiers dans un long intervalle que dans un court. (Hors cours : $Z_t\indep W_t$ et la question 2
+donnent, via les fonctions caractéristiques (C4.5), $Z_t+W_t\to\Gamma(2,\lambda)$ en loi, de densité $\lambda^2se^{-\lambda s}=\frac{s\,\lambda e^{-\lambda s}}{1/\lambda}$ :
+la loi exponentielle « biaisée par la taille ».)
+Il n'y a pas de contradiction avec $\tau_n\sim\Expo(\lambda)$ : l'indice $N_t+1$ est aléatoire et dépend des longueurs des intervalles.
+
+\question{4.}{RER A, intensité $\lambda$ ; on arrive à l'instant $t$. Attente moyenne ?}
+L'attente est $W_t\sim\Expo(\lambda)$ (question 1), indépendante de $\F^N_t$ (propriété de Markov, C9.7 avec $S=t$).
+\begin{resultat}Attente moyenne $\E(W_t)=\dfrac1\lambda$ : l'intervalle moyen entre deux trains, et non la moitié $\frac1{2\lambda}$.\end{resultat}
+\textit{Illustration.} Avec $\lambda=6$ trains par heure, on attend en moyenne $10{,}0$ min (et non 5 min, valeur obtenue avec des trains
+parfaitement réguliers toutes les 10 min). Pour $t=30$ min, l'intervalle contenant $t$ dure en moyenne $\frac{2-e^{-3}}6$ h $\approx19{,}5$ min,
+proche de la limite $20{,}0$ min.
+\end{exo}
+
+\end{document}

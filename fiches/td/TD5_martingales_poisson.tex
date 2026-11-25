@@ -1,0 +1,152 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD5}{Processus, martingales, temps d'arrêt, Poisson}{Random Process, Martingale, Stopping Time and Poisson Processes}
+
+\textit{À lire avant de chercher le TD. Renvois : « C8.6 » = fiche C8, énoncé n°6. Fiches associées : \textbf{C8}, \textbf{C6}, \textbf{C9}, \textbf{C3}.}
+
+\begin{exo}[Temps d'arrêt]
+\outils Définition d'un temps d'arrêt (C8.6) ; temps d'entrée (C8.7 et sa remarque) ; tribu (C1.1).
+
+\meth Écrire $\{\tau\le t\}$ à l'aide d'événements déjà dans $\F_t$.
+
+\indic 1. $\{t_0\le t\}\in\{\emptyset,\Omega\}$. 2. $\{\tau_1\vee\tau_2\le t\}=\{\tau_1\le t\}\cap\{\tau_2\le t\}$ et
+$\{\tau_1\wedge\tau_2\le t\}=\{\tau_1\le t\}\cup\{\tau_2\le t\}$.
+3. Avec $d(x,F)=\inf_{y\in F}|x-y|$ (continue, nulle exactement sur $F$ fermé) et les trajectoires continues :
+$\{\tau\le t\}=\bigl\{\inf_{s\in([0,t]\cap\Q)\cup\{t\}}d(X_s,F)=0\bigr\}$. C'est un infimum \emph{dénombrable} de v.a.\ $\F_t$-mesurables.
+\end{exo}
+
+\begin{exo}[Martingales multiplicatives et logarithmiques]
+\outils Martingale en temps discret (C8.2, C8.4) ; indépendance $X_{n+1}\indep\F_n$ (C3.11) ; $\E(\cdot\mid\G)=\E(\cdot)$ si indépendance
+(C6.5, point 7) ; sortir ce qui est connu (C6.5, point 4).
+
+\meth $\ln P_n=\sum_{k\le n}\ln(1+X_k)$ est une somme de v.a.\ i.i.d.\ intégrables : on la recentre. $P_{n+1}=P_n(1+X_{n+1})$ avec
+$P_n$ $\F_n$-mesurable. Vérifier aussi l'intégrabilité ($P_n$ est un produit de v.a.\ indépendantes intégrables, C3.15).
+
+\rep 1. $a=\E\bigl(\ln(1+X_1)\bigr)$. 2. $b=\E(1+X_1)=1+\E X_1$ (supposé non nul).
+\end{exo}
+
+\begin{exo}[Casino : on ne bat pas un jeu équitable]
+\begin{alerte}
+L'hypothèse « $\{\tau=i\}$ indépendant de $\F_i$ » est dégénérée si $\tau$ est un temps d'arrêt : comme $\{\tau=i\}\in\F_i$, cet événement
+serait indépendant de lui-même, donc $\PP(\tau=i)=\PP(\tau=i)^2\in\{0,1\}$ et $\tau$ serait déterministe.
+% Vérifié : {tau=i} dans F_i et independant de F_i => P(tau=i) dans {0,1}.
+Deux lectures donnent le résultat sans dégénérescence : (a) $\tau$ temps d'arrêt borné par $N$ : écrire
+$S_\tau=\sum_{i\le N}X_i\1_{\{\tau\ge i\}}$ avec $\{\tau\ge i\}=\{\tau\le i-1\}^c\in\F_{i-1}$, indépendant de $X_i$ ;
+(b) $\tau$ indépendant de toute la suite $(X_i)$ (arrêt décidé « de l'extérieur »).
+\end{alerte}
+\outils Martingale (C8.2) ; sortir ce qui est connu et indépendance (C6.5) ; temps d'arrêt (C8.6) ; théorème d'arrêt (C8.10).
+
+\meth
+\begin{itemize}
+  \item $\F_n$ = information après $n$ parties. $\E(S_{n+1}\mid\F_n)=S_n+\E(X_{n+1})$.
+  \item Stratégie : la mise $H_n$ doit être décidée \textbf{avant} la $n$-ième partie, donc $\F_{n-1}$-mesurable (\emph{prévisible}),
+  et telle que $H_nX_n\in L^1$ (par ex.\ $H_n$ bornée). Alors on peut sortir $H_{n+1}$ de $\E(H_{n+1}X_{n+1}\mid\F_n)$.
+  \item Arrêt : $\{\tau=n\}\in\F_n$ (décider d'arrêter avec l'information disponible). Calculer
+  $\E(S_\tau)=\sum_i\E(S_i\1_{\{\tau=i\}})$ ($\tau$ borné : somme finie) et utiliser l'hypothèse de l'énoncé ; ou, plus solidement, la décomposition (a) de l'encadré.
+\end{itemize}
+
+\rep $\E(S_{n+1}\mid\F_n)=S_n$ ; $\E(\tilde S_{n+1}\mid\F_n)=\tilde S_n$ (toute stratégie prévisible reste équitable) ; $\E(S_\tau)=0$
+(cohérent avec C8.10).
+\end{exo}
+
+\begin{exo}[Jeu du capital partagé]
+\outils Martingale bornée et convergence p.s.\ (C8.11, hors cours) ; convergence dominée ; espérance totale (C6.5) ; $\liminf$ (C3.5) ;
+Borel--Cantelli 2 (C3.6).
+
+\meth
+\begin{enumerate}
+  \item Appliquer la relation de l'énoncé avec $f=\mathrm{id}$ ; $X_n\in[0,1]$ donne l'intégrabilité.
+  \item Appliquer avec $f(x)=x^2$, prendre l'espérance ; passer à la limite par convergence dominée ($0\le X_n\le1$) dans
+  $\E(X_{n+1}^2)=\frac14\E(3X_n^2+X_n)$ et dans $\E(X_n)=p$.
+  \item $W(1-W)\ge0$ d'espérance nulle, donc nul p.s.
+  \item Gain : $X_{n+1}=X_n+\frac{1-X_n}2$, donc $Y_n=1$ ; perte : $X_{n+1}=\frac{X_n}2$, donc $Y_n=0$. D'où $Y_n=\1_{\{\text{gain à }n+1\}}$.
+  \item $Y_n=2X_{n+1}-X_n\to2Z-Z=Z$ p.s. ; une suite à valeurs dans $\{0,1\}$ qui converge est stationnaire.
+  Pour l'indépendance : si les $Y_n$ étaient indépendantes, que dirait BC2 appliqué aux $H_n$ ?
+\end{enumerate}
+
+\rep 2. $\E(Z^2)=\E(Z)=p$. 3. $Z\sim\mathcal B(p)$. 4. $\E(\1_{\{Y_n=1\}}\mid\F_n)=X_n$, $\E(\1_{\{Y_n=0\}}\mid\F_n)=1-X_n$, donc $Y_n\sim\mathcal B(p)$.
+5. $\liminf G_n=\{Z=1\}$, de probabilité $p$, et $\liminf H_n=\{Z=0\}$, de probabilité $1-p$ ; les $Y_n$ ne sont \emph{pas} indépendantes (sinon BC2 donnerait $\PP(\liminf G_n)=0$).
+6. Avec probabilité $p$, le joueur finit par gagner toutes les parties et capte tout le capital ; avec probabilité $1-p$, il perd tout.
+\end{exo}
+
+\begin{exo}[Carré d'une sous-martingale positive]
+\outils Jensen conditionnel (C6.5, point 8) ; monotonie (C6.5, point 3) ; sous-martingale (C8.2).
+
+\meth $\E(M_t^2\mid\F_s)\ge\bigl(\E(M_t\mid\F_s)\bigr)^2\ge M_s^2$. La seconde inégalité utilise $\E(M_t\mid\F_s)\ge M_s\ge0$ et la
+croissance de $x\mapsto x^2$ sur $\R_+$. Intégrabilité : $M_t\in L^2$.
+\end{exo}
+
+\begin{exo}[Fonction convexe croissante d'une sous-martingale]
+\outils Mêmes outils qu'à l'exercice 5.
+
+\meth $\E(\Phi(M_t)\mid\F_s)\ge\Phi(\E(M_t\mid\F_s))\ge\Phi(M_s)$ : Jensen, puis croissance de $\Phi$.
+Lien : l'exercice 5 est le cas $\Phi(x)=(x^+)^2$ (convexe croissante sur $\R$, égale à $x^2$ sur $\R_+$, où vit $M$).
+\end{exo}
+
+\begin{exo}[Martingale fermée]
+\outils Tour (C6.5, point 6) ; Jensen avec $|\cdot|$ ; martingale (C8.2, C8.3).
+
+\meth Pour $s\le t$, $\F_s\subset\F_t$ : $\E(X_t\mid\F_s)=\E(\E(Y\mid\F_t)\mid\F_s)=\E(Y\mid\F_s)=X_s$. Intégrabilité :
+$\E|X_t|\le\E\bigl(\E(|Y|\mid\F_t)\bigr)=\E|Y|$. Adaptation : par définition de l'espérance conditionnelle.
+\end{exo}
+
+\begin{exo}[Poisson compensé]
+\outils Déf.\ du processus de Poisson (C9.4) ; indépendance et $\E(\cdot\mid\G)$ (C6.5, point 7) ; regroupement par paquets (C3.11).
+
+\meth $\F_n=\sigma(N_0,\dots,N_n)=\sigma(N_1-N_0,\dots,N_n-N_{n-1})$ ; l'accroissement $N_{n+1}-N_n$ est indépendant de ces
+accroissements, et a même loi que $N_1\sim\Poi(\lambda)$. Donc $\E(N_{n+1}-N_n\mid\F_n)=\lambda$. Ne pas oublier adaptation et intégrabilité.
+\end{exo}
+
+\begin{exo}[Attente résiduelle]
+\outils Thm C9.6 (c'est exactement l'énoncé du cours) ; dictionnaire C9.3.
+
+\meth $\{W_1>t\}=\{N_{s+t}-N_s=0\}$, puis stationnarité des accroissements.
+
+\rep $W_1\sim\Expo(\lambda)$ ; $T_1\sim\Expo(\lambda)$ (cas $s=0$).
+\end{exo}
+
+\begin{exo}[Instants de saut et statistiques d'ordre]
+\outils Densité produit des $X_i$ indépendantes (C3.16) ; changement de variables linéaire (C2.10, version multidimensionnelle) ; dictionnaire C9.3 ;
+densités conditionnelles (C6.9).
+
+\meth 1. $(T_1,\dots,T_4)=A(X_1,\dots,X_4)$ avec $A$ triangulaire inférieure de 1, $|\det A|=1$ ; image du domaine $\R_+^{*4}$ :
+$\{0<t_1<t_2<t_3<t_4\}$. 2. $\{N_t=3\}=\{T_3\le t<T_4\}$ : intégrer la densité de la question 1 en $t_4$ sur $]t,+\infty[$, puis diviser
+par $\PP(N_t=3)$.
+
+\rep 1. $f(t_1,\dots,t_4)=\lambda^4e^{-\lambda t_4}\1_{0<t_1<t_2<t_3<t_4}$.
+2. $\dfrac{3!}{t^3}\1_{0<t_1<t_2<t_3<t}$ : loi des statistiques d'ordre de 3 uniformes indépendantes sur $[0,t]$.
+\end{exo}
+
+\begin{exo}[Le paradoxe de l'autobus]
+\outils Dictionnaire C9.3 ; Thm C9.6 ; accroissements indépendants et stationnaires (C9.4) ; critère des fonctions de répartition pour
+l'indépendance (C3.9) ; convergence en loi par fonctions de répartition (C4.7).
+
+\meth Pour $0\le z\le t$ et $w\ge0$, l'événement $\{Z_t\ge z,\ W_t>w\}$ signifie qu'il n'y a aucune arrivée dans $]t-z,t+w]$
+(avec $Z_t=t$ s'il n'y a eu aucune arrivée avant $t$). Sa probabilité factorise. Alternative suggérée par l'énoncé : décomposer selon
+$\{N_t=n\}$ et utiliser la densité d'Erlang de $T_n$.
+
+\rep 1. $\PP(Z_t\ge z,W_t>w)=e^{-\lambda z}e^{-\lambda w}$ pour $0\le z\le t$, $w\ge0$ (et $0$ si $z>t$) ; d'où la fonction de répartition $F(z,w)=(1-e^{-\lambda z})(1-e^{-\lambda w})$ pour $0\le z<t$, $w\ge0$, et $1-e^{-\lambda w}$ pour $z\ge t$ : $Z_t\indep W_t$ et $W_t\sim\Expo(\lambda)$.
+2. $Z_t$ a la loi de $\min(T_1,t)$ (atome $e^{-\lambda t}$ en $t$) ; sa fonction de répartition tend vers celle de $\Expo(\lambda)$.
+3. $\E(Z_t+W_t)=\frac{1-e^{-\lambda t}}{\lambda}+\frac1\lambda\xrightarrow[t\to\infty]{}\frac2\lambda$ : l'intervalle qui contient $t$ est en moyenne
+\emph{deux fois} plus long qu'un intervalle typique ($\frac1\lambda$), car on tombe plus souvent dans les grands intervalles.
+4. Attente moyenne $\E(W_t)=\frac1\lambda$, et non $\frac1{2\lambda}$.
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Montrer que $\tau$ est un temps d'arrêt & Écrire $\{\tau\le t\}$ (ou $\{\tau=n\}$) avec des événements de $\F_t$ ; opérations dénombrables (C8.6).\\
+Montrer que $(X_n)$ est une martingale & Adapté + intégrable + $\E(X_{n+1}\mid\F_n)=X_n$ : sortir le connu, l'indépendant devient une espérance (C8.4, C6.5).\\
+Trouver la constante qui rend une suite martingale & Calculer $\E(X_{n+1}\mid\F_n)$ en fonction du paramètre, puis identifier.\\
+Stratégies, mises & Mise prévisible et bornée $\Rightarrow$ la transformée de martingale est une martingale.\\
+Sous-martingale $\Phi(M)$ & Jensen conditionnel + monotonie de $\Phi$ (C6.5).\\
+Limite d'une martingale bornée & Convergence p.s.\ (C8.11) + convergence dominée pour passer les espérances à la limite.\\
+Indépendance d'une suite ? & Confronter à Borel--Cantelli 2 (C3.6).\\
+Poisson : lois d'attente & Traduire en $\{N_{s+t}-N_s=0\}$ ; stationnarité et indépendance des accroissements (C9.3, C9.6).\\
+Densité des instants de saut & Changement de variables linéaire $T=AX$ ; conditionner par $\{N_t=n\}=\{T_n\le t<T_{n+1}\}$.\\\bottomrule
+\end{tabularx}
+
+\end{document}

@@ -1,0 +1,114 @@
+% ==============================================================
+%  Préambule commun aux fiches -- Advanced Probabilities (M1)
+%  Usage, dans chaque fiche :
+%     \documentclass[11pt,a4paper]{article}
+%     \input{../preambule.tex}
+%     \fiche{C5}{Vecteurs gaussiens}{Gaussian vectors}
+% ==============================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=1.9cm,top=1.7cm,bottom=1.9cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[inline]{enumitem}
+\usepackage{booktabs,array,tabularx}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+
+\setlist{itemsep=1pt,topsep=3pt,parsep=0pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\emergencystretch=3em
+
+% ---------- Identification de la fiche -------------------------
+\newcommand{\ficheid}{}
+\newcommand{\fichetitre}{}
+\newcommand{\fiche}[3]{%
+  \renewcommand{\ficheid}{#1}\renewcommand{\fichetitre}{#2}%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[L]{\small\textsf{Advanced Probabilities -- Fiche #1}}%
+  \fancyhead[R]{\small\textsf{#2}}%
+  \fancyfoot[C]{\small\thepage}%
+  \begin{center}
+    {\LARGE\bfseries Fiche #1 -- #2}\par\smallskip
+    {\large\itshape (#3)}\par\smallskip
+    {\small Cours de V.\,M.~Lambert, M1 -- semestre 1}
+  \end{center}\vspace{-2pt}\hrule\vspace{6pt}}
+
+% ---------- Environnements numérotés (un seul compteur) --------
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}
+\renewcommand{\thedefinition}{\ficheid.\arabic{definition}}
+\newtheorem{theoreme}[definition]{Théorème}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemme}[definition]{Lemme}
+\newtheorem{corollaire}[definition]{Corollaire}
+\newtheorem{exemple}[definition]{Exemple}
+\theoremstyle{remark}
+\newtheorem{remarque}[definition]{Remarque}
+
+% Résultat hors cours (standard, signalé comme tel)
+\theoremstyle{definition}
+\newtheorem{horscours}[definition]{Hors cours}
+
+% Idée de preuve
+\newenvironment{idee}{\par\small\textit{Idée de preuve.}~}{\par}
+
+% ---------- Encadrés -----------------------------------------
+\tcbset{fichebox/.style={enhanced,breakable,boxrule=0.6pt,arc=2pt,
+  left=5pt,right=5pt,top=3pt,bottom=3pt,fonttitle=\bfseries}}
+\newtcolorbox{piege}[1][]{fichebox,colback=red!4,colframe=red!60!black,
+  title={Pièges classiques},#1}
+\newtcolorbox{liens}[1][]{fichebox,colback=blue!3,colframe=blue!50!black,
+  title={Liens entre notions},#1}
+\newtcolorbox{methode}[1][Méthode]{fichebox,colback=green!4,colframe=green!40!black,title={#1}}
+\newtcolorbox{alerte}[1][]{fichebox,colback=orange!6,colframe=orange!70!black,
+  title={Attention à l'énoncé},#1}
+
+% Exercice de TD (fiches de rappels)
+\newcounter{exo}
+\newenvironment{exo}[1][]{\refstepcounter{exo}\par\medskip
+  \noindent{\large\bfseries Exercice~\theexo}\ifx\relax#1\relax\else~{\large\bfseries -- #1}\fi\par\nopagebreak\smallskip}{\par}
+\newcommand{\outils}{\textbf{Outils du cours.}~}
+\newcommand{\meth}{\textbf{Méthode / astuce.}~}
+\newcommand{\indic}{\textbf{Indication.}~}
+\newcommand{\rep}{\textbf{Réponse.}~}
+
+% ---------- Notations du cours ---------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Hc}{\mathcal{H}}
+\newcommand{\Tc}{\mathcal{T}}
+\newcommand{\Bc}{\mathcal{B}}
+\newcommand{\Cc}{\mathcal{C}}
+\newcommand{\Ec}{\mathcal{E}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\Nc}{\mathcal{N}}
+\newcommand{\LN}{\mathcal{LN}}
+\newcommand{\Expo}{\mathcal{E}}
+\newcommand{\Poi}{\mathcal{P}}
+\newcommand{\Ff}{\mathbb{F}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\dd}{\,\mathrm{d}}
+\DeclareMathOperator{\Var}{\mathbb{V}}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\diag}{diag}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\ps}{\ \PP\text{-p.s.}}
+\newcommand{\tendloi}{\xrightarrow[n\to+\infty]{\text{loi}}}
+\newcommand{\tendps}{\xrightarrow[n\to+\infty]{\text{p.s.}}}
+\newcommand{\tendproba}{\xrightarrow[n\to+\infty]{\PP}}
+\newcommand{\tendLp}{\xrightarrow[n\to+\infty]{L^p}}
+\newcommand{\tend}{\xrightarrow[n\to+\infty]{}}

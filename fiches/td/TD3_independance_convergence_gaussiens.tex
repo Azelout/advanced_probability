@@ -1,0 +1,155 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{TD3}{Indépendance, convergence et vecteurs gaussiens}{Independence, Convergence and Gaussian Vectors}
+
+\textit{À lire avant de chercher le TD. Renvois : « C4.5 » = fiche C4, énoncé n°5. Fiches associées : \textbf{C3}, \textbf{C4}, \textbf{C5}.}
+
+\begin{exo}[Borel--Cantelli et Bernoulli]
+\outils $\limsup/\liminf$ (C3.5) ; Borel--Cantelli 1 et 2 (C3.6).
+
+\meth Comme $X_n\in\{0,1\}$, « $X_n\to0$ » signifie « $X_n=0$ à partir d'un certain rang » : exprimer l'événement avec $A_n=\{X_n=1\}$.
+
+\indic $\{X_n\to0\}=\liminf_n\{X_n=0\}=\bigl(\limsup_n A_n\bigr)^c$ avec $\PP(A_n)=p_n$. Sens $\Leftarrow$ : BC1. Sens $\Rightarrow$ : contraposée
+et BC2, en utilisant que les $A_n$ sont indépendants (fonctions des $X_n$, C3.10).
+\end{exo}
+
+\begin{exo}[Somme de gaussiennes indépendantes]
+\outils Fonction caractéristique de $\Nc(m,\sigma^2)$ (C5.1) ; $\varphi_{X+Y}=\varphi_X\varphi_Y$ si $X\indep Y$ (C3.15) ; $\varphi$ caractérise la loi (C4.2).
+
+\meth Produit des fonctions caractéristiques (c'est la preuve de C5.2), ou récurrence sur $N$ avec le regroupement par paquets (C3.11) :
+$\sum_{n=1}^{N}X_n\indep X_{N+1}$.
+
+\rep $\sum_{n=1}^NX_n\sim\Nc\bigl(\sum m_n,\ \sum\sigma_n^2\bigr)$ (les \emph{variances} s'additionnent).
+\end{exo}
+
+\begin{exo}[Limite de gaussiennes]
+\outils Théorème de Lévy (C4.5) ; Lemme C4.6.
+
+\meth Écrire $\varphi_{X_n}(t)=e^{itm_n-t^2\sigma_n^2/2}$ et passer à la limite pour $t$ fixé.
+
+\rep $X_n\tendloi\Nc(m,\sigma^2)$ ; si $\sigma=0$, la limite est $\delta_m$ (gaussienne dégénérée).
+\end{exo}
+
+\begin{exo}[Théorème de Poisson, binomiale $\to$ Poisson]
+\outils Loi binomiale (C2.11) ; critère de convergence en loi pour des v.a.\ à valeurs dans $\N$ (C4.7, hors cours) ; ou bien Lévy (C4.5)
+avec l'exemple C4.12.
+
+\meth Écrire $\PP(X_n=k)=\binom nkp_n^k(1-p_n)^{n-k}$ et séparer les trois facteurs, à $k$ fixé.
+
+\indic $\binom nk\sim\frac{n^k}{k!}$, donc $\binom nkp_n^k\to\frac{\lambda^k}{k!}$ ; $(1-p_n)^{n}=\exp(n\ln(1-p_n))$ avec $\ln(1-p_n)\sim-p_n$
+($p_n\to0$) ; et $(1-p_n)^{-k}\to1$.
+\end{exo}
+
+\begin{exo}[Poisson renormalisée $\to$ gaussienne]
+\outils $\varphi$ de $\Poi(\lambda)$ : $e^{\lambda(e^{it}-1)}$ (C4.2) ; $\varphi_{aX+b}$ (C4.2) ; Lévy (C4.5).
+
+\meth Calculer $\varphi_{(X_\lambda-\lambda)/\sqrt\lambda}(t)=\exp\bigl(\lambda(e^{it/\sqrt\lambda}-1)-it\sqrt\lambda\bigr)$ puis développer
+$e^{iu}=1+iu-\frac{u^2}2+o(u^2)$ avec $u=t/\sqrt\lambda\to0$.
+
+\indic Les termes en $it\sqrt\lambda$ se compensent ; il reste $-\frac{t^2}2+o(1)$. (La convergence pour $\lambda\to\infty$ réel se ramène
+à des suites $\lambda_n\to\infty$.)
+\end{exo}
+
+\begin{exo}[Retraits à la banque : Tchebychev contre TCL]
+\outils Bienaymé--Tchebychev (C4.11, hors cours) ; TCL (C4.9) ; variance d'une somme indépendante (C3.15) ; exemple C4.13.
+
+\meth $S=\sum_{i=1}^{200}X_i$, $\E S=200\times40$, $\Var S=200\times10^2$. On cherche $c$ tel que $\PP(S\le c)\ge0{,}95$.
+Tchebychev : $\PP(S>\E S+a)\le\PP(|S-\E S|\ge a)\le\frac{\Var S}{a^2}$, imposer $\le0{,}05$.
+TCL : $\frac{S-\E S}{\sqrt{\Var S}}\approx\Nc(0,1)$ et $c=\E S+1{,}645\sqrt{\Var S}$.
+
+\rep $\E S=8000$, $\sqrt{\Var S}=100\sqrt2\approx141{,}4$.
+Tchebychev : $a=\sqrt{20000/0{,}05}\approx632{,}5$, soit $c\approx8633$~€.
+TCL : $c\approx8000+1{,}645\times141{,}4\approx8233$~€ (approximation ; bien moins coûteux).
+\end{exo}
+
+\begin{exo}[$Z=XY$ : gaussienne sans vecteur gaussien]
+\outils Déf.\ de vecteur gaussien (C5.3) ; indépendance (C3.8) ; covariance et $\E(XY)$ (C3.15) ; lien « Liens entre notions » de C5.
+
+\meth
+\begin{enumerate}
+  \item Conditionner sur la valeur de $Y$ et utiliser la symétrie $-X\sim X$ : $\PP(Z\le z)=p\PP(X\le z)+(1-p)\PP(-X\le z)$.
+  \item Tester une combinaison linéaire : $X+Z=X(1+Y)$ vaut $0$ sur $\{Y=-1\}$. A-t-elle un atome sans être constante ?
+  \item Comparer $|Z|$ et $|X|$ : trouver $A,B$ avec $\PP(X\in A,Z\in B)\neq\PP(X\in A)\PP(Z\in B)$.
+  \item $\Cov(X,Z)=\E(X^2Y)=\E(X^2)\E(Y)$ par indépendance.
+\end{enumerate}
+
+\rep 1. $Z\sim\Nc(0,1)$ pour tout $p$. 2. Pour $0<p<1$, non ($X+Z$ a un atome en 0 sans être constante) ; pour $p\in\{0,1\}$,
+$Z=\mp X$ et $(X,Z)$ est gaussien (dégénéré). 3. Non (ex.\ $\PP(|X|\le1,|Z|>1)=0$). 4. $\Cov(X,Z)=2p-1=0\iff p=\frac12$ :
+\emph{non corrélées mais dépendantes}.
+\end{exo}
+
+\begin{exo}[Indépendance de deux combinaisons linéaires]
+\outils Transformation affine d'un vecteur gaussien (C5.5) ; Thm des blocs (C5.12).
+
+\meth $(a^tX,b^tX)=AX$ avec $A$ de lignes $a^t,b^t$ : c'est un vecteur gaussien, donc indépendance $\iff$ covariance nulle.
+
+\rep $a^tX\indep b^tX\iff\sum_{i=1}^na_ib_i=0$ (vecteurs $a$ et $b$ orthogonaux).
+\end{exo}
+
+\begin{exo}[$N$ indépendant de $Y$]
+\outils C5.5, C5.12, $a^tX\sim\Nc(a^tm,a^t\Sigma a)$ (C5.6).
+
+\meth $(N,Y_1,Y_2,Y_3)=AX$ est un vecteur gaussien ; calculer les trois covariances $\Cov(N,Y_j)$ par bilinéarité
+($\Cov(X_i,X_j)=\1_{i=j}$).
+
+\rep $N\sim\Nc(0,3)$ ; $\Cov(N,Y_j)=0$ pour $j=1,2,3$, donc $N\indep Y$.
+\end{exo}
+
+\begin{exo}[Modèle binomial et formule de Black--Scholes]
+\begin{alerte}
+\begin{itemize}
+  \item L'énoncé \emph{définit} « erf » comme la fonction de répartition de $\Nc(0,1)$ (notée $\Phi$ en général) : notation non
+  standard, à ne pas confondre avec la fonction erreur usuelle $\operatorname{erf}_{\text{us}}(x)=\frac2{\sqrt\pi}\int_0^xe^{-t^2}\dd t$
+  (lien : $\Phi(x)=\frac12\bigl(1+\operatorname{erf}_{\text{us}}(x/\sqrt2)\bigr)$). Elle vérifie $\operatorname{erf}(x)+\operatorname{erf}(-x)=1$.
+  \item IV.2 : il manque un facteur $K$ ; la limite correcte est $Ke^{-rT}\operatorname{erf}(-d_2)-s_0\operatorname{erf}(-d_1)$.
+  De même, en V.2, la liste « $r,T,s_0,d_1,d_2$ et erf » omet $K$.
+  % Vérifié sur le PDF de l'énoncé (p. 5) : IV.2 écrit e^{-rT} erf(-d2) - s0 erf(-d1), sans K.
+\end{itemize}
+\end{alerte}
+\outils Espace produit et probabilité produit (C3.12) ; indépendance et espérance d'un produit (C3.14, C3.15) ; fonctions caractéristiques
+et Lévy (C4.2, C4.5) ; $(1+\frac{z_m}m)^m\to e^z$ (C4.7) ; définition de la convergence en loi avec $f$ continue bornée (C4.3) ; transfert (C2.8).
+
+\meth Modèle produit $\Rightarrow$ $Y_m=\ln(S^{(m)}_T/s_0)$ est une somme i.i.d. ; développement limité de $\Phi_m$ à l'ordre $\frac1m$,
+puis Lévy. Le prix limite est $\E(f(Y))$ avec $f$ continue bornée, calculé par complétion du carré gaussien.
+
+\indic
+\begin{itemize}
+  \item \textbf{I.} Une période : $\Lambda^{(m)}=\{b_m,h_m\}$, $\Tc^{(m)}=\Pc(\Lambda^{(m)})$, $\QQ^{(m)}(\{h_m\})=p_m$.
+  $m$ périodes : $\Omega^{(m)}=(\Lambda^{(m)})^m$, $\F^{(m)}=\Pc(\Omega^{(m)})$, $\PP^{(m)}=(\QQ^{(m)})^{\otimes m}$ ; les coordonnées $U^{(m)}_k$ sont
+  \textbf{i.i.d.\ de loi $\QQ^{(m)}$}.
+  \item \textbf{II.1} Récurrence. \textbf{II.2} Par indépendance, $\E^{(m)}\bigl(\prod_k(1+U_k)\bigr)=(1+\E U_1)^m$ ; comme les deux nombres
+  $1+\E U_1$ et $1+\frac{rT}m$ sont $>0$, on obtient $\E U_1=\frac{rT}m$, i.e.\ $p_m\sigma^+-q_m\sigma^-=0$.
+  \item \textbf{III.1} $\ln(1+x)=x-\frac{x^2}2+O(x^3)$ avec $x=h_m$ ou $b_m=O(m^{-1/2})$.
+  \textbf{III.2} $\Phi_m(u)=p_me^{iu\ln(1+h_m)}+q_me^{iu\ln(1+b_m)}$ et $e^{ix}=1+ix-\frac{x^2}2+o(x^2)$ ; le terme en $\frac1{\sqrt m}$ disparaît grâce à
+  $p_m\sigma^+=q_m\sigma^-$, et $p_m(\sigma^+)^2+q_m(\sigma^-)^2=\sigma^+\sigma^-$.
+  \textbf{III.3} $Y_m=\sum_k\ln(1+U_k)$, somme i.i.d. \textbf{III.4} $(1+\frac{z_m}m)^m\to e^z$, puis Lévy.
+  \item \textbf{IV.1} $x\mapsto(K-s_0e^x)_+$ est continue et \emph{bornée par $K$} : on applique directement la définition de la convergence en loi ;
+  et $(1+\frac{rT}m)^{-m}\to e^{-rT}$. Écrire la limite $Y=\mu+\vartheta U$ avec $U\sim\Nc(0,1)$.
+  \item \textbf{IV.2} L'intégrande est non nulle ssi $u<-d_2$ ; pour le terme en $s_0$, compléter le carré : $\mu+\vartheta^2/2=rT$ et
+  $d_1=d_2+\vartheta$.
+  \item \textbf{V.1} $(x-K)_+-(K-x)_+=x-K$ ; linéarité ; $\E^{(m)}(S^{(m)}_T)=s_0(1+\frac{rT}m)^m$ (II.2).
+  \textbf{V.2} Parité + IV.2 + $\operatorname{erf}(x)+\operatorname{erf}(-x)=1$.
+\end{itemize}
+
+\rep II.2 : $p_m=\frac{\sigma^-}{\sigma^++\sigma^-}$. III.3 : $\varphi_{Y_m}=\Phi_m^m$. III.4 : $Y_m\xrightarrow[m\to+\infty]{\text{loi}}\Nc(\mu,\vartheta^2)$.
+V.2 : $\lim C_0^{(m)}=s_0\operatorname{erf}(d_1)-Ke^{-rT}\operatorname{erf}(d_2)$ (formule de Black--Scholes).
+\end{exo}
+
+\section*{Synthèse : type de question $\to$ méthode}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+\toprule
+Type de question & Méthode\\\midrule
+Probabilité qu'une infinité de $A_n$ se produisent & Écrire l'événement en $\limsup/\liminf$ ; BC1 (série convergente), BC2 (indépendance) (C3.6).\\
+Loi d'une somme de v.a.\ indépendantes & Produit des fonctions caractéristiques (ou génératrices) puis identification (C3.15, C4.2).\\
+Convergence en loi & Lévy : limite simple de $\varphi_{X_n}(t)$ (C4.5) ; à valeurs entières : $\PP(X_n=k)\to\PP(X=k)$ (C4.7).\\
+Renormalisation $\frac{X-\E X}{\sigma}$ & Développement limité de $\varphi$ à l'ordre 2 ; $(1+\frac{z_n}n)^n\to e^z$.\\
+Dimensionner un seuil à 95\,\% & Tchebychev (borne sûre mais grossière) ou TCL (approximation, quantile $1{,}645$) (C4.13).\\
+Un couple est-il un vecteur gaussien ? & Oui : l'écrire $AX+b$ avec $X$ gaussien (C5.5). Non : exhiber une combinaison linéaire non gaussienne.\\
+Indépendance dans un vecteur gaussien & Covariances croisées nulles (C5.12), \emph{après} avoir justifié le caractère gaussien du vecteur joint.\\
+Covariance nulle mais dépendance & Contre-exemple hors vecteur gaussien (ex.~7).\\
+Limite d'un prix $\E(f(Y_m))$ & $f$ continue bornée + convergence en loi (C4.3) ; puis calcul gaussien par complétion du carré.\\\bottomrule
+\end{tabularx}
+
+\end{document}

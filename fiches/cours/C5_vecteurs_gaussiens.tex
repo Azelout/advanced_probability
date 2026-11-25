@@ -1,0 +1,150 @@
+\documentclass[11pt,a4paper]{article}
+\input{../preambule.tex}
+\begin{document}
+\fiche{C5}{Vecteurs gaussiens}{Gaussian vectors}
+
+\textit{Source : slides, chapitre 6 (Déf.~35, 41, Lemmes 8--10, Thm~8--11) et poly « Gaussian vector » (Déf.~1, 5, Lemmes 6--8, 11,
+Thm~9, 10, 12, 13). Convergence en loi, LGN, TCL : fiche C4.}
+
+\section*{1. Gaussienne réelle}
+
+\begin{definition}[Loi gaussienne sur $\R$]\label{C5:gauss1}
+Une probabilité $\mu$ sur $\Bc(\R)$ est \emph{gaussienne} si
+\begin{enumerate}
+  \item (cas non dégénéré) $\mu=f_{m,\sigma^2}\cdot\lambda$ avec
+  $f_{m,\sigma^2}(y)=\dfrac{1}{\sqrt{2\pi\sigma^2}}\,e^{-\frac{(y-m)^2}{2\sigma^2}}$, $m\in\R$, $\sigma^2\in\,]0,\infty[$ ;
+  \item (cas dégénéré) $\mu=\delta_m$, masse de Dirac en $m$ : $\delta_m(A)=1$ si $m\in A$, $0$ sinon (« $\sigma^2=0$ »).
+\end{enumerate}
+Si $\PP_X=\mu$ : $\E(X)=\int x\dd\mu=m$, $\Var(X)=\sigma^2$, et $\varphi_X(t)=e^{itm-\frac{t^2\sigma^2}{2}}$. On note $X\sim\Nc(m,\sigma^2)$.
+\end{definition}
+
+\begin{proposition}[combinaisons de gaussiennes indépendantes]\label{C5:somme-indep}
+Si $X_1,\dots,X_n$ sont \textbf{indépendantes}, $X_i\sim\Nc(m_i,\sigma_i^2)$, et $a_i,b_i\in\R$, alors
+\[\sum_{i=1}^n(a_iX_i+b_i)\sim\Nc\Bigl(\sum_{i=1}^n(a_im_i+b_i),\ \sum_{i=1}^n(a_i\sigma_i)^2\Bigr).\]
+En particulier ($n=1$, standard) $aX+b\sim\Nc(am+b,a^2\sigma^2)$ et $\frac{X-m}{\sigma}\sim\Nc(0,1)$ si $\sigma>0$.
+\end{proposition}
+\begin{idee}
+Indépendance (C3) : $\varphi_{\sum(a_jX_j+b_j)}(t)=\prod_je^{itb_j}\varphi_{X_j}(a_jt)
+=\exp\bigl(it\sum_j(a_jm_j+b_j)-\frac{t^2}2\sum_j(a_j\sigma_j)^2\bigr)$, et $\varphi$ caractérise la loi.
+\end{idee}
+
+\section*{2. Vecteurs gaussiens}
+
+\begin{definition}[Vecteur gaussien]\label{C5:vecteur}
+$X=(X_1,\dots,X_d)$ à valeurs dans $\R^d$ est un \emph{vecteur gaussien} si \textbf{toute} combinaison linéaire de ses
+composantes est une v.a.\ réelle gaussienne : $\forall a\in\R^d$, $a^tX=\sum_{i=1}^da_iX_i$ est gaussienne (éventuellement dégénérée).
+Une loi gaussienne sur $\R^d$ est la loi d'un vecteur gaussien.
+\end{definition}
+
+\begin{lemme}\label{C5:indep-vect}
+Si $X_1,\dots,X_d$ sont des gaussiennes réelles \textbf{indépendantes}, $(X_1,\dots,X_d)$ est un vecteur gaussien, et
+$\sum a_iX_i\sim\Nc\bigl(\sum a_im_i,\sum a_i^2\sigma_i^2\bigr)$.
+\end{lemme}
+
+\begin{lemme}[transformation affine]\label{C5:affine}
+Soit $X$ un vecteur gaussien de $\R^d$, de moyenne $m=\E X=(\E X_1,\dots,\E X_d)^t$ et de matrice de variance-covariance
+$\Sigma_X=(\Cov(X_i,X_j))_{i,j}=\E\bigl((X-\E X)(X-\E X)^t\bigr)$. Pour $A\in\mathcal M_{n,d}(\R)$, $b\in\R^n$,
+$Y=AX+b$ est un vecteur gaussien de $\R^n$, de moyenne $Am+b$ et de covariance $A\Sigma_XA^t$.
+\end{lemme}
+\begin{idee}
+Pour $a\in\R^n$, $a^tY=a^tb+(A^ta)^tX$ est gaussienne car $X$ est un vecteur gaussien.
+\end{idee}
+
+\begin{remarque}[standard]
+$\Sigma_X$ est symétrique positive : $\Var(a^tX)=a^t\Sigma_Xa\ge0$. Ainsi $a^tX\sim\Nc(a^tm,\ a^t\Sigma_Xa)$.
+\end{remarque}
+
+\begin{theoreme}[fonction caractéristique]\label{C5:fc}
+Soit $X$ un vecteur aléatoire de $\R^d$ de carré intégrable, de moyenne $m$ et de covariance $\Sigma_X$. $X$ est un vecteur gaussien \emph{ssi}
+\[\varphi_X(u)=\E\bigl(e^{iu^tX}\bigr)=e^{iu^tm-\frac12u^t\Sigma_Xu},\qquad\forall u\in\R^d.\]
+Une loi gaussienne est donc entièrement déterminée par $(m,\Sigma_X)$.
+\end{theoreme}
+\begin{idee}
+($\Rightarrow$) $u^tX\sim\Nc(u^tm,u^t\Sigma_Xu)$ donc $\varphi_X(u)=\varphi_{u^tX}(1)$.
+($\Leftarrow$) $\varphi_{u^tX}(v)=\varphi_X(vu)=e^{ivu^tm-\frac{v^2}2u^t\Sigma_Xu}$ : c'est la f.c.\ de $\Nc(u^tm,u^t\Sigma_Xu)$.
+\end{idee}
+
+\begin{theoreme}[existence et unicité de $\Nc_d(m,K)$]\label{C5:existence}
+Soit $m\in\R^d$ et $K$ une matrice $d\times d$ \textbf{symétrique positive} ($x^tKx\ge0$ pour tout $x$).
+Il existe une unique loi gaussienne de moyenne $m$ et de covariance $K$, notée $\Nc_d(m,K)$. Les trois conditions
+(taille $d\times d$, symétrique, positive) sont nécessaires et suffisantes ; alors les valeurs propres de $K$ sont $\ge0$ et $\det K\ge0$.
+\end{theoreme}
+\begin{idee}
+Existence : $X=(X_1,\dots,X_d)$ avec $X_i\sim\Nc(0,1)$ i.i.d.\ est $\Nc_d(0,I_d)$ (Lemme~\ref{C5:indep-vect}) ; si $K=AA^t$,
+$Y=AX+m$ est gaussien de moyenne $m$ et covariance $AI_dA^t=K$ (Lemme~\ref{C5:affine}). Unicité : Thm~\ref{C5:fc}.
+\end{idee}
+
+\begin{lemme}[racine carrée de $K$ ; « Cholesky decomposition » dans le cours]\label{C5:racine}
+$K$ symétrique positive est diagonalisable en base orthonormée : $K=P\diag(\lambda_1,\dots,\lambda_d)P^t$, $P$ orthogonale, $\lambda_i\ge0$.
+Avec $A=P\diag(\sqrt{\lambda_1},\dots,\sqrt{\lambda_d})P^t$, $A$ est symétrique positive et $K=AA^t$.
+\end{lemme}
+\begin{remarque}
+\emph{Hors cours :} la décomposition de Cholesky au sens strict fournit $A$ \emph{triangulaire inférieure} avec $K=AA^t$ ;
+pour simuler $\Nc_d(m,K)$, n'importe quel $A$ tel que $K=AA^t$ convient.
+\end{remarque}
+
+\begin{horscours}[densité]\label{C5:densite}
+Si $K$ est \textbf{inversible}, $\Nc_d(m,K)$ a pour densité sur $\R^d$
+\[f(x)=\frac{1}{(2\pi)^{d/2}\sqrt{\det K}}\exp\Bigl(-\frac12(x-m)^tK^{-1}(x-m)\Bigr),\qquad x\in\R^d.\]
+Si $\det K=0$, le vecteur vit p.s.\ dans un sous-espace affine strict : \emph{pas de densité} par rapport à $\lambda_d$.
+\end{horscours}
+
+\section*{3. Indépendance et covariance}
+
+\begin{theoreme}[blocs]\label{C5:blocs}
+Soit $(X_1,\dots,X_m,Y_1,\dots,Y_n)$ un \textbf{vecteur gaussien}. Sont équivalents :
+\begin{enumerate}
+  \item $X=(X_1,\dots,X_m)$ et $Y=(Y_1,\dots,Y_n)$ sont indépendants ;
+  \item $\Cov(X_i,Y_j)=0$ pour tous $1\le i\le m$, $1\le j\le n$ ;
+  \item $\Sigma_{(X,Y)}=\begin{pmatrix}\Sigma_X&0\\0&\Sigma_Y\end{pmatrix}$ (diagonale par blocs).
+\end{enumerate}
+Le résultat s'étend à $k$ blocs. \textbf{Le grand vecteur $(X,Y)$ doit être gaussien}, pas seulement $X$ et $Y$ séparément.
+\end{theoreme}
+\begin{idee}
+$1\Rightarrow2$ toujours. $3\Rightarrow1$ : avec $u=(v,w)$, $u^t\Sigma_{(X,Y)}u=v^t\Sigma_Xv+w^t\Sigma_Yw$, donc
+$\varphi_{(X,Y)}(v,w)=\varphi_X(v)\varphi_Y(w)$, ce qui caractérise l'indépendance (loi jointe $=$ produit des lois).
+\end{idee}
+
+\begin{corollaire}\label{C5:diag}
+Si $X=(X_1,\dots,X_d)$ est un vecteur gaussien, les $X_i$ sont indépendantes $\iff\Sigma_X$ est diagonale.
+Et : $X_1,\dots,X_d$ indépendantes de lois $\Nc(m_i,\sigma_i^2)$ $\iff$ $X$ est un vecteur gaussien de moyenne
+$(m_1,\dots,m_d)$ et de covariance $\diag(\sigma_1^2,\dots,\sigma_d^2)$.
+\end{corollaire}
+
+\begin{liens}
+\[\text{gaussiennes indépendantes}\ \Longrightarrow\ \text{vecteur gaussien}\ \Longrightarrow\ \text{composantes gaussiennes}\]
+\begin{itemize}
+  \item Réciproque 2 fausse : composantes gaussiennes $\not\Rightarrow$ vecteur gaussien. $X\sim\Nc(0,1)$, $a>0$,
+  $Y=X\1_{|X|\le a}-X\1_{|X|>a}$ : par symétrie de $\Nc(0,1)$, $Y\sim\Nc(0,1)$ ; mais $X+Y=2X\1_{|X|\le a}$ est bornée,
+  non constante, donc non gaussienne : $(X,Y)$ n'est pas un vecteur gaussien.
+  \item Réciproque 1 fausse : pour $X\sim\Nc(0,1)$, $(X,X)$ est gaussien mais ses composantes ne sont pas indépendantes ($\Cov(X,X)=1\neq0$).
+  \item Dans un vecteur gaussien : composantes non corrélées deux à deux $\iff$ mutuellement indépendantes. Hors vecteur gaussien, seul le sens «~$\Leftarrow$~» subsiste (C3).
+\end{itemize}
+\end{liens}
+
+\begin{piege}
+\begin{itemize}
+  \item $\Nc(m,\sigma^2)$ : le second paramètre est la \emph{variance}. $\Var(aX)=a^2\Var X$, pas $a\Var X$.
+  \item Pour la somme de gaussiennes, l'\emph{indépendance} (ou le caractère gaussien du vecteur) est indispensable ;
+  sinon la somme peut ne pas être gaussienne (contre-exemple ci-dessus).
+  \item « Covariance nulle $\Rightarrow$ indépendance » exige que le \emph{vecteur joint} soit gaussien (Thm~\ref{C5:blocs}).
+  \item Pour montrer qu'un vecteur est gaussien, l'écrire $AX+b$ avec $X$ gaussien (souvent $X$ à composantes i.i.d.\ $\Nc(0,1)$).
+  \item $\Var(X+Y)=\Var X+\Var Y+2\Cov(X,Y)$ : ne pas oublier le terme croisé.
+  \item Une loi dégénérée ($\delta_m$, ou $\Sigma$ non inversible) reste gaussienne, mais n'a pas de densité par rapport à $\lambda_d$.
+\end{itemize}
+\end{piege}
+
+\section*{Exemples types}
+
+\begin{exemple}[somme et différence]\label{C5:ex1}
+$X_1,X_2$ i.i.d.\ $\Nc(0,1)$, $U=X_1+X_2$, $V=X_1-X_2$. $(U,V)=A(X_1,X_2)^t$ avec $A=\begin{pmatrix}1&1\\1&-1\end{pmatrix}$ :
+vecteur gaussien centré de covariance $AI_2A^t=\begin{pmatrix}2&0\\0&2\end{pmatrix}$. Donc $U\indep V$ (Thm~\ref{C5:blocs}) et
+$U,V\sim\Nc(0,2)$.
+\end{exemple}
+
+\begin{exemple}[loi d'une combinaison linéaire]\label{C5:ex2}
+$X\sim\Nc_2\Bigl(\begin{pmatrix}1\\0\end{pmatrix},\begin{pmatrix}2&1\\1&1\end{pmatrix}\Bigr)$ et $a=(1,-2)^t$.
+$a^tm=1$, $a^t\Sigma a=a_1^2\Sigma_{11}+2a_1a_2\Sigma_{12}+a_2^2\Sigma_{22}=2-4+4=2$. Donc $X_1-2X_2\sim\Nc(1,2)$.
+\end{exemple}
+
+\end{document}

@@ -1,0 +1,31 @@
+# Liste blanche : on ignore tout, puis on n'autorise que les fichiers utiles.
+*
+
+# Autoriser la traversée des dossiers (sinon leur contenu reste ignoré)
+!*/
+
+# Fichiers à versionner
+!.gitignore
+!*.tex
+!*.pdf
+!*.md
+!*.bib
+!.latexmkrc
+!latexmkrc
+
+# Sécurité : artefacts LaTeX jamais versionnés, même s'ils matchent ci-dessus
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
